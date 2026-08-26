@@ -20,13 +20,15 @@ export function delay(ms?: number): Promise<void> {
 }
 
 /** Error shape the stores translate into toasts. */
+export type ServiceErrorCode = 'not_found' | 'conflict' | 'validation' | 'storage'
+
 export class ServiceError extends Error {
-  constructor(
-    message: string,
-    readonly code: 'not_found' | 'conflict' | 'validation' | 'storage' = 'validation',
-  ) {
+  code: ServiceErrorCode
+
+  constructor(message: string, code: ServiceErrorCode = 'validation') {
     super(message)
     this.name = 'ServiceError'
+    this.code = code
   }
 }
 
