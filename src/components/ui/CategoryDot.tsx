@@ -33,6 +33,9 @@ export function CategoryDot({ color, icon = 'circle', size = 'md', className }: 
       className={cn('flex shrink-0 items-center justify-center', SIZES[size], className)}
       style={{ backgroundColor: `color-mix(in srgb, ${color} 16%, transparent)`, color }}
     >
+      {/* A lookup in the static icon registry, not a component declared during
+          render — its identity is stable, so nothing remounts. */}
+      {/* oxlint-disable-next-line react/static-components */}
       <Icon className={ICON_SIZES[size]} strokeWidth={2.2} />
     </span>
   )

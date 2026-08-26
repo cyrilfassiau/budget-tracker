@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { Button, Field, Input, Modal, Select } from '@/components/ui'
 import { CURRENCIES } from '@/lib/constants'
@@ -48,14 +48,16 @@ export function BudgetForm({
       (category.id === categoryId || !budgetedIds.has(category.id)),
   )
 
-  useEffect(() => {
-    if (!open) return
+  // Seed the fields when the dialog opens on a different category.
+  const instance = open ? (categoryId ?? 'new') : 'closed'
+  const [renderedInstance, setRenderedInstance] = useState(instance)
+
+  if (instance !== renderedInstance) {
+    setRenderedInstance(instance)
     setError(undefined)
     setSelectedCategory(categoryId ?? options[0]?.id ?? '')
     setLimitValue(currentLimit !== null ? String(currentLimit) : '')
-    // `options` is derived from props that are already in the dep list.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, categoryId, currentLimit])
+  }
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()

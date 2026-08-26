@@ -49,7 +49,7 @@ export function AppLayout({ title, description, actions, children }: AppLayoutPr
           onAddTransaction={() => openNew()}
         />
 
-        <main className="flex-1 px-4 py-5 sm:px-6 sm:py-6">
+        <main id="main-content" className="flex-1 px-4 py-5 sm:px-6 sm:py-6">
           <div className="mx-auto w-full max-w-6xl">{children}</div>
         </main>
 

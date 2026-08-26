@@ -1,5 +1,5 @@
 import { Check } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import { Button, Field, Input, Modal, SegmentedControl } from '@/components/ui'
 import { CATEGORY_COLORS } from '@/lib/constants'
@@ -46,15 +46,20 @@ export function CategoryForm({ open, category, onClose }: CategoryFormProps) {
     [categories, category],
   )
 
-  useEffect(() => {
-    if (!open) return
+  // Seed the fields when the dialog opens on a different category, adjusting
+  // state during render rather than in an effect.
+  const instance = open ? (category?.id ?? 'new') : 'closed'
+  const [renderedInstance, setRenderedInstance] = useState(instance)
+
+  if (instance !== renderedInstance) {
+    setRenderedInstance(instance)
     setErrors({})
     setValues(
       category
         ? { name: category.name, color: category.color, icon: category.icon, kind: category.kind }
         : DEFAULTS,
     )
-  }, [open, category])
+  }
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
@@ -108,6 +113,7 @@ export function CategoryForm({ open, category, onClose }: CategoryFormProps) {
               color: values.color,
             }}
           >
+            {/* oxlint-disable-next-line react/static-components */}
             <PreviewIcon className="size-5" strokeWidth={2.2} />
           </span>
 
@@ -202,6 +208,7 @@ export function CategoryForm({ open, category, onClose }: CategoryFormProps) {
                       : 'text-fg-subtle hover:bg-card-muted hover:text-fg',
                   )}
                 >
+                  {/* oxlint-disable-next-line react/static-components */}
                   <Icon className="size-4" />
                 </button>
               )

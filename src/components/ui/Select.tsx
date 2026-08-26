@@ -3,7 +3,7 @@ import type { SelectHTMLAttributes } from 'react'
 
 import { cn } from '@/lib/cn'
 
-import { controlClasses } from './Input'
+import { controlClasses } from './controlClasses'
 
 export function Select({
   className,

@@ -1,5 +1,5 @@
 import { ArrowDownLeft, ArrowUpRight } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import {
   Button,
@@ -63,31 +63,28 @@ export function TransactionForm() {
     [categories, values.type],
   )
 
-  // Re-seed the form whenever the dialog opens (new, edit, or with defaults).
-  useEffect(() => {
-    if (!open) return
+  // Re-seed the form whenever the dialog opens on a different subject. This is
+  // React's "adjust state during render" pattern: cheaper than an effect,
+  // because the stale values never reach the DOM.
+  const instance = open ? (editing?.id ?? 'new') : 'closed'
+  const [renderedInstance, setRenderedInstance] = useState(instance)
+
+  if (instance !== renderedInstance) {
+    setRenderedInstance(instance)
     setErrors({})
     setTouched({})
-
-    if (editing) {
-      setValues({
-        amount: String(editing.amount),
-        type: editing.type,
-        categoryId: editing.categoryId,
-        date: editing.date,
-        note: editing.note,
-      })
-    } else {
-      setValues(emptyValues(defaults ?? {}))
-    }
-  }, [open, editing, defaults])
-
-  // Keep the category valid when the type flips between income and expense.
-  useEffect(() => {
-    if (!values.categoryId) return
-    const stillValid = availableCategories.some((entry) => entry.id === values.categoryId)
-    if (!stillValid) setValues((current) => ({ ...current, categoryId: '' }))
-  }, [availableCategories, values.categoryId])
+    setValues(
+      editing
+        ? {
+            amount: String(editing.amount),
+            type: editing.type,
+            categoryId: editing.categoryId,
+            date: editing.date,
+            note: editing.note,
+          }
+        : emptyValues(defaults ?? {}),
+    )
+  }
 
   const setField = <K extends keyof TransactionFormValues>(
     key: K,
@@ -98,6 +95,15 @@ export function TransactionForm() {
     if (touched[key]) {
       setErrors(validateTransaction(next, { allowFutureDates }))
     }
+  }
+
+  /** Switching type can strand a category that does not apply to it. */
+  const setType = (type: TransactionType) => {
+    const stillValid = categories.some(
+      (entry) =>
+        entry.id === values.categoryId && (entry.kind === type || entry.kind === 'both'),
+    )
+    setValues({ ...values, type, categoryId: stillValid ? values.categoryId : '' })
   }
 
   const blur = (key: keyof TransactionFormValues) => {
@@ -158,7 +164,7 @@ export function TransactionForm() {
         <SegmentedControl<TransactionType>
           label="Transaction type"
           value={values.type}
-          onChange={(type) => setField('type', type)}
+          onChange={setType}
           options={[
             { value: 'expense', label: 'Expense', icon: <ArrowUpRight className="size-3.5" /> },
             { value: 'income', label: 'Income', icon: <ArrowDownLeft className="size-3.5" /> },

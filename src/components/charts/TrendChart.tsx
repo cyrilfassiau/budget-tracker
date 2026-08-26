@@ -81,6 +81,9 @@ export function TrendChart({ data, activeMonth }: TrendChartProps) {
             }}
           />
 
+          {/* Entry animations are off across the app's charts: Recharts does not
+              settle them reliably under React 19's StrictMode double-render and
+              leaves bars flat and pie slices as slivers. */}
           <Bar
             dataKey="income"
             name="Income"
@@ -88,7 +91,7 @@ export function TrendChart({ data, activeMonth }: TrendChartProps) {
             radius={[4, 4, 0, 0]}
             maxBarSize={22}
             opacity={activeMonth ? 0.9 : 1}
-            animationDuration={600}
+            isAnimationActive={false}
           />
           <Bar
             dataKey="expenses"
@@ -96,7 +99,7 @@ export function TrendChart({ data, activeMonth }: TrendChartProps) {
             fill="var(--expense)"
             radius={[4, 4, 0, 0]}
             maxBarSize={22}
-            animationDuration={600}
+            isAnimationActive={false}
           />
           <Line
             type="monotone"
@@ -106,7 +109,7 @@ export function TrendChart({ data, activeMonth }: TrendChartProps) {
             strokeWidth={2}
             dot={{ r: 2.5, strokeWidth: 0, fill: 'var(--accent)' }}
             activeDot={{ r: 4 }}
-            animationDuration={700}
+            isAnimationActive={false}
           />
         </ComposedChart>
       </ResponsiveContainer>

@@ -59,8 +59,6 @@ export function SpendingDonut({ data, total, maxSlices = 7 }: SpendingDonutProps
               endAngle={-270}
               onMouseEnter={(_, index) => setActiveIndex(index)}
               onMouseLeave={() => setActiveIndex(null)}
-              // Recharts' pie sweep animation does not settle reliably under
-              // React 19's StrictMode double-render, leaving slivers on screen.
               isAnimationActive={false}
             >
               {slices.map((entry, index) => (

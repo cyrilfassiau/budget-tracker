@@ -2,7 +2,7 @@ import type { TextareaHTMLAttributes } from 'react'
 
 import { cn } from '@/lib/cn'
 
-import { controlClasses } from './Input'
+import { controlClasses } from './controlClasses'
 
 export function Textarea({
   className,

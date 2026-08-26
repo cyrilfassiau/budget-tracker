@@ -1,22 +1,48 @@
+import { Suspense, lazy } from 'react'
 import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 
-import { BudgetsPage } from '@/pages/BudgetsPage'
-import { CategoriesPage } from '@/pages/CategoriesPage'
-import { DashboardPage } from '@/pages/DashboardPage'
-import { SettingsPage } from '@/pages/SettingsPage'
-import { TransactionsPage } from '@/pages/TransactionsPage'
+import { RouteFallback } from '@/components/layout/RouteFallback'
+
+/**
+ * Routes are code-split so the initial load does not pay for Recharts, which
+ * only the dashboard needs.
+ */
+const DashboardPage = lazy(() =>
+  import('@/pages/DashboardPage').then((module) => ({ default: module.DashboardPage })),
+)
+const TransactionsPage = lazy(() =>
+  import('@/pages/TransactionsPage').then((module) => ({ default: module.TransactionsPage })),
+)
+const BudgetsPage = lazy(() =>
+  import('@/pages/BudgetsPage').then((module) => ({ default: module.BudgetsPage })),
+)
+const CategoriesPage = lazy(() =>
+  import('@/pages/CategoriesPage').then((module) => ({ default: module.CategoriesPage })),
+)
+const SettingsPage = lazy(() =>
+  import('@/pages/SettingsPage').then((module) => ({ default: module.SettingsPage })),
+)
 
 export function App() {
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<DashboardPage />} />
-        <Route path="/transactions" element={<TransactionsPage />} />
-        <Route path="/budgets" element={<BudgetsPage />} />
-        <Route path="/categories" element={<CategoriesPage />} />
-        <Route path="/settings" element={<SettingsPage />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+      <a
+        href="#main-content"
+        className="sr-only rounded-lg bg-accent px-4 py-2 text-sm font-medium text-accent-fg focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[70]"
+      >
+        Skip to content
+      </a>
+
+      <Suspense fallback={<RouteFallback />}>
+        <Routes>
+          <Route path="/" element={<DashboardPage />} />
+          <Route path="/transactions" element={<TransactionsPage />} />
+          <Route path="/budgets" element={<BudgetsPage />} />
+          <Route path="/categories" element={<CategoriesPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Suspense>
     </Router>
   )
 }
