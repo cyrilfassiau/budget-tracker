@@ -33,8 +33,10 @@ export function useFocusTrap(
       target.focus({ preventScroll: true })
     }
 
-    // Wait a frame so entry animations do not scroll the focused field.
-    const frame = requestAnimationFrame(focusFirst)
+    // Focus synchronously: deferring to the next frame lets a user who types
+    // immediately have their first keystrokes land in the wrong field.
+    // `preventScroll` is what keeps the entry animation from jumping.
+    focusFirst()
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -67,7 +69,6 @@ export function useFocusTrap(
 
     document.addEventListener('keydown', onKeyDown, true)
     return () => {
-      cancelAnimationFrame(frame)
       document.removeEventListener('keydown', onKeyDown, true)
       previouslyFocused?.focus?.({ preventScroll: true })
     }
