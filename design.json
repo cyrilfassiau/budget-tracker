@@ -1,0 +1,294 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-26T00:00:00.000Z",
+  "title": "Design System: Budget Tracker",
+  "note": "This sidecar normally lives at .impeccable/design.json. That directory is root-owned and unwritable in this repo, so it is written beside DESIGN.md at the project root.",
+  "extensions": {
+    "colorMeta": {
+      "paper": {
+        "role": "neutral",
+        "displayName": "Safety Stock",
+        "canonical": "#e9eee4",
+        "darkCounterpart": "#0f1116",
+        "purpose": "The page ground. Never a component fill.",
+        "tonalRamp": ["oklch(18% 0.012 135)", "oklch(28% 0.014 135)", "oklch(40% 0.016 135)", "oklch(52% 0.018 135)", "oklch(64% 0.018 135)", "oklch(76% 0.016 135)", "oklch(88% 0.014 135)", "oklch(95% 0.010 135)"]
+      },
+      "sheet": {
+        "role": "neutral",
+        "displayName": "Sheet",
+        "canonical": "#fbfcf9",
+        "darkCounterpart": "#171a21",
+        "purpose": "The surface laid on the stock: every sheet, control, menu, dialog and toast.",
+        "tonalRamp": ["oklch(18% 0.005 130)", "oklch(29% 0.005 130)", "oklch(41% 0.006 130)", "oklch(53% 0.006 130)", "oklch(65% 0.006 130)", "oklch(77% 0.005 130)", "oklch(89% 0.004 130)", "oklch(97% 0.004 130)"]
+      },
+      "sheet-alt": {
+        "role": "neutral",
+        "displayName": "Ruled Band",
+        "canonical": "#f3f6ef",
+        "darkCounterpart": "#1d212a",
+        "purpose": "Column-head rows, row hover, ghost-button hover, pace-bar trough.",
+        "tonalRamp": ["oklch(18% 0.008 132)", "oklch(29% 0.009 132)", "oklch(41% 0.010 132)", "oklch(53% 0.010 132)", "oklch(65% 0.010 132)", "oklch(77% 0.009 132)", "oklch(89% 0.008 132)", "oklch(96% 0.007 132)"]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "#c2ccbd",
+        "darkCounterpart": "#2b313c",
+        "purpose": "The default 1px rule; set as the global border-color so a bare border is always correct.",
+        "tonalRamp": ["oklch(18% 0.018 135)", "oklch(29% 0.021 135)", "oklch(41% 0.024 135)", "oklch(53% 0.026 135)", "oklch(65% 0.026 135)", "oklch(77% 0.024 135)", "oklch(88% 0.020 135)", "oklch(95% 0.014 135)"]
+      },
+      "rule-strong": {
+        "role": "neutral",
+        "displayName": "Heavy Rule",
+        "canonical": "#9aa795",
+        "darkCounterpart": "#414958",
+        "purpose": "Register head, first entry of a new day, secondary-button outline, control hover, chart axis, scrollbar thumb.",
+        "tonalRamp": ["oklch(18% 0.020 135)", "oklch(29% 0.024 135)", "oklch(41% 0.028 135)", "oklch(53% 0.030 135)", "oklch(65% 0.030 135)", "oklch(77% 0.026 135)", "oklch(88% 0.020 135)", "oklch(95% 0.014 135)"]
+      },
+      "perforation": {
+        "role": "neutral",
+        "displayName": "Perforation Tint",
+        "canonical": "#d5ddcf",
+        "darkCounterpart": "#232833",
+        "purpose": "The stub-edge perforation gradient. Currently declared but not deployed by any component.",
+        "tonalRamp": ["oklch(18% 0.014 135)", "oklch(29% 0.016 135)", "oklch(41% 0.018 135)", "oklch(53% 0.020 135)", "oklch(65% 0.020 135)", "oklch(77% 0.018 135)", "oklch(89% 0.015 135)", "oklch(96% 0.011 135)"]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ledger Black",
+        "canonical": "#12161c",
+        "darkCounterpart": "#e6e9e2",
+        "purpose": "Body text, figures, paid-out bars, the elapsed rule's fill, total borders, and the heaviest frame.",
+        "tonalRamp": ["oklch(16% 0.014 255)", "oklch(27% 0.016 255)", "oklch(39% 0.018 255)", "oklch(51% 0.018 255)", "oklch(63% 0.016 255)", "oklch(75% 0.014 255)", "oklch(87% 0.010 255)", "oklch(95% 0.006 255)"]
+      },
+      "ink-2": {
+        "role": "neutral",
+        "displayName": "Secondary Ink",
+        "canonical": "#4a5560",
+        "darkCounterpart": "#a8b0ba",
+        "purpose": "Secondary prose, descriptions, transfer figures.",
+        "tonalRamp": ["oklch(18% 0.018 250)", "oklch(29% 0.022 250)", "oklch(41% 0.026 250)", "oklch(53% 0.026 250)", "oklch(65% 0.024 250)", "oklch(77% 0.018 250)", "oklch(88% 0.012 250)", "oklch(95% 0.008 250)"]
+      },
+      "ink-3": {
+        "role": "neutral",
+        "displayName": "Stamp Ink",
+        "canonical": "#5f6a75",
+        "darkCounterpart": "#8f97a2",
+        "purpose": "Column heads, the Courier stamp layer, notes, placeholders, blank-cell dashes.",
+        "tonalRamp": ["oklch(18% 0.016 250)", "oklch(29% 0.020 250)", "oklch(41% 0.024 250)", "oklch(53% 0.024 250)", "oklch(65% 0.022 250)", "oklch(77% 0.016 250)", "oklch(88% 0.011 250)", "oklch(95% 0.007 250)"]
+      },
+      "carbon": {
+        "role": "primary",
+        "displayName": "Carbon Copy Blue",
+        "canonical": "#2f3b8c",
+        "darkCounterpart": "#9aa2f2",
+        "purpose": "The committed ink: primary buttons, active nav, focus ring, caret, selected segment, paid-in bars, in-sheet links.",
+        "tonalRamp": ["oklch(20% 0.090 272)", "oklch(30% 0.120 272)", "oklch(40% 0.140 272)", "oklch(50% 0.150 272)", "oklch(60% 0.140 272)", "oklch(72% 0.110 272)", "oklch(84% 0.070 272)", "oklch(94% 0.030 272)"]
+      },
+      "carbon-2": {
+        "role": "primary",
+        "displayName": "Carbon Light",
+        "canonical": "#4d59b0",
+        "darkCounterpart": "#b3b9f7",
+        "purpose": "Primary hover, and a budget bar running ahead of pace.",
+        "tonalRamp": ["oklch(20% 0.090 274)", "oklch(30% 0.115 274)", "oklch(41% 0.135 274)", "oklch(52% 0.140 274)", "oklch(63% 0.125 274)", "oklch(74% 0.100 274)", "oklch(85% 0.060 274)", "oklch(94% 0.028 274)"]
+      },
+      "carbon-tint": {
+        "role": "primary",
+        "displayName": "Carbon Tint",
+        "canonical": "#dee2f4",
+        "darkCounterpart": "#232741",
+        "purpose": "The only interactive fill in the system: active nav row, drag drop-target, the opening frame of entry-strike.",
+        "tonalRamp": ["oklch(20% 0.030 272)", "oklch(31% 0.038 272)", "oklch(43% 0.044 272)", "oklch(55% 0.046 272)", "oklch(67% 0.042 272)", "oklch(79% 0.034 272)", "oklch(90% 0.024 272)", "oklch(96% 0.012 272)"]
+      },
+      "red": {
+        "role": "secondary",
+        "displayName": "Ledger Red",
+        "canonical": "#a8231c",
+        "darkCounterpart": "#f08b82",
+        "purpose": "Trouble only: a negative figure, an over-limit bar, a field in error, delete, the irreversible block.",
+        "tonalRamp": ["oklch(22% 0.090 28)", "oklch(32% 0.130 28)", "oklch(42% 0.165 28)", "oklch(52% 0.180 28)", "oklch(63% 0.165 28)", "oklch(74% 0.130 28)", "oklch(86% 0.080 28)", "oklch(95% 0.030 28)"]
+      },
+      "red-tint": {
+        "role": "secondary",
+        "displayName": "Red Tint",
+        "canonical": "#f7e3e1",
+        "darkCounterpart": "#331b1c",
+        "purpose": "Ground of an invalid field and resting fill of the danger button.",
+        "tonalRamp": ["oklch(22% 0.030 28)", "oklch(33% 0.040 28)", "oklch(45% 0.048 28)", "oklch(57% 0.050 28)", "oklch(69% 0.045 28)", "oklch(80% 0.036 28)", "oklch(90% 0.024 28)", "oklch(96% 0.012 28)"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display Figure", "purpose": "The one money figure a page exists to report. 30px, 38px from sm. One per page, never two." },
+      "headline": { "displayName": "Page Title", "purpose": "The statement head's title. One per page." },
+      "title": { "displayName": "Sheet Head", "purpose": "The printed head of a sheet or dialog; also the shape of buttons and nav items." },
+      "body": { "displayName": "Body", "purpose": "Register lines, field values, descriptions. 13px Archivo." },
+      "note": { "displayName": "Note", "purpose": "Hints, verdict lines, honesty footnotes. 11px, usually ink-3." },
+      "label": { "displayName": "Column Head", "purpose": "The .col-head class: a printed head above a table column or above a figure." },
+      "stamp": { "displayName": "Stamp", "purpose": "The .stamp class — Courier Prime reference layer: dates, period status, section numerals, TFR/IN tags. Used only at 9–11px." }
+    },
+    "shadows": [
+      { "name": "none", "value": "none", "purpose": "The system has zero shadows in any component or state. Depth is rule weight and stock tone." },
+      { "name": "scrim", "value": "rgb(12 16 14 / 0.5)", "purpose": "The modal backdrop — the single non-flat surface treatment in the build. Fades in over 160ms." }
+    ],
+    "motion": [
+      { "name": "ease-settle", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "The easing for both entrances: sheet-in and entry-strike." },
+      { "name": "sheet-in", "value": "sheet-in 260ms cubic-bezier(0.16, 1, 0.3, 1) both", "purpose": "Utility entrance (.animate-in): 6px rise and fade for page content, dialogs, menus, toasts." },
+      { "name": "entry-strike", "value": "entry-strike 420ms cubic-bezier(0.16, 1, 0.3, 1) both", "purpose": "The one authored moment: a new entry struck onto the sheet from the left, opening on a carbon-tint ground that clears as it settles." },
+      { "name": "fade-in", "value": "fade-in 160ms ease-out both", "purpose": "The modal scrim only." },
+      { "name": "shimmer", "value": "shimmer 1.5s ease-in-out infinite", "purpose": "Skeleton rows only." },
+      { "name": "state-color", "value": "transition: color/background/border 100ms", "purpose": "Every hover and selection change." },
+      { "name": "bar-width", "value": "transition: width 500ms ease-out", "purpose": "The elapsed rule and the pace bar filling." },
+      { "name": "reduced-motion", "value": "prefers-reduced-motion: reduce → 0.01ms", "purpose": "Every animation and transition collapses globally." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px", "purpose": "The workhorse. The register's single Amount column splits into Paid out / Paid in / Transfer / Balance; padding steps up; dialogs centre." },
+      { "name": "lg", "value": "1024px", "purpose": "Navigation moves from the foot (tab bar) to the left edge (sidebar); two-up sheet grids appear." }
+    ],
+    "focus": { "value": "outline: 2px solid var(--carbon); outline-offset: 1px", "purpose": "One global focus ring, on :focus-visible." }
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "A solid block of carbon ink. One per surface — on every page it is Enter transaction, in the statement head.",
+      "html": "<button class=\"ds-btn ds-btn-primary\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"><path d=\"M5 12h14M12 5v14\"/></svg>Enter</button>",
+      "css": ".ds-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 36px; padding: 0 14px; border: none; border-radius: 0; font-family: 'Archivo Narrow', Archivo, sans-serif; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; cursor: pointer; transition: color 100ms, background-color 100ms, border-color 100ms; } .ds-btn-primary { background: var(--carbon, #2f3b8c); color: var(--sheet, #fbfcf9); } .ds-btn-primary:hover { background: var(--carbon-2, #4d59b0); } .ds-btn-primary:focus-visible { outline: 2px solid var(--carbon, #2f3b8c); outline-offset: 1px; } .ds-btn-primary:disabled { opacity: 0.4; pointer-events: none; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "The default variant: a ruled outline on the sheet. Hover fills the ruled band and darkens the hairline.",
+      "html": "<button class=\"ds-btn ds-btn-secondary\">Copy previous</button>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 36px; padding: 0 14px; border: 1px solid var(--rule-strong, #9aa795); border-radius: 0; background: var(--sheet, #fbfcf9); color: var(--ink, #12161c); font-family: 'Archivo Narrow', Archivo, sans-serif; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; cursor: pointer; transition: color 100ms, background-color 100ms, border-color 100ms; } .ds-btn-secondary:hover { background: var(--sheet-alt, #f3f6ef); border-color: var(--ink-3, #5f6a75); } .ds-btn-secondary:focus-visible { outline: 2px solid var(--carbon, #2f3b8c); outline-offset: 1px; }"
+    },
+    {
+      "name": "Danger Button",
+      "kind": "button",
+      "refersTo": "button-danger",
+      "description": "Red hairline on red tint, inverting to solid red on hover. Reserved for destructive confirmation.",
+      "html": "<button class=\"ds-btn ds-btn-danger\">Delete</button>",
+      "css": ".ds-btn-danger { display: inline-flex; align-items: center; justify-content: center; height: 36px; padding: 0 14px; border: 1px solid var(--red, #a8231c); border-radius: 0; background: var(--red-tint, #f7e3e1); color: var(--red, #a8231c); font-family: 'Archivo Narrow', Archivo, sans-serif; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; cursor: pointer; transition: color 100ms, background-color 100ms; } .ds-btn-danger:hover { background: var(--red, #a8231c); color: var(--sheet, #fbfcf9); } .ds-btn-danger:focus-visible { outline: 2px solid var(--carbon, #2f3b8c); outline-offset: 1px; }"
+    },
+    {
+      "name": "Sheet",
+      "kind": "card",
+      "refersTo": "sheet",
+      "description": "The container primitive — replaces the card. One hairline, square corners, no shadow, no radius, never nested.",
+      "html": "<section class=\"ds-sheet\"><div class=\"ds-sheet-head\"><h2>August 2026</h2><p class=\"ds-sheet-meta\">Open · day 12 of 31</p></div><div class=\"ds-sheet-row\"><span>Brought forward</span><span class=\"ds-figure\">1,240.00</span></div><div class=\"ds-sheet-row ds-sheet-total\"><span class=\"ds-col-head\">Carried forward</span><span class=\"ds-display\">1,586.20</span></div></section>",
+      "css": ".ds-sheet { border: 1px solid var(--rule, #c2ccbd); border-radius: 0; background: var(--sheet, #fbfcf9); color: var(--ink, #12161c); font-family: Archivo, sans-serif; } .ds-sheet-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding: 10px 20px; border-bottom: 1px solid var(--rule, #c2ccbd); } .ds-sheet-head h2 { margin: 0; font-family: 'Archivo Narrow', Archivo, sans-serif; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; } .ds-sheet-meta { margin: 0; font-family: 'Courier Prime', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.02em; color: var(--ink-3, #5f6a75); } .ds-sheet-row { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding: 8px 20px; border-top: 1px solid var(--rule, #c2ccbd); font-size: 13px; } .ds-sheet-row:first-of-type { border-top: none; } .ds-sheet-total { border-top: 2px solid var(--ink, #12161c); } .ds-col-head { font-family: 'Archivo Narrow', Archivo, sans-serif; font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.09em; color: var(--ink, #12161c); } .ds-figure { font-variant-numeric: tabular-nums lining-nums; } .ds-display { font-family: 'Archivo Narrow', Archivo, sans-serif; font-size: 38px; font-weight: 700; line-height: 1; letter-spacing: -0.01em; font-variant-numeric: tabular-nums lining-nums; }"
+    },
+    {
+      "name": "Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "A ruled box on the sheet with a printed column head above it. Hairline darkens on hover, turns carbon on focus.",
+      "html": "<div class=\"ds-field\"><label class=\"ds-field-label\" for=\"ds-amount\">Amount</label><input class=\"ds-input\" id=\"ds-amount\" placeholder=\"0.00\" /><p class=\"ds-field-hint\">Entered in your account currency.</p></div>",
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 4px; font-family: Archivo, sans-serif; } .ds-field-label { font-family: 'Archivo Narrow', Archivo, sans-serif; font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.09em; color: var(--ink-2, #4a5560); } .ds-input { width: 100%; height: 36px; padding: 6px 10px; border: 1px solid var(--rule, #c2ccbd); border-radius: 0; background: var(--sheet, #fbfcf9); color: var(--ink, #12161c); font-family: Archivo, sans-serif; font-size: 13px; transition: border-color 100ms, background-color 100ms; } .ds-input::placeholder { color: var(--ink-3, #5f6a75); } .ds-input:hover { border-color: var(--rule-strong, #9aa795); } .ds-input:focus { border-color: var(--carbon, #2f3b8c); outline: 2px solid var(--carbon, #2f3b8c); outline-offset: 1px; } .ds-input[aria-invalid=\"true\"] { border-color: var(--red, #a8231c); background: var(--red-tint, #f7e3e1); } .ds-field-hint { margin: 0; font-size: 11px; line-height: 1.35; color: var(--ink-3, #5f6a75); }"
+    },
+    {
+      "name": "Segmented Picker",
+      "kind": "chip",
+      "refersTo": "segment-selected",
+      "description": "Ruled tabs sharing one outline, the way a form offers boxes to tick. The selected segment fills solid carbon; radio semantics.",
+      "html": "<div class=\"ds-segments\" role=\"radiogroup\" aria-label=\"Type\"><button class=\"ds-segment\" role=\"radio\" aria-checked=\"false\">Paid out</button><button class=\"ds-segment ds-segment-on\" role=\"radio\" aria-checked=\"true\">Paid in</button><button class=\"ds-segment\" role=\"radio\" aria-checked=\"false\">Transfer</button></div>",
+      "css": ".ds-segments { display: flex; width: 100%; border: 1px solid var(--rule, #c2ccbd); } .ds-segment { flex: 1; padding: 6px 8px; border: none; border-left: 1px solid var(--rule, #c2ccbd); border-radius: 0; background: var(--sheet, #fbfcf9); color: var(--ink-3, #5f6a75); font-family: 'Archivo Narrow', Archivo, sans-serif; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; cursor: pointer; transition: color 100ms, background-color 100ms; } .ds-segment:first-child { border-left: none; } .ds-segment:hover { background: var(--sheet-alt, #f3f6ef); color: var(--ink, #12161c); } .ds-segment-on, .ds-segment-on:hover { background: var(--carbon, #2f3b8c); color: var(--sheet, #fbfcf9); } .ds-segment:focus-visible { outline: 2px solid var(--carbon, #2f3b8c); outline-offset: 1px; }"
+    },
+    {
+      "name": "Sidebar Nav Item",
+      "kind": "nav",
+      "refersTo": "nav-item",
+      "description": "The bound left edge of the book. A stamped section numeral in a fixed gutter, a Narrow uppercase label, and a carbon left border plus tint when active.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Sections\"><a class=\"ds-nav-item ds-nav-item-on\" href=\"#\"><span class=\"ds-nav-index\">01</span>Statement</a><a class=\"ds-nav-item\" href=\"#\"><span class=\"ds-nav-index\">02</span>Register</a><a class=\"ds-nav-item\" href=\"#\"><span class=\"ds-nav-index\">03</span>Budgets</a></nav>",
+      "css": ".ds-nav { display: flex; flex-direction: column; width: 208px; padding: 4px 0; border-right: 1px solid var(--rule, #c2ccbd); background: var(--sheet, #fbfcf9); } .ds-nav-item { display: flex; align-items: baseline; gap: 12px; padding: 8px 20px; border-left: 1px solid transparent; color: var(--ink-3, #5f6a75); font-family: 'Archivo Narrow', Archivo, sans-serif; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; text-decoration: none; transition: color 100ms, background-color 100ms; } .ds-nav-item:hover { background: var(--sheet-alt, #f3f6ef); color: var(--ink, #12161c); } .ds-nav-item-on, .ds-nav-item-on:hover { border-left-color: var(--carbon, #2f3b8c); background: var(--carbon-tint, #dee2f4); color: var(--ink, #12161c); } .ds-nav-index { width: 16px; flex: none; font-family: 'Courier Prime', monospace; font-size: 10px; color: var(--ink-3, #5f6a75); }"
+    },
+    {
+      "name": "Pace Bar",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "Signature. Spent against the month elapsed: a solid carbon fill, a 1px ink scheduled tick overhanging the trough, overspend hatched back over the fill, and the verdict written out in words beneath.",
+      "html": "<div class=\"ds-pace-wrap\"><div class=\"ds-pace\" role=\"progressbar\" aria-valuemin=\"0\" aria-valuemax=\"100\" aria-valuenow=\"64\" aria-label=\"Groceries budget\"><div class=\"ds-pace-fill\" style=\"width:64%\"></div><div class=\"ds-pace-tick\" style=\"left:39%\"></div></div><p class=\"ds-pace-note\"><span>42.00 within pace</span><span class=\"ds-figure\">64% spent · 39% elapsed</span></p></div>",
+      "css": ".ds-pace-wrap { font-family: Archivo, sans-serif; } .ds-pace { position: relative; height: 12px; border: 1px solid var(--rule, #c2ccbd); background: var(--sheet-alt, #f3f6ef); } .ds-pace-fill { position: absolute; top: 0; bottom: 0; left: 0; background: var(--carbon, #2f3b8c); transition: width 500ms ease-out; } .ds-pace-tick { position: absolute; top: -3px; bottom: -3px; width: 1px; background: var(--ink, #12161c); } .ds-pace-note { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin: 4px 0 0; font-size: 11px; color: var(--ink-3, #5f6a75); } .ds-figure { font-variant-numeric: tabular-nums lining-nums; }"
+    },
+    {
+      "name": "Elapsed Rule",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "Signature, and the app's one global instrument. Printed in the statement head: the day count in Courier, the percentage on the right, and a 4px ruled trough filled solid to today.",
+      "html": "<div class=\"ds-elapsed\"><div class=\"ds-elapsed-line\"><span class=\"ds-stamp\">Day 12 of 31</span><span class=\"ds-stamp\">39% elapsed</span></div><div class=\"ds-elapsed-track\" role=\"img\" aria-label=\"12 of 31 days of this period have elapsed.\"><div class=\"ds-elapsed-fill\" style=\"width:39%\"></div></div></div>",
+      "css": ".ds-elapsed { font-family: Archivo, sans-serif; } .ds-elapsed-line { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; } .ds-stamp { font-family: 'Courier Prime', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.02em; color: var(--ink-3, #5f6a75); } .ds-elapsed-track { height: 4px; margin-top: 4px; border: 1px solid var(--rule, #c2ccbd); background: var(--sheet, #fbfcf9); } .ds-elapsed-fill { height: 100%; background: var(--ink, #12161c); transition: width 500ms ease-out; }"
+    },
+    {
+      "name": "Register Entry",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "Signature. One line of the account book: a Courier date on the first entry of each day, particulars with the category mark, then separate ruled money columns and the balance the entry left behind.",
+      "html": "<table class=\"ds-register\"><thead><tr><th class=\"ds-col-head\">Date</th><th class=\"ds-col-head ds-left\">Particulars</th><th class=\"ds-col-head ds-right\">Paid out</th><th class=\"ds-col-head ds-right\">Paid in</th><th class=\"ds-col-head ds-right\">Balance</th></tr></thead><tbody><tr class=\"ds-entry ds-entry-day\"><td><time class=\"ds-stamp\">12 AUG</time></td><td class=\"ds-particulars\">Weekly shop<span>Groceries</span></td><td class=\"ds-right ds-figure\">54.20</td><td class=\"ds-right ds-figure\"></td><td class=\"ds-right ds-figure ds-balance\">1,586.20</td></tr><tr class=\"ds-entry\"><td></td><td class=\"ds-particulars\">Refund<span>Household</span></td><td class=\"ds-right ds-figure\"></td><td class=\"ds-right ds-figure\">12.00</td><td class=\"ds-right ds-figure ds-balance ds-dr\">1,598.20</td></tr></tbody></table>",
+      "css": ".ds-register { width: 100%; border-collapse: collapse; font-family: Archivo, sans-serif; font-variant-numeric: tabular-nums lining-nums; background: var(--sheet, #fbfcf9); color: var(--ink, #12161c); } .ds-register thead tr { background: var(--sheet-alt, #f3f6ef); border-bottom: 1px solid var(--rule-strong, #9aa795); } .ds-col-head { padding: 6px 8px; font-family: 'Archivo Narrow', Archivo, sans-serif; font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.09em; color: var(--ink-3, #5f6a75); text-align: right; } .ds-col-head.ds-left { text-align: left; } .ds-entry { border-top: 1px solid var(--rule, #c2ccbd); transition: background-color 100ms; } .ds-entry-day { border-top-color: var(--rule-strong, #9aa795); } .ds-entry:hover { background: var(--sheet-alt, #f3f6ef); } .ds-entry td { padding: 8px; vertical-align: top; font-size: 13px; } .ds-right { text-align: right; white-space: nowrap; } .ds-particulars { text-align: left; } .ds-particulars span { display: block; margin-top: 2px; font-size: 11px; color: var(--ink-3, #5f6a75); } .ds-balance { font-weight: 600; } .ds-dr { color: var(--red, #a8231c); } .ds-stamp { font-family: 'Courier Prime', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.02em; color: var(--ink-3, #5f6a75); } .ds-figure { font-variant-numeric: tabular-nums lining-nums; }"
+    },
+    {
+      "name": "Toast",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "A receipt slip printed at the foot of the page: ink frame on the sheet, Narrow uppercase message, an underlined carbon undo. No icon set, no colour coding beyond the ledger's one rule.",
+      "html": "<div class=\"ds-toast\"><div><p class=\"ds-toast-msg\">Entry recorded</p><p class=\"ds-toast-desc\">Weekly shop · 54.20 paid out</p><button class=\"ds-toast-action\">Undo</button></div></div>",
+      "css": ".ds-toast { display: flex; gap: 12px; width: 320px; padding: 10px 12px; border: 1px solid var(--ink, #12161c); border-radius: 0; background: var(--sheet, #fbfcf9); font-family: Archivo, sans-serif; } .ds-toast-msg { margin: 0; font-family: 'Archivo Narrow', Archivo, sans-serif; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink, #12161c); } .ds-toast-desc { margin: 2px 0 0; font-size: 12px; line-height: 1.35; color: var(--ink-2, #4a5560); } .ds-toast-action { margin-top: 6px; padding: 0; border: none; background: none; font-family: 'Archivo Narrow', Archivo, sans-serif; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--carbon, #2f3b8c); text-decoration: underline; text-underline-offset: 4px; cursor: pointer; } .ds-toast-action:hover { color: var(--ink, #12161c); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Passbook",
+    "overview": "This is an account book, not a dashboard. The governing fiction is a bank passbook printed on cheque safety-tint stock: pale green paper, a whiter sheet laid on it, hairline rules dividing columns, and two inks doing all the work — the ledger's black and the carbon-copy blue of a committed entry. Every figure is money in a column, so no figure may ever shift; every entry carries the balance it left behind, so \"how am I doing\" is answered by the register's own construction rather than by a row of stat cards.\n\nThe system's discipline is subtractive. It refuses the KPI-card row, the donut, the tinted status pill, and the coloured category chip — not as taste, but because each of them spends colour on identity, and in this world colour is reserved for one meaning: trouble. Income and expense are separated by column position, the way a real register separates them; that frees red to mean exactly one thing everywhere it appears. The rest of the interface is structure: ruled rows, printed column heads, stamped reference codes. Density is high and deliberate, because a book of accounts is meant to be read down, not scanned across.\n\nDark mode is not an inversion. It is the carbon copy underneath the top sheet: the same document, printed through, warmer greys and a lighter blue ink. The two themes are two sides of one artefact, and the theme control names them that way (\"Sheet\", \"Carbon\").",
+    "keyCharacteristics": [
+      "Cheque safety-tint stock with a whiter sheet laid on it; no gradients, no glass, no tint fills except the two semantic tints.",
+      "Two inks: ledger black for structure and figures, carbon blue for the committed and the interactive.",
+      "Ledger red spent on one meaning only — money you do not have, or a limit you have passed.",
+      "Hairline rules and ruled columns instead of cards; square corners everywhere; zero shadows.",
+      "Archivo for reading, Archivo Narrow stamped in uppercase for heads and controls, Courier Prime for the machine-stamped reference layer.",
+      "Tabular lining figures in every table, right-aligned on a shared decimal.",
+      "One display step, one authored motion moment, one global instrument (the elapsed rule)."
+    ],
+    "rules": [
+      { "name": "The One Meaning Rule", "body": "Colour carries exactly one meaning in this app: trouble. Direction of money is read from column position, never from green-versus-red. If a new surface needs to distinguish income from expense, it gets another column or a ruled tag — not a hue.", "section": "colors" },
+      { "name": "The Two Inks Rule", "body": "Every mark is ledger black or carbon blue. Ink is structure, figures and the printed page; carbon is what the user has committed to or is standing on. A third accent has no role to fill and must not be introduced.", "section": "colors" },
+      { "name": "The Colour-As-Subject Rule", "body": "Category colour appears in exactly two places: the categories index, where the colour is the thing being edited, and a chart where colour is the only encoding available. It is deliberately absent from the register, the analysis table and the budget bars.", "section": "colors" },
+      { "name": "The Carbon Copy Rule", "body": "Dark mode is the same document printed through, not an inversion. Dark tokens keep the light theme's roles intact — stock stays below sheet, rule stays below rule-strong, carbon stays the committed ink.", "section": "colors" },
+      { "name": "The Tabular Rule", "body": "font-variant-numeric: tabular-nums lining-nums applies to every table and every .figure at the base layer. A figure that shifts as it updates has broken the column, and the column is the whole argument of this design.", "section": "typography" },
+      { "name": "The One Display Step Rule", "body": "There is exactly one display size and exactly one display figure per page. If a second figure wants to be big, the page has two subjects and one of them is wrong.", "section": "typography" },
+      { "name": "The Stamped Head Rule", "body": "Headings, buttons, nav and column heads are always Archivo Narrow, uppercase, letterspaced. Sentence-case headings and body-weight buttons do not exist in this world.", "section": "typography" },
+      { "name": "The No-Kicker Rule", "body": "No kicker or eyebrow above a heading, on any navigation surface. A .col-head above a figure is native to the world and correct — a decorative label above a heading is not the same device and is not permitted.", "section": "typography" },
+      { "name": "The Ruled Row Rule", "body": "Structure comes from hairlines between rows, not from gaps between boxes. A list is a sequence of bordered rows inside one sheet; it is never a stack of separated tiles.", "section": "layout" },
+      { "name": "The Column-Position Rule", "body": "In any table of money, direction is encoded by which column the figure lands in. Below sm, where the columns collapse into one, direction moves onto a ruled stamp tag (TFR, IN) — a small printed object on the sheet, never a colour and never a whisper.", "section": "layout" },
+      { "name": "The One Navigation Rule", "body": "There is exactly one navigation at every width: sidebar at lg and above, tab bar below it. No band where the app has two, none where it has none.", "section": "layout" },
+      { "name": "The Flat Book Rule", "body": "No box-shadow, ever, in any state. Something that needs to read as \"on top\" gets border-ink; something that needs to read as \"different ground\" gets sheet-alt.", "section": "elevation" },
+      { "name": "The Total Rule", "body": "A figure that closes an arithmetic is separated by a 2px ink top border. That heavier rule is reserved for totals (and, in red, for the irreversible block); it must not be used for ordinary emphasis.", "section": "elevation" },
+      { "name": "The Square Corner Rule", "body": "Radius 0 on everything. If a component needs to look softer, it is the wrong component for this world.", "section": "shapes" },
+      { "name": "The Hatch Rule", "body": "45° hatching means \"incomplete or past the boundary\" and nothing else. A partial period is hatched rather than drawn solid, because a partial bar flush beside complete ones is the most misleading mark this app could print.", "section": "shapes" },
+      { "name": "The One Authored Moment Rule", "body": "entry-strike is the system's only expressive animation, and it belongs to recording an entry — the product's hot path. Everything else either fades in or does not move. A second authored moment would make the first one ordinary.", "section": "components" }
+    ],
+    "dos": [
+      "Do put every money figure through Amount, and every table under tabular-nums lining-nums. Right-align on a shared decimal.",
+      "Do encode direction with column position, and give a collapsed mobile column a ruled .stamp tag (TFR, IN) instead of a colour.",
+      "Do build new surfaces from Sheet + ruled rows: one hairline between rows, edge-to-edge, the sheet supplying horizontal padding.",
+      "Do reserve --red for money you do not have or a limit already passed, and pair it with a written word or the DR marker so meaning never rests on hue.",
+      "Do write the verdict out in words next to any bar or gauge (\"£40 within pace\"), so the reader never has to compute a judgement from a colour.",
+      "Do hatch anything that is incomplete or past its boundary, at 45°.",
+      "Do keep one display figure per page, and let the elapsed rule in the statement head be the only global instrument.",
+      "Do state the period's honesty in plain 11px prose under a summary when a comparison has been cut to a like-for-like day range.",
+      "Do frame anything laid over the book with border-ink, and let hover change ground (sheet-alt) or border weight."
+    ],
+    "donts": [
+      "Don't add a shadow, a radius, or a gradient. Not on hover, not on a dialog, not \"just a subtle one\".",
+      "Don't nest a Sheet inside a Sheet, or reintroduce the card — a row of stat tiles is the specific thing the summary block exists to replace.",
+      "Don't use green-for-income / red-for-expense, or any second accent colour. Colour means trouble; that is its whole job.",
+      "Don't print category colour in the register, the analysis table, or a budget bar. Its only homes are the categories index and a chart where colour is the sole encoding.",
+      "Don't put a kicker or eyebrow above a heading in a navigation surface. (A .col-head above a figure is a column head, and is correct.)",
+      "Don't set a heading, button or nav label in body case or body weight — those are always Archivo Narrow, uppercase, letterspaced.",
+      "Don't introduce a second display size, or a second big figure on a page.",
+      "Don't author a second signature animation; extend entry-strike's meaning instead, or use animate-in.",
+      "Don't draw a partial period flush beside complete ones, or clamp an overspent bar at 100%. Both flatter the user with an artefact of timing.",
+      "Don't reveal controls only on hover — a touch device has no hover to reveal them with."
+    ]
+  }
+}

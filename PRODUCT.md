@@ -74,4 +74,6 @@ No pre-existing brand, logo, palette, or typeface. Name: **Budget Tracker**. Voi
 
 ## Accessibility & Inclusion
 
-WCAG 2.1 AA is the target. Established requirements: text contrast at 4.5:1 (the current `--fg-subtle` token fails at 3.03:1 light / 3.91:1 dark and must be fixed); every flow completable by keyboard; visible focus; no meaning carried by colour alone — which the current budget bars violate by using category colour for identity and semantic colour for status in the same element.
+WCAG 2.1 AA is the target. Established requirements: text contrast at 4.5:1; every flow completable by keyboard; visible focus; and no meaning carried by colour alone.
+
+All three were outstanding defects before the redesign and are now discharged: the muted-text token (then `--fg-subtle`, now `--ink-3`) measured 3.03:1 light and 3.91:1 dark, and measures ~5.4:1 light and ~6.6:1 dark; and colour no longer carries identity and status in the same element, because category colour is absent from the register and from budget bars while red is reserved for trouble alone.
