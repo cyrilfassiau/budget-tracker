@@ -43,8 +43,8 @@ export function SpendingDonut({ data, total, maxSlices = 7 }: SpendingDonutProps
   const active = activeIndex !== null ? slices[activeIndex] : null
 
   return (
-    <div className="flex flex-col items-center gap-4 sm:flex-row sm:gap-6">
-      <div className="relative size-48 shrink-0">
+    <div className="flex flex-col items-center gap-5">
+      <div className="relative aspect-square w-full max-w-[13rem] shrink-0">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
@@ -59,8 +59,9 @@ export function SpendingDonut({ data, total, maxSlices = 7 }: SpendingDonutProps
               endAngle={-270}
               onMouseEnter={(_, index) => setActiveIndex(index)}
               onMouseLeave={() => setActiveIndex(null)}
-              isAnimationActive
-              animationDuration={520}
+              // Recharts' pie sweep animation does not settle reliably under
+              // React 19's StrictMode double-render, leaving slivers on screen.
+              isAnimationActive={false}
             >
               {slices.map((entry, index) => (
                 <Cell
