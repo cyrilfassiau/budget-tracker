@@ -1,48 +1,41 @@
-import { AlertCircle, CheckCircle2, Info, X } from 'lucide-react'
+import { X } from 'lucide-react'
 import { useEffect } from 'react'
 import { createPortal } from 'react-dom'
 
 import { cn } from '@/lib/cn'
-import {
-  TOAST_DURATION,
-  useToastStore,
-  type Toast as ToastModel,
-} from '@/store/useToastStore'
+import { TOAST_DURATION, useToastStore, type Toast as ToastModel } from '@/store/useToastStore'
 
-const ICONS = {
-  success: CheckCircle2,
-  error: AlertCircle,
-  info: Info,
-}
-
-const TONES = {
-  success: 'text-income',
-  error: 'text-expense',
-  info: 'text-accent',
-}
-
+/**
+ * A receipt slip printed at the foot of the page. No icon set, no colour
+ * coding beyond the ledger's one rule: trouble is red.
+ */
 function Toast({ toast }: { toast: ToastModel }) {
   const dismiss = useToastStore((state) => state.dismiss)
-  const Icon = ICONS[toast.variant]
 
   useEffect(() => {
-    const timer = setTimeout(() => dismiss(toast.id), TOAST_DURATION)
+    // An undo offer must outlast a glance at the screen.
+    const timer = setTimeout(() => dismiss(toast.id), toast.action ? TOAST_DURATION * 2 : TOAST_DURATION)
     return () => clearTimeout(timer)
-  }, [toast.id, dismiss])
+  }, [toast.id, toast.action, dismiss])
 
   return (
     <div
       className={cn(
-        'pointer-events-auto flex w-full items-start gap-3 animate-toast-in',
-        'rounded-xl border border-border-base bg-card p-3 pr-2 shadow-lg',
+        'pointer-events-auto flex w-full items-start gap-3 animate-in border bg-sheet px-3 py-2.5',
+        toast.variant === 'error' ? 'border-red' : 'border-ink',
       )}
     >
-      <Icon className={cn('mt-0.5 size-4.5 shrink-0', TONES[toast.variant])} aria-hidden="true" />
-
       <div className="min-w-0 flex-1">
-        <p className="text-[13px] font-medium text-fg">{toast.message}</p>
+        <p
+          className={cn(
+            'font-narrow text-[12px] font-semibold uppercase tracking-[0.07em]',
+            toast.variant === 'error' ? 'text-red' : 'text-ink',
+          )}
+        >
+          {toast.message}
+        </p>
         {toast.description ? (
-          <p className="mt-0.5 text-xs text-fg-muted">{toast.description}</p>
+          <p className="mt-0.5 text-[12px] leading-snug text-ink-2">{toast.description}</p>
         ) : null}
         {toast.action ? (
           <button
@@ -51,7 +44,7 @@ function Toast({ toast }: { toast: ToastModel }) {
               toast.action?.onClick()
               dismiss(toast.id)
             }}
-            className="mt-1.5 text-xs font-semibold text-accent hover:underline"
+            className="mt-1.5 font-narrow text-[12px] font-semibold uppercase tracking-[0.07em] text-carbon underline underline-offset-4 hover:text-ink"
           >
             {toast.action.label}
           </button>
@@ -61,8 +54,8 @@ function Toast({ toast }: { toast: ToastModel }) {
       <button
         type="button"
         onClick={() => dismiss(toast.id)}
-        aria-label="Dismiss notification"
-        className="rounded-md p-1 text-fg-subtle transition-colors hover:bg-card-muted hover:text-fg"
+        aria-label="Dismiss"
+        className="-mr-1 -mt-0.5 p-1 text-ink-3 transition-colors hover:bg-sheet-alt hover:text-ink"
       >
         <X className="size-3.5" />
       </button>
@@ -70,7 +63,6 @@ function Toast({ toast }: { toast: ToastModel }) {
   )
 }
 
-/** Live region so screen readers announce create/update/delete results. */
 export function Toaster() {
   const toasts = useToastStore((state) => state.toasts)
 
@@ -79,10 +71,7 @@ export function Toaster() {
       role="status"
       aria-live="polite"
       aria-atomic="false"
-      className={cn(
-        'pointer-events-none fixed z-[60] flex w-[calc(100%-2rem)] flex-col gap-2',
-        'bottom-4 left-4 sm:left-auto sm:right-4 sm:w-80',
-      )}
+      className="pointer-events-none fixed bottom-3 left-3 z-[60] flex w-[calc(100%-1.5rem)] flex-col gap-2 sm:left-auto sm:right-3 sm:w-80"
     >
       {toasts.map((toast) => (
         <Toast key={toast.id} toast={toast} />

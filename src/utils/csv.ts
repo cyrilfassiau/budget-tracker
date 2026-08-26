@@ -119,8 +119,8 @@ export function fromCSV(text: string, categories: Category[]): ImportResult {
       errors.push(`Line ${line}: "${date}" is not a valid YYYY-MM-DD date.`)
       return
     }
-    if (rawType !== 'income' && rawType !== 'expense') {
-      errors.push(`Line ${line}: type must be "income" or "expense".`)
+    if (rawType !== 'income' && rawType !== 'expense' && rawType !== 'transfer') {
+      errors.push(`Line ${line}: type must be "income", "expense" or "transfer".`)
       return
     }
     if (amount === null || amount <= 0) {

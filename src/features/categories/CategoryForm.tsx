@@ -1,7 +1,7 @@
 import { Check } from 'lucide-react'
 import { useMemo, useState } from 'react'
 
-import { Button, Field, Input, Modal, SegmentedControl } from '@/components/ui'
+import { Button, Field, Input, Modal, TypePicker } from '@/components/ui'
 import { CATEGORY_COLORS } from '@/lib/constants'
 import { cn } from '@/lib/cn'
 import { ICON_KEYS, getCategoryIcon } from '@/lib/icons'
@@ -91,7 +91,7 @@ export function CategoryForm({ open, category, onClose }: CategoryFormProps) {
       open={open}
       onClose={onClose}
       title={category ? 'Edit category' : 'New category'}
-      description="Colour and icon are used across charts and lists."
+      description="The colour marks this category in the index."
       footer={
         <>
           <Button variant="ghost" onClick={onClose} disabled={submitting}>
@@ -107,14 +107,11 @@ export function CategoryForm({ open, category, onClose }: CategoryFormProps) {
         <div className="flex items-center gap-3">
           <span
             aria-hidden="true"
-            className="flex size-12 shrink-0 items-center justify-center rounded-2xl transition-colors"
-            style={{
-              backgroundColor: `color-mix(in srgb, ${values.color} 16%, transparent)`,
-              color: values.color,
-            }}
+            className="flex size-10 shrink-0 items-center justify-center border border-rule-strong transition-colors"
+            style={{ backgroundColor: values.color, color: '#fff' }}
           >
             {/* oxlint-disable-next-line react/static-components */}
-            <PreviewIcon className="size-5" strokeWidth={2.2} />
+            <PreviewIcon className="size-4" strokeWidth={2} />
           </span>
 
           <Field label="Name" error={errors.name} required className="flex-1">
@@ -135,22 +132,22 @@ export function CategoryForm({ open, category, onClose }: CategoryFormProps) {
 
         <Field label="Used for">
           {() => (
-            <SegmentedControl<CategoryKind>
+            <TypePicker<CategoryKind>
               label="Category applies to"
-              size="sm"
               value={values.kind}
               onChange={(kind) => setValues({ ...values, kind })}
               options={[
-                { value: 'expense', label: 'Expenses' },
-                { value: 'income', label: 'Income' },
-                { value: 'both', label: 'Both' },
+                { value: 'expense', label: 'Out' },
+                { value: 'income', label: 'In' },
+                { value: 'transfer', label: 'Transfer' },
+                { value: 'both', label: 'Any' },
               ]}
             />
           )}
         </Field>
 
         <fieldset>
-          <legend className="mb-2 text-[13px] font-medium text-fg">Colour</legend>
+          <legend className="col-head mb-1.5 text-ink-2">Colour</legend>
           <div role="radiogroup" aria-label="Category colour" className="flex flex-wrap gap-2">
             {CATEGORY_COLORS.map((color) => (
               <button
@@ -161,14 +158,10 @@ export function CategoryForm({ open, category, onClose }: CategoryFormProps) {
                 aria-label={`Colour ${color}`}
                 onClick={() => setValues({ ...values, color })}
                 className={cn(
-                  'flex size-8 items-center justify-center rounded-xl transition-transform',
-                  'hover:scale-110',
-                  values.color === color && 'ring-2 ring-offset-2 ring-offset-[var(--card)]',
+                  'flex size-7 items-center justify-center border transition-colors',
+                  values.color === color ? 'border-ink' : 'border-rule',
                 )}
-                style={{
-                  backgroundColor: color,
-                  ...(values.color === color ? { '--tw-ring-color': color } as React.CSSProperties : {}),
-                }}
+                style={{ backgroundColor: color }}
               >
                 {values.color === color ? (
                   <Check className="size-4 text-white" strokeWidth={3} />
@@ -177,18 +170,18 @@ export function CategoryForm({ open, category, onClose }: CategoryFormProps) {
             ))}
           </div>
           {errors.color ? (
-            <p role="alert" className="mt-1.5 text-xs font-medium text-expense">
+            <p role="alert" className="mt-1.5 text-[11px] font-semibold text-red">
               {errors.color}
             </p>
           ) : null}
         </fieldset>
 
         <fieldset>
-          <legend className="mb-2 text-[13px] font-medium text-fg">Icon</legend>
+          <legend className="col-head mb-1.5 text-ink-2">Icon</legend>
           <div
             role="radiogroup"
             aria-label="Category icon"
-            className="grid max-h-40 grid-cols-8 gap-1.5 overflow-y-auto rounded-xl border border-border-base p-2"
+            className="grid max-h-36 grid-cols-8 gap-1 overflow-y-auto border border-rule p-1.5"
           >
             {ICON_KEYS.map((key) => {
               const Icon = getCategoryIcon(key)
@@ -202,10 +195,8 @@ export function CategoryForm({ open, category, onClose }: CategoryFormProps) {
                   aria-label={key}
                   onClick={() => setValues({ ...values, icon: key })}
                   className={cn(
-                    'flex aspect-square items-center justify-center rounded-lg transition-colors',
-                    selected
-                      ? 'bg-accent-soft text-accent'
-                      : 'text-fg-subtle hover:bg-card-muted hover:text-fg',
+                    'flex aspect-square items-center justify-center transition-colors',
+                    selected ? 'bg-ink text-sheet' : 'text-ink-3 hover:bg-sheet-alt hover:text-ink',
                   )}
                 >
                   {/* oxlint-disable-next-line react/static-components */}

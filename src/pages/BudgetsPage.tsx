@@ -1,31 +1,29 @@
-import { CopyPlus, PiggyBank, Plus } from 'lucide-react'
 import { useMemo, useState } from 'react'
 
 import { AppLayout } from '@/components/layout/AppLayout'
-import { MonthPicker } from '@/components/layout/MonthPicker'
+import { PeriodPicker } from '@/components/layout/PeriodPicker'
 import {
-  Badge,
+  Amount,
   Button,
-  Card,
-  CardHeader,
-  CategoryDot,
+  CategoryMark,
   ConfirmDialog,
   EmptyState,
-  ProgressBar,
-  Skeleton,
+  PaceBar,
+  Sheet,
+  SheetHead,
+  SkeletonRows,
 } from '@/components/ui'
 import { BudgetForm } from '@/features/budgets/BudgetForm'
 import { BudgetRow } from '@/features/budgets/BudgetRow'
 import { useIsLoading } from '@/hooks/useAppData'
 import { useBudgetsStore } from '@/store/useBudgetsStore'
 import { useCategoriesStore } from '@/store/useCategoriesStore'
-import { useCurrencyFormat } from '@/store/useSettingsStore'
 import { toMessage, toast } from '@/store/useToastStore'
 import { useTransactionsStore } from '@/store/useTransactionsStore'
 import { useUIStore } from '@/store/useUIStore'
 import { budgetProgress, type BudgetProgress } from '@/utils/calculations'
-import { formatMonthLabel, shiftMonth } from '@/utils/dates'
-import { formatMoney, roundMoney } from '@/utils/money'
+import { formatMonthLabel, monthProgress, shiftMonth } from '@/utils/dates'
+import { formatPercent, roundMoney } from '@/utils/money'
 
 export function BudgetsPage() {
   const month = useUIStore((state) => state.selectedMonth)
@@ -35,10 +33,9 @@ export function BudgetsPage() {
   const categories = useCategoriesStore((state) => state.items)
   const transactions = useTransactionsStore((state) => state.items)
   const loading = useIsLoading()
-  const { currency, locale } = useCurrencyFormat()
 
   const [formOpen, setFormOpen] = useState(false)
-  const [editingCategory, setEditingCategory] = useState<BudgetProgress | null>(null)
+  const [editing, setEditing] = useState<BudgetProgress | null>(null)
   const [pendingDelete, setPendingDelete] = useState<BudgetProgress | null>(null)
   const [copying, setCopying] = useState(false)
 
@@ -58,21 +55,30 @@ export function BudgetsPage() {
   const totals = useMemo(() => {
     const limit = roundMoney(rows.reduce((sum, row) => sum + row.limit, 0))
     const spent = roundMoney(rows.reduce((sum, row) => sum + row.spent, 0))
-    return { limit, spent, remaining: roundMoney(limit - spent), ratio: limit > 0 ? spent / limit : 0 }
+    return { limit, spent, ratio: limit > 0 ? spent / limit : 0 }
   }, [rows])
 
+  const pace = monthProgress(month)
   const overCount = rows.filter((row) => row.status === 'over').length
+  const aheadCount = rows.filter((row) => row.aheadOfSchedule && row.status !== 'over').length
 
   const handleCopy = async () => {
     setCopying(true)
+    const previous = shiftMonth(month, -1)
     try {
-      const previous = shiftMonth(month, -1)
       const count = await copyMonth(previous, month)
-      toast.success(`Copied ${count} budget${count === 1 ? '' : 's'}`, {
-        description: `From ${formatMonthLabel(previous)}.`,
-      })
+      // A no-op is not a success: say plainly that nothing was there to copy.
+      if (count === 0) {
+        toast.info('Nothing to copy', {
+          description: `${formatMonthLabel(previous)} has no limits set.`,
+        })
+      } else {
+        toast.success(`Copied ${count} ${count === 1 ? 'limit' : 'limits'}`, {
+          description: `From ${formatMonthLabel(previous)}.`,
+        })
+      }
     } catch (error) {
-      toast.error(toMessage(error, 'Could not copy last month.'))
+      toast.error(toMessage(error, 'Could not copy the previous period.'))
     } finally {
       setCopying(false)
     }
@@ -84,148 +90,149 @@ export function BudgetsPage() {
     try {
       await removeBudget(target.budgetId)
       setPendingDelete(null)
-      toast.success(`Budget for "${target.name}" removed`)
+      toast.success(`Limit removed for ${target.name}`)
     } catch (error) {
-      toast.error(toMessage(error, 'Could not remove the budget.'))
+      toast.error(toMessage(error, 'Could not remove the limit.'))
     }
-  }
-
-  const openCreate = () => {
-    setEditingCategory(null)
-    setFormOpen(true)
-  }
-
-  const openEdit = (budget: BudgetProgress) => {
-    setEditingCategory(budget)
-    setFormOpen(true)
   }
 
   return (
     <AppLayout
       title="Budgets"
-      description={`Monthly limits for ${formatMonthLabel(month)}`}
       actions={
-        <div className="flex items-center gap-2">
-          <MonthPicker />
-          <Button size="sm" variant="secondary" icon={<Plus className="size-3.5" />} onClick={openCreate}>
-            <span className="hidden sm:inline">Set budget</span>
+        <>
+          <PeriodPicker />
+          <Button
+            variant="secondary"
+            onClick={() => {
+              setEditing(null)
+              setFormOpen(true)
+            }}
+          >
+            Set limit
           </Button>
-        </div>
+        </>
       }
     >
       {loading ? (
-        <div className="flex flex-col gap-4">
-          <Skeleton className="h-28 w-full rounded-2xl" />
-          <Skeleton className="h-80 w-full rounded-2xl" />
-        </div>
+        <Sheet>
+          <SkeletonRows rows={7} />
+        </Sheet>
       ) : (
         <div className="flex animate-in flex-col gap-4">
-          <Card>
-            <div className="flex flex-wrap items-end justify-between gap-4">
-              <div>
-                <p className="text-[13px] font-medium text-fg-muted">Budgeted this month</p>
-                <p className="tabular mt-1 text-2xl font-semibold tracking-tight text-fg">
-                  {formatMoney(totals.spent, currency, locale)}
-                  <span className="text-base font-normal text-fg-subtle">
-                    {' / '}
-                    {formatMoney(totals.limit, currency, locale)}
+          <Sheet>
+            <SheetHead
+              title={`Limits for ${formatMonthLabel(month)}`}
+              meta={
+                overCount > 0
+                  ? `${overCount} over the limit`
+                  : aheadCount > 0
+                    ? `${aheadCount} ahead of pace`
+                    : rows.length > 0
+                      ? 'All on schedule'
+                      : undefined
+              }
+              action={
+                <Button variant="ghost" size="sm" loading={copying} onClick={handleCopy}>
+                  Copy previous
+                </Button>
+              }
+            />
+
+            {rows.length > 0 ? (
+              <div className="border-b border-rule px-4 py-3 sm:px-5">
+                <div className="flex items-baseline justify-between gap-3">
+                  <p className="text-[13px] text-ink-2">Total against limits</p>
+                  <p className="text-[15px] font-semibold text-ink">
+                    <Amount value={totals.spent} plain />
+                    <span className="font-normal text-ink-3">
+                      {' of '}
+                      <Amount value={totals.limit} plain />
+                    </span>
+                  </p>
+                </div>
+                <PaceBar
+                  className="mt-2"
+                  value={totals.ratio}
+                  pace={pace}
+                  label="All budgets"
+                  over={totals.ratio > 1}
+                  aheadOfSchedule={totals.ratio > pace + 0.02}
+                />
+                <p className="mt-1 flex items-baseline justify-between gap-2 text-[11px] text-ink-3">
+                  <span>
+                    The tick marks how much of the period has passed
+                    {pace < 1 ? ` — ${formatPercent(pace)} so far` : ''}.
                   </span>
+                  <span className="figure shrink-0">{formatPercent(totals.ratio)} spent</span>
                 </p>
               </div>
-
-              <div className="flex items-center gap-2">
-                {overCount > 0 ? (
-                  <Badge tone="expense">
-                    {overCount} categor{overCount === 1 ? 'y' : 'ies'} over
-                  </Badge>
-                ) : totals.limit > 0 ? (
-                  <Badge tone="income">
-                    {formatMoney(Math.max(0, totals.remaining), currency, locale)} left
-                  </Badge>
-                ) : null}
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  icon={<CopyPlus className="size-3.5" />}
-                  loading={copying}
-                  onClick={handleCopy}
-                >
-                  Copy last month
-                </Button>
-              </div>
-            </div>
-
-            <ProgressBar
-              value={totals.ratio}
-              label="Total budget"
-              tone={totals.ratio > 1 ? 'over' : totals.ratio >= 0.8 ? 'warning' : 'default'}
-              className="mt-4"
-            />
-          </Card>
-
-          <Card>
-            <CardHeader
-              title="By category"
-              description={`${rows.length} budget${rows.length === 1 ? '' : 's'} set`}
-            />
+            ) : null}
 
             {rows.length === 0 ? (
               <EmptyState
-                icon={<PiggyBank className="size-5" />}
-                title={`No budgets for ${formatMonthLabel(month)}`}
-                description="Set a limit per category to see spending tracked against a plan, with a warning before you go over."
+                title={`No limits for ${formatMonthLabel(month)}`}
+                description="A limit is what turns spending into something you can be ahead of, or behind."
                 action={
-                  <div className="flex flex-wrap justify-center gap-2">
-                    <Button variant="primary" onClick={openCreate}>
-                      Set your first budget
+                  <>
+                    <Button
+                      variant="primary"
+                      onClick={() => {
+                        setEditing(null)
+                        setFormOpen(true)
+                      }}
+                    >
+                      Set the first limit
                     </Button>
                     <Button variant="secondary" loading={copying} onClick={handleCopy}>
-                      Copy last month
+                      Copy previous period
                     </Button>
-                  </div>
+                  </>
                 }
               />
             ) : (
-              <ul className="mt-1 divide-y divide-[var(--border)]">
+              <ul>
                 {rows.map((row) => (
                   <BudgetRow
                     key={row.categoryId}
                     budget={row}
-                    onEdit={openEdit}
+                    onEdit={(budget) => {
+                      setEditing(budget)
+                      setFormOpen(true)
+                    }}
                     onDelete={setPendingDelete}
                   />
                 ))}
               </ul>
             )}
-          </Card>
+          </Sheet>
 
           {unbudgeted.length > 0 ? (
-            <Card>
-              <CardHeader
-                title="Not budgeted"
-                description="Categories without a limit this month"
-              />
-              <ul className="mt-3 flex flex-wrap gap-2">
+            <Sheet>
+              <SheetHead title="Without a limit" meta="Categories not budgeted this period" />
+              <ul className="flex flex-wrap gap-1.5 p-3 sm:p-4">
                 {unbudgeted.map((row) => (
                   <li key={row.categoryId}>
                     <button
                       type="button"
-                      onClick={() => openEdit({ ...row, limit: 0 })}
-                      className="flex items-center gap-2 rounded-xl border border-border-base bg-card px-2.5 py-1.5 text-[13px] text-fg-muted transition-colors hover:border-accent hover:text-fg"
+                      onClick={() => {
+                        setEditing({ ...row, limit: 0 })
+                        setFormOpen(true)
+                      }}
+                      className="flex items-center gap-1.5 border border-rule bg-sheet px-2 py-1 text-[12px] text-ink-2 transition-colors hover:border-ink hover:text-ink"
                     >
-                      <CategoryDot color={row.color} icon={row.icon} size="sm" />
+                      <CategoryMark icon={row.icon} size="sm" />
                       {row.name}
                       {row.spent > 0 ? (
-                        <span className="tabular text-xs text-fg-subtle">
-                          {formatMoney(row.spent, currency, locale, { maximumFractionDigits: 0 })}
+                        <span className="text-ink-3">
+                          <Amount value={row.spent} plain whole />
                         </span>
                       ) : null}
-                      <Plus className="size-3.5 text-fg-subtle" />
                     </button>
                   </li>
                 ))}
               </ul>
-            </Card>
+            </Sheet>
           ) : null}
         </div>
       )}
@@ -233,16 +240,16 @@ export function BudgetsPage() {
       <BudgetForm
         open={formOpen}
         month={month}
-        categoryId={editingCategory?.categoryId ?? null}
-        currentLimit={editingCategory && editingCategory.limit > 0 ? editingCategory.limit : null}
+        categoryId={editing?.categoryId ?? null}
+        currentLimit={editing && editing.limit > 0 ? editing.limit : null}
         onClose={() => setFormOpen(false)}
       />
 
       <ConfirmDialog
         open={pendingDelete !== null}
-        title={`Remove the budget for "${pendingDelete?.name ?? ''}"?`}
-        message="The limit is removed for this month only. Your transactions are not affected."
-        confirmLabel="Remove budget"
+        title={`Remove the limit for ${pendingDelete?.name ?? ''}?`}
+        message="The limit is removed for this period only. Your entries are untouched."
+        confirmLabel="Remove limit"
         onConfirm={handleDelete}
         onCancel={() => setPendingDelete(null)}
       />

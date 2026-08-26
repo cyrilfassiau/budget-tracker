@@ -6,7 +6,7 @@ import { controlClasses } from './controlClasses'
 
 export function Textarea({
   className,
-  rows = 3,
+  rows = 2,
   ...props
 }: TextareaHTMLAttributes<HTMLTextAreaElement>) {
   return <textarea rows={rows} className={cn(controlClasses, 'resize-y', className)} {...props} />

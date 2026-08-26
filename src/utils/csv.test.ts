@@ -50,6 +50,15 @@ describe('fromCSV', () => {
     })
   })
 
+  it('accepts transfers alongside income and expenses', () => {
+    const { transactions, errors } = fromCSV(
+      `${header}\n2026-03-01,transfer,Groceries,10,moved to savings`,
+      categories,
+    )
+    expect(errors).toEqual([])
+    expect(transactions[0]?.type).toBe('transfer')
+  })
+
   it('maps unknown category names to Uncategorized', () => {
     const { transactions } = fromCSV(`${header}\n2026-03-01,expense,Nonsense,10,x`, categories)
     expect(transactions[0]?.categoryId).toBe(UNCATEGORIZED_ID)
@@ -66,7 +75,7 @@ describe('fromCSV', () => {
       header,
       '2026-03-01,expense,Groceries,10,ok',
       'not-a-date,expense,Groceries,10,bad date',
-      '2026-03-02,transfer,Groceries,10,bad type',
+      '2026-03-02,refund,Groceries,10,bad type',
       '2026-03-03,expense,Groceries,0,bad amount',
     ].join('\n')
 

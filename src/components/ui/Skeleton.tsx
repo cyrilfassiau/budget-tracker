@@ -1,35 +1,26 @@
 import { cn } from '@/lib/cn'
 
-interface SkeletonProps {
-  className?: string
+export function Skeleton({ className }: { className?: string }) {
+  return <div aria-hidden="true" className={cn('shimmer', className)} />
 }
 
-/** Placeholder block used while a service call is in flight. */
-export function Skeleton({ className }: SkeletonProps) {
-  return <div aria-hidden="true" className={cn('shimmer rounded-lg', className)} />
-}
-
-export function SkeletonText({ lines = 3, className }: { lines?: number; className?: string }) {
+/** Ruled rows waiting for their figures — the shape the register will take. */
+export function SkeletonRows({ rows = 6, className }: { rows?: number; className?: string }) {
   return (
-    <div className={cn('flex flex-col gap-2', className)}>
-      {Array.from({ length: lines }).map((_, index) => (
-        <Skeleton
-          key={index}
-          className={cn('h-3', index === lines - 1 ? 'w-2/3' : 'w-full')}
-        />
+    <div className={cn('divide-y divide-[var(--rule)]', className)}>
+      {Array.from({ length: rows }).map((_, index) => (
+        <div key={index} className="flex items-center gap-3 px-4 py-2.5 sm:px-5">
+          <Skeleton className="h-2.5 w-14" />
+          <Skeleton className="h-2.5 flex-1" />
+          <Skeleton className="h-2.5 w-16" />
+          <Skeleton className="hidden h-2.5 w-20 sm:block" />
+        </div>
       ))}
     </div>
   )
 }
 
-/** Wraps a loading region so assistive tech is told something is coming. */
-export function LoadingRegion({
-  label,
-  children,
-}: {
-  label: string
-  children: React.ReactNode
-}) {
+export function LoadingRegion({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div role="status" aria-busy="true" aria-label={label}>
       {children}

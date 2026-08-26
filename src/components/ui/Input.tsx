@@ -5,29 +5,28 @@ import { cn } from '@/lib/cn'
 import { controlClasses } from './controlClasses'
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
-  /** Rendered inside the field on the left (currency symbol, search icon). */
   leading?: ReactNode
   trailing?: ReactNode
 }
 
 export function Input({ className, leading, trailing, ...props }: InputProps) {
   if (!leading && !trailing) {
-    return <input className={cn(controlClasses, 'h-10', className)} {...props} />
+    return <input className={cn(controlClasses, 'h-9', className)} {...props} />
   }
 
   return (
     <div className="relative flex items-center">
       {leading ? (
-        <span className="pointer-events-none absolute left-3 flex items-center text-fg-subtle">
+        <span className="pointer-events-none absolute left-2.5 flex items-center text-ink-3">
           {leading}
         </span>
       ) : null}
       <input
-        className={cn(controlClasses, 'h-10', leading && 'pl-9', trailing && 'pr-9', className)}
+        className={cn(controlClasses, 'h-9', leading && 'pl-7', trailing && 'pr-8', className)}
         {...props}
       />
       {trailing ? (
-        <span className="absolute right-3 flex items-center text-fg-subtle">{trailing}</span>
+        <span className="absolute right-2.5 flex items-center text-ink-3">{trailing}</span>
       ) : null}
     </div>
   )

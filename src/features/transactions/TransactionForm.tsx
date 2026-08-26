@@ -1,23 +1,15 @@
-import { ArrowDownLeft, ArrowUpRight } from 'lucide-react'
 import { useMemo, useState } from 'react'
 
-import {
-  Button,
-  Field,
-  Input,
-  Modal,
-  SegmentedControl,
-  Select,
-  Textarea,
-} from '@/components/ui'
+import { Button, Field, Input, Modal, Select, Textarea, TypePicker } from '@/components/ui'
 import { CURRENCIES } from '@/lib/constants'
 import { useCategoriesStore } from '@/store/useCategoriesStore'
 import { useSettingsStore } from '@/store/useSettingsStore'
 import { toMessage, toast } from '@/store/useToastStore'
 import { useTransactionModal } from '@/store/useTransactionModal'
 import { useTransactionsStore } from '@/store/useTransactionsStore'
+import { useUIStore } from '@/store/useUIStore'
 import type { TransactionType } from '@/types'
-import { toDateKey } from '@/utils/dates'
+import { currentMonthKey, monthBounds, toDateKey } from '@/utils/dates'
 import {
   MAX_NOTE_LENGTH,
   hasErrors,
@@ -27,31 +19,54 @@ import {
   type TransactionFormValues,
 } from '@/utils/validation'
 
-function emptyValues(overrides: Partial<TransactionFormValues> = {}): TransactionFormValues {
+/**
+ * A new entry lands in the period the user is looking at.
+ *
+ * Defaulting to today looks harmless until someone opens an empty March, is
+ * told to add an entry, does exactly that, and watches March stay empty.
+ */
+function defaultDateFor(month: string): string {
+  const today = new Date()
+  if (month === currentMonthKey(today)) return toDateKey(today)
+  const { from, to } = monthBounds(month)
+  return to < toDateKey(today) ? to : from
+}
+
+function emptyValues(month: string, overrides: Partial<TransactionFormValues> = {}) {
   return {
     amount: '',
-    type: 'expense',
+    type: 'expense' as TransactionType,
     categoryId: '',
-    date: toDateKey(new Date()),
+    date: defaultDateFor(month),
     note: '',
     ...overrides,
   }
 }
 
+const TYPE_OPTIONS = [
+  { value: 'expense' as const, label: 'Paid out', hint: 'Money leaving your accounts' },
+  { value: 'income' as const, label: 'Paid in', hint: 'Money arriving' },
+  {
+    value: 'transfer' as const,
+    label: 'Transfer',
+    hint: 'Between your own accounts — counts as neither',
+  },
+]
+
 /**
- * Add/edit dialog. Validation runs on submit, then live per-field once a field
- * has been touched — errors that appear while typing the first character are
- * the fastest way to make a form feel hostile.
+ * The entry slip. Validation runs on submit, then live per field once that
+ * field has been touched, so no error appears while typing a first character.
  */
 export function TransactionForm() {
   const { open, editing, defaults, close } = useTransactionModal()
+  const month = useUIStore((state) => state.selectedMonth)
   const categories = useCategoriesStore((state) => state.items)
   const add = useTransactionsStore((state) => state.add)
   const edit = useTransactionsStore((state) => state.edit)
   const allowFutureDates = useSettingsStore((state) => state.allowFutureDates)
   const currency = useSettingsStore((state) => state.currency)
 
-  const [values, setValues] = useState<TransactionFormValues>(emptyValues())
+  const [values, setValues] = useState<TransactionFormValues>(() => emptyValues(month))
   const [errors, setErrors] = useState<FieldErrors<TransactionFormValues>>({})
   const [touched, setTouched] = useState<Record<string, boolean>>({})
   const [submitting, setSubmitting] = useState(false)
@@ -59,14 +74,16 @@ export function TransactionForm() {
   const symbol = CURRENCIES.find((entry) => entry.code === currency)?.symbol ?? currency
 
   const availableCategories = useMemo(
-    () => categories.filter((category) => category.kind === values.type || category.kind === 'both'),
+    () =>
+      categories.filter(
+        (category) => category.kind === values.type || category.kind === 'both',
+      ),
     [categories, values.type],
   )
 
-  // Re-seed the form whenever the dialog opens on a different subject. This is
-  // React's "adjust state during render" pattern: cheaper than an effect,
-  // because the stale values never reach the DOM.
-  const instance = open ? (editing?.id ?? 'new') : 'closed'
+  // Re-seed when the slip opens on a different subject. Adjusting state during
+  // render is cheaper than an effect and the stale values never reach the DOM.
+  const instance = open ? (editing?.id ?? `new:${month}`) : 'closed'
   const [renderedInstance, setRenderedInstance] = useState(instance)
 
   if (instance !== renderedInstance) {
@@ -82,7 +99,7 @@ export function TransactionForm() {
             date: editing.date,
             note: editing.note,
           }
-        : emptyValues(defaults ?? {}),
+        : emptyValues(month, defaults ?? {}),
     )
   }
 
@@ -92,16 +109,13 @@ export function TransactionForm() {
   ) => {
     const next = { ...values, [key]: value }
     setValues(next)
-    if (touched[key]) {
-      setErrors(validateTransaction(next, { allowFutureDates }))
-    }
+    if (touched[key]) setErrors(validateTransaction(next, { allowFutureDates }))
   }
 
-  /** Switching type can strand a category that does not apply to it. */
+  /** Switching type can strand a category that no longer applies to it. */
   const setType = (type: TransactionType) => {
     const stillValid = categories.some(
-      (entry) =>
-        entry.id === values.categoryId && (entry.kind === type || entry.kind === 'both'),
+      (entry) => entry.id === values.categoryId && (entry.kind === type || entry.kind === 'both'),
     )
     setValues({ ...values, type, categoryId: stillValid ? values.categoryId : '' })
   }
@@ -123,14 +137,14 @@ export function TransactionForm() {
       const payload = toTransactionPayload(values)
       if (editing) {
         await edit(editing.id, payload)
-        toast.success('Transaction updated')
+        toast.success('Entry updated')
       } else {
         await add(payload)
-        toast.success('Transaction added')
+        toast.success('Entry recorded')
       }
       close()
     } catch (error) {
-      toast.error(toMessage(error, 'Could not save the transaction.'))
+      toast.error(toMessage(error, 'Could not record the entry.'))
     } finally {
       setSubmitting(false)
     }
@@ -140,69 +154,69 @@ export function TransactionForm() {
     <Modal
       open={open}
       onClose={close}
-      title={editing ? 'Edit transaction' : 'New transaction'}
-      description={
-        editing ? 'Update the details and save your changes.' : 'Record money in or out.'
-      }
+      title={editing ? 'Amend entry' : 'New entry'}
+      description={editing ? undefined : 'Record money in, out, or moved.'}
       footer={
         <>
           <Button variant="ghost" onClick={close} disabled={submitting}>
             Cancel
           </Button>
-          <Button
-            variant="primary"
-            type="submit"
-            form="transaction-form"
-            loading={submitting}
-          >
-            {editing ? 'Save changes' : 'Add transaction'}
+          <Button variant="primary" type="submit" form="entry-form" loading={submitting}>
+            {editing ? 'Save' : 'Record'}
           </Button>
         </>
       }
     >
-      <form id="transaction-form" onSubmit={handleSubmit} className="flex flex-col gap-4" noValidate>
-        <SegmentedControl<TransactionType>
-          label="Transaction type"
+      <form id="entry-form" onSubmit={handleSubmit} className="flex flex-col gap-3.5" noValidate>
+        <TypePicker<TransactionType>
+          label="Entry type"
           value={values.type}
           onChange={setType}
-          options={[
-            { value: 'expense', label: 'Expense', icon: <ArrowUpRight className="size-3.5" /> },
-            { value: 'income', label: 'Income', icon: <ArrowDownLeft className="size-3.5" /> },
-          ]}
+          options={TYPE_OPTIONS}
         />
 
+        {values.type === 'transfer' ? (
+          <p className="border border-rule bg-sheet-alt px-2.5 py-1.5 text-[11px] leading-snug text-ink-2">
+            A transfer moves money between your own accounts. It is left out of paid in, paid out,
+            budgets and the savings rate.
+          </p>
+        ) : null}
+
         <Field label="Amount" error={errors.amount} required>
-          {({ id, describedBy, invalid }) => (
+          {({ id, describedBy, invalid, required }) => (
             <Input
               id={id}
               name="amount"
               inputMode="decimal"
               autoComplete="off"
               placeholder="0.00"
-              leading={<span className="text-[13px] font-medium">{symbol}</span>}
+              required={required}
+              leading={<span className="text-[12px] font-semibold">{symbol}</span>}
               value={values.amount}
               onChange={(event) => setField('amount', event.target.value)}
               onBlur={() => blur('amount')}
               aria-describedby={describedBy}
               aria-invalid={invalid}
+              className="text-[15px] font-semibold"
               data-autofocus
             />
           )}
         </Field>
 
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-3.5 sm:grid-cols-2">
           <Field label="Category" error={errors.categoryId} required>
-            {({ id, describedBy, invalid }) => (
+            {({ id, describedBy, invalid, required }) => (
               <Select
                 id={id}
                 name="categoryId"
+                required={required}
                 value={values.categoryId}
                 onChange={(event) => setField('categoryId', event.target.value)}
                 onBlur={() => blur('categoryId')}
                 aria-describedby={describedBy}
                 aria-invalid={invalid}
               >
-                <option value="">Select a category…</option>
+                <option value="">Choose…</option>
                 {availableCategories.map((category) => (
                   <option key={category.id} value={category.id}>
                     {category.name}
@@ -216,13 +230,14 @@ export function TransactionForm() {
             label="Date"
             error={errors.date}
             required
-            hint={allowFutureDates ? 'Planning mode: future dates allowed.' : undefined}
+            hint={allowFutureDates ? 'Planning is on: future dates allowed.' : undefined}
           >
-            {({ id, describedBy, invalid }) => (
+            {({ id, describedBy, invalid, required }) => (
               <Input
                 id={id}
                 name="date"
                 type="date"
+                required={required}
                 value={values.date}
                 max={allowFutureDates ? undefined : toDateKey(new Date())}
                 onChange={(event) => setField('date', event.target.value)}
@@ -235,16 +250,19 @@ export function TransactionForm() {
         </div>
 
         <Field
-          label="Note"
+          label="Particulars"
           error={errors.note}
-          hint={`${values.note.length}/${MAX_NOTE_LENGTH} characters`}
+          hint={
+            values.note.length > MAX_NOTE_LENGTH - 30
+              ? `${values.note.length} of ${MAX_NOTE_LENGTH} characters`
+              : undefined
+          }
         >
           {({ id, describedBy, invalid }) => (
             <Textarea
               id={id}
               name="note"
-              rows={2}
-              placeholder="What was this for?"
+              placeholder="What was it for?"
               value={values.note}
               onChange={(event) => setField('note', event.target.value)}
               onBlur={() => blur('note')}

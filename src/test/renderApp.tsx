@@ -12,6 +12,7 @@ import { useTransactionModal } from '@/store/useTransactionModal'
 import { useTransactionsStore } from '@/store/useTransactionsStore'
 import { useUIStore } from '@/store/useUIStore'
 import { EMPTY_FILTERS } from '@/utils/filters'
+import { currentMonthKey } from '@/utils/dates'
 import type { Budget, Transaction } from '@/types'
 
 interface SeedOptions {
@@ -42,7 +43,8 @@ export function resetApp({ transactions = [], budgets = [] }: SeedOptions = {}) 
     filters: EMPTY_FILTERS,
     page: 1,
     sort: { field: 'date', direction: 'desc' },
-    sidebarOpen: false,
+    registerScope: 'all',
+    selectedMonth: currentMonthKey(),
   })
 }
 

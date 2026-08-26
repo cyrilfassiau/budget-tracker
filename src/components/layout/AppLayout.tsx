@@ -1,59 +1,36 @@
-import { useEffect, type ReactNode } from 'react'
-import { useLocation } from 'react-router-dom'
+import type { ReactNode } from 'react'
 
 import { Toaster } from '@/components/ui'
 import { TransactionForm } from '@/features/transactions/TransactionForm'
 import { useBootstrap } from '@/hooks/useAppData'
 import { useTheme } from '@/hooks/useTheme'
-import { useTransactionModal } from '@/store/useTransactionModal'
-import { useUIStore } from '@/store/useUIStore'
 
-import { Header } from './Header'
-import { MobileTabBar } from './MobileTabBar'
-import { MobileSidebar, Sidebar } from './Sidebar'
+import { Sidebar, TabBar } from './Nav'
+import { StatementHead } from './StatementHead'
 
 interface AppLayoutProps {
   title: string
-  description?: string
   actions?: ReactNode
+  showPeriod?: boolean
   children: ReactNode
 }
 
-/**
- * Shell shared by every page: navigation, header, the global transaction
- * dialog and the toast region. Pages supply only their own content.
- */
-export function AppLayout({ title, description, actions, children }: AppLayoutProps) {
-  const openNew = useTransactionModal((state) => state.openNew)
-  const setSidebarOpen = useUIStore((state) => state.setSidebarOpen)
-  const { pathname } = useLocation()
-
+export function AppLayout({ title, actions, showPeriod, children }: AppLayoutProps) {
   useBootstrap()
   useTheme()
 
-  // Route changes should never leave the mobile drawer open behind the page.
-  useEffect(() => {
-    setSidebarOpen(false)
-  }, [pathname, setSidebarOpen])
-
   return (
-    <div className="flex min-h-dvh bg-bg">
+    <div className="flex min-h-dvh bg-paper">
       <Sidebar />
-      <MobileSidebar />
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <Header
-          title={title}
-          description={description}
-          actions={actions}
-          onAddTransaction={() => openNew()}
-        />
+        <StatementHead title={title} actions={actions} showPeriod={showPeriod} />
 
-        <main id="main-content" className="flex-1 px-4 py-5 sm:px-6 sm:py-6">
-          <div className="mx-auto w-full max-w-6xl">{children}</div>
+        <main id="main-content" className="flex-1 px-4 py-4 sm:px-6 sm:py-5">
+          <div className="mx-auto w-full max-w-5xl">{children}</div>
         </main>
 
-        <MobileTabBar />
+        <TabBar />
       </div>
 
       <TransactionForm />

@@ -8,6 +8,7 @@ export const STORAGE_KEYS = {
   settings: 'budget-tracker:settings',
   theme: 'budget-tracker:theme',
   seeded: 'budget-tracker:seeded',
+  schema: 'budget-tracker:schema',
 } as const
 
 export const MONTH_FORMAT = 'yyyy-MM'

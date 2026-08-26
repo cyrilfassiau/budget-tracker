@@ -1,8 +1,8 @@
-import { Plus, Tags } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import { useMemo, useState } from 'react'
 
 import { AppLayout } from '@/components/layout/AppLayout'
-import { Button, Card, ConfirmDialog, EmptyState, Skeleton } from '@/components/ui'
+import { Button, ConfirmDialog, EmptyState, Sheet, SheetHead, SkeletonRows } from '@/components/ui'
 import { CategoryCard, type CategoryUsage } from '@/features/categories/CategoryCard'
 import { CategoryForm } from '@/features/categories/CategoryForm'
 import { useIsLoading } from '@/hooks/useAppData'
@@ -79,10 +79,10 @@ export function CategoriesPage() {
       const moved = await removeCategory(target.id)
       await invalidateTransactions()
       setPendingDelete(null)
-      toast.success(`"${target.name}" deleted`, {
+      toast.success(`${target.name} deleted`, {
         description:
           moved > 0
-            ? `${moved} transaction${moved === 1 ? '' : 's'} moved to Uncategorized.`
+            ? `${moved} ${moved === 1 ? 'entry' : 'entries'} moved to Uncategorized.`
             : undefined,
       })
     } catch (error) {
@@ -103,42 +103,42 @@ export function CategoriesPage() {
   return (
     <AppLayout
       title="Categories"
-      description="Organise spending, then reorder to match how you think about it"
+      showPeriod={false}
       actions={
-        <Button variant="secondary" size="sm" icon={<Plus className="size-3.5" />} onClick={openCreate}>
+        <Button variant="secondary" icon={<Plus className="size-3.5" />} onClick={openCreate}>
           New category
         </Button>
       }
     >
       {loading ? (
-        <ul className="grid gap-2.5 lg:grid-cols-2" aria-busy="true">
-          {Array.from({ length: 8 }).map((_, index) => (
-            <li key={index}>
-              <Skeleton className="h-[68px] w-full rounded-2xl" />
-            </li>
-          ))}
-        </ul>
+        <Sheet>
+          <SkeletonRows rows={8} />
+        </Sheet>
       ) : categories.length === 0 ? (
-        <Card>
+        <Sheet>
           <EmptyState
-            icon={<Tags className="size-5" />}
             title="No categories"
-            description="Categories group your transactions and drive the charts on the dashboard."
+            description="Categories are how entries are analysed on the statement."
             action={
               <Button variant="primary" onClick={openCreate}>
                 Create a category
               </Button>
             }
           />
-        </Card>
+        </Sheet>
       ) : (
-        <>
-          <p className="mb-3 text-xs text-fg-subtle">
-            Drag a card to reorder, or use the arrows for keyboard reordering. Deleting a category
-            moves its transactions to <strong className="font-medium text-fg-muted">Uncategorized</strong>.
+        <Sheet className="animate-in">
+          <SheetHead
+            title="Index of categories"
+            meta={`${categories.length} in the book`}
+          />
+          <p className="border-b border-rule px-4 py-2 text-[11px] leading-snug text-ink-3 sm:px-5">
+            Drag to reorder, or use the arrows — they work on touch, where dragging does not.
+            Deleting a category moves its entries to{' '}
+            <strong className="font-semibold text-ink-2">Uncategorized</strong>.
           </p>
 
-          <ul className="grid animate-in gap-2.5 lg:grid-cols-2">
+          <ul>
             {categories.map((category, index) => (
               <CategoryCard
                 key={category.id}
@@ -159,24 +159,25 @@ export function CategoriesPage() {
               />
             ))}
           </ul>
-        </>
+        </Sheet>
       )}
 
       <CategoryForm open={formOpen} category={editing} onClose={() => setFormOpen(false)} />
 
       <ConfirmDialog
         open={pendingDelete !== null}
-        title={`Delete "${pendingDelete?.name ?? ''}"?`}
+        title={`Delete ${pendingDelete?.name ?? ''}?`}
         message={
           pendingDelete ? (
             (usage.get(pendingDelete.id)?.count ?? 0) > 0 ? (
               <>
-                {usage.get(pendingDelete.id)?.count} transaction
-                {usage.get(pendingDelete.id)?.count === 1 ? '' : 's'} will be moved to{' '}
-                <strong className="font-medium text-fg">Uncategorized</strong>. This cannot be undone.
+                {usage.get(pendingDelete.id)?.count}{' '}
+                {usage.get(pendingDelete.id)?.count === 1 ? 'entry' : 'entries'} will be moved to{' '}
+                <strong className="font-semibold text-ink">Uncategorized</strong>. This cannot be
+                undone.
               </>
             ) : (
-              'This category has no transactions. It will be removed permanently.'
+              'This category has no entries. It will be removed permanently.'
             )
           ) : null
         }

@@ -73,3 +73,34 @@ export function monthBounds(month: string): { from: string; to: string } {
 export function currentMonthKey(today = new Date()): string {
   return format(today, MONTH_FORMAT)
 }
+
+export function daysInMonth(month: string): number {
+  return Number(monthBounds(month).to.slice(-2))
+}
+
+/**
+ * How many days of `month` have actually happened. A finished month is all of
+ * them; a month that has not started is none. This is the number the whole app
+ * reads its "am I ahead or behind" judgement from.
+ */
+export function daysElapsed(month: string, today = new Date()): number {
+  const current = currentMonthKey(today)
+  if (month < current) return daysInMonth(month)
+  if (month > current) return 0
+  return today.getDate()
+}
+
+/** Days elapsed as a fraction of the month, 0-1. */
+export function monthProgress(month: string, today = new Date()): number {
+  const total = daysInMonth(month)
+  return total === 0 ? 0 : daysElapsed(month, today) / total
+}
+
+export function isCurrentMonth(month: string, today = new Date()): boolean {
+  return month === currentMonthKey(today)
+}
+
+/** True once every day of the month has passed. */
+export function isMonthComplete(month: string, today = new Date()): boolean {
+  return month < currentMonthKey(today)
+}

@@ -4,33 +4,31 @@ import { cn } from '@/lib/cn'
 
 import { Spinner } from './Spinner'
 
-export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'soft'
-export type ButtonSize = 'sm' | 'md' | 'lg' | 'icon'
+export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger'
+export type ButtonSize = 'sm' | 'md' | 'icon'
 
+/**
+ * Stamped, not styled: square corners, one ink, no shadow. The primary is a
+ * solid block of carbon; everything else is a ruled outline.
+ */
 const VARIANTS: Record<ButtonVariant, string> = {
-  primary:
-    'bg-accent text-accent-fg shadow-sm hover:brightness-110 active:brightness-95 disabled:hover:brightness-100',
-  secondary:
-    'bg-card text-fg border border-border-base hover:bg-card-muted active:bg-bg-subtle',
-  ghost: 'text-fg-muted hover:bg-card-muted hover:text-fg',
-  soft: 'bg-accent-soft text-accent hover:brightness-97 dark:hover:brightness-125',
-  danger: 'bg-expense text-white shadow-sm hover:brightness-110 active:brightness-95',
+  primary: 'bg-carbon text-sheet hover:bg-carbon-2',
+  secondary: 'border border-rule-strong bg-sheet text-ink hover:bg-sheet-alt hover:border-ink-3',
+  ghost: 'text-ink-2 hover:bg-sheet-alt hover:text-ink',
+  danger: 'border border-red bg-red-tint text-red hover:bg-red hover:text-sheet',
 }
 
 const SIZES: Record<ButtonSize, string> = {
-  sm: 'h-8 px-3 text-[13px] gap-1.5 rounded-lg',
-  md: 'h-10 px-4 text-sm gap-2 rounded-xl',
-  lg: 'h-12 px-5 text-[15px] gap-2 rounded-xl',
-  icon: 'size-9 rounded-lg',
+  sm: 'h-7 px-2.5 text-[12px] gap-1.5',
+  md: 'h-9 px-3.5 text-[13px] gap-2',
+  icon: 'size-8',
 }
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant
   size?: ButtonSize
   loading?: boolean
-  /** Rendered before the label; hidden while `loading`. */
   icon?: ReactNode
-  iconRight?: ReactNode
   fullWidth?: boolean
 }
 
@@ -39,7 +37,6 @@ export function Button({
   size = 'md',
   loading = false,
   icon,
-  iconRight,
   fullWidth,
   className,
   children,
@@ -53,9 +50,10 @@ export function Button({
       disabled={disabled || loading}
       aria-busy={loading || undefined}
       className={cn(
-        'inline-flex shrink-0 select-none items-center justify-center font-medium',
-        'transition-[background-color,color,filter,box-shadow,transform] duration-150',
-        'active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50',
+        'inline-flex shrink-0 select-none items-center justify-center',
+        'font-narrow font-semibold uppercase tracking-[0.07em]',
+        'transition-colors duration-100',
+        'disabled:pointer-events-none disabled:opacity-40',
         VARIANTS[variant],
         SIZES[size],
         fullWidth && 'w-full',
@@ -63,9 +61,8 @@ export function Button({
       )}
       {...props}
     >
-      {loading ? <Spinner className="size-4" /> : icon}
+      {loading ? <Spinner className="size-3.5" /> : icon}
       {children}
-      {!loading && iconRight}
     </button>
   )
 }

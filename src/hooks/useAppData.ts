@@ -35,6 +35,32 @@ export function useCategoryMap(): Map<string, Category> {
   )
 }
 
+/** Every `yyyy-MM` that holds at least one entry, for marking the period list. */
+export function useMonthsWithEntries(): Set<string> {
+  const transactions = useTransactionsStore((state) => state.items)
+  return useMemo(
+    () => new Set(transactions.map((transaction) => transaction.date.slice(0, 7))),
+    [transactions],
+  )
+}
+
+/** The nearest period that holds entries, for an empty period's way out. */
+export function useNearestMonthWithEntries(month: string): string | null {
+  const months = useMonthsWithEntries()
+  return useMemo(() => {
+    if (months.size === 0) return null
+    return [...months].sort(
+      (a, b) => Math.abs(monthDistance(a, month)) - Math.abs(monthDistance(b, month)),
+    )[0]!
+  }, [months, month])
+}
+
+function monthDistance(a: string, b: string): number {
+  const [ay, am] = a.split('-').map(Number)
+  const [by, bm] = b.split('-').map(Number)
+  return (ay! - by!) * 12 + (am! - bm!)
+}
+
 /** True while any of the primary collections is still loading. */
 export function useIsLoading(): boolean {
   const transactions = useTransactionsStore((state) => state.status)

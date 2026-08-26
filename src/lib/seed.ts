@@ -1,6 +1,6 @@
 import { addMonths, format, startOfMonth } from 'date-fns'
 
-import type { Budget, Category, Settings, Transaction } from '@/types'
+import type { Budget, Category, Settings, Transaction, TransactionType } from '@/types'
 
 import { DATE_FORMAT, MONTH_FORMAT, UNCATEGORIZED_ID } from './constants'
 import { createId } from './id'
@@ -10,7 +10,7 @@ export const DEFAULT_SETTINGS: Settings = {
   currency: 'EUR',
   locale: 'en-GB',
   allowFutureDates: false,
-  latencyMs: 320,
+  latencyMs: 0,
 }
 
 export const DEFAULT_CATEGORIES: Category[] = [
@@ -23,7 +23,7 @@ export const DEFAULT_CATEGORIES: Category[] = [
   { id: 'cat-utilities', name: 'Utilities', color: '#f59e0b', icon: 'zap', kind: 'expense', order: 6 },
   { id: 'cat-health', name: 'Health', color: '#ec4899', icon: 'heart', kind: 'expense', order: 7 },
   { id: 'cat-leisure', name: 'Leisure', color: '#8b5cf6', icon: 'clapperboard', kind: 'expense', order: 8 },
-  { id: 'cat-savings', name: 'Savings', color: '#0f766e', icon: 'piggyBank', kind: 'expense', order: 9 },
+  { id: 'cat-savings', name: 'Savings', color: '#0f766e', icon: 'piggyBank', kind: 'transfer', order: 9 },
   {
     id: UNCATEGORIZED_ID,
     name: 'Uncategorized',
@@ -46,7 +46,7 @@ function makeRandom(seed: number) {
 
 interface SeedRecipe {
   categoryId: string
-  type: 'income' | 'expense'
+  type: TransactionType
   notes: string[]
   /** Number of transactions to create per month. */
   perMonth: number
@@ -64,7 +64,7 @@ const RECIPES: SeedRecipe[] = [
   { categoryId: 'cat-utilities', type: 'expense', notes: ['Electricity', 'Internet', 'Mobile plan'], perMonth: 2, min: 22, max: 95 },
   { categoryId: 'cat-health', type: 'expense', notes: ['Pharmacy', 'Dentist', 'Gym membership'], perMonth: 1, min: 18, max: 140 },
   { categoryId: 'cat-leisure', type: 'expense', notes: ['Cinema', 'Concert ticket', 'Streaming', 'Bookshop'], perMonth: 2, min: 11, max: 85 },
-  { categoryId: 'cat-savings', type: 'expense', notes: ['Transfer to savings'], perMonth: 1, min: 200, max: 400 },
+  { categoryId: 'cat-savings', type: 'transfer', notes: ['Transfer to savings'], perMonth: 1, min: 200, max: 400 },
 ]
 
 /**

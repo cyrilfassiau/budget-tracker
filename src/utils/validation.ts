@@ -1,4 +1,4 @@
-import type { NewTransaction, TransactionType } from '@/types'
+import type { CategoryKind, NewTransaction, TransactionType } from '@/types'
 
 import { isFutureDate, isValidDateString } from './dates'
 import { parseAmount } from './money'
@@ -75,7 +75,7 @@ export interface CategoryFormValues {
   name: string
   color: string
   icon: string
-  kind: 'income' | 'expense' | 'both'
+  kind: CategoryKind
 }
 
 export function validateCategory(

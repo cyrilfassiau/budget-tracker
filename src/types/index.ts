@@ -4,7 +4,11 @@
  * shapes below are what the endpoints must return.
  */
 
-export type TransactionType = 'income' | 'expense'
+/**
+ * `transfer` is money moved between the user's own accounts. It is neither
+ * income nor expense and never reaches a total, a budget, or the savings rate.
+ */
+export type TransactionType = 'income' | 'expense' | 'transfer'
 
 /** Which transaction types a category may be used for. */
 export type CategoryKind = TransactionType | 'both'

@@ -12,8 +12,9 @@ interface UIState {
   filters: TransactionFilters
   sort: TransactionSort
   page: number
+  /** The register reads the selected period by default, or all history. */
+  registerScope: 'month' | 'all'
   theme: ThemePreference
-  sidebarOpen: boolean
 
   setMonth: (month: string) => void
   setFilters: (patch: Partial<TransactionFilters>) => void
@@ -21,8 +22,8 @@ interface UIState {
   setSort: (sort: TransactionSort) => void
   toggleSort: (field: TransactionSort['field']) => void
   setPage: (page: number) => void
+  setScope: (scope: 'month' | 'all') => void
   setTheme: (theme: ThemePreference) => void
-  setSidebarOpen: (open: boolean) => void
 }
 
 export const useUIStore = create<UIState>((set) => ({
@@ -30,10 +31,13 @@ export const useUIStore = create<UIState>((set) => ({
   filters: EMPTY_FILTERS,
   sort: DEFAULT_SORT,
   page: 1,
+  registerScope: 'month',
   theme: readJSON<ThemePreference>(STORAGE_KEYS.theme, 'system'),
-  sidebarOpen: false,
 
-  setMonth: (selectedMonth) => set({ selectedMonth }),
+  // Changing the period resets pagination: page 4 of a different month is a bug.
+  setMonth: (selectedMonth) => set({ selectedMonth, page: 1 }),
+
+  setScope: (registerScope) => set({ registerScope, page: 1 }),
 
   // Any filter change resets pagination — page 4 of a new result set is a bug.
   setFilters: (patch) =>
@@ -59,5 +63,4 @@ export const useUIStore = create<UIState>((set) => ({
     set({ theme })
   },
 
-  setSidebarOpen: (sidebarOpen) => set({ sidebarOpen }),
 }))

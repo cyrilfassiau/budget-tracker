@@ -3,157 +3,217 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* --------------------------------------------------------------------------
-   Design tokens. Every colour used by the app resolves through one of these
-   variables, so theming (light/dark) is a single swap at the :root level.
+   The Passbook.
+
+   Two inks on cheque safety stock. Carbon-copy blue carries the interface;
+   ledger red is spent on one meaning only — money you do not have, or a
+   budget you have already passed. Income and expense are never separated by
+   colour, because the register separates them by column.
+
+   Dark mode is the carbon copy underneath the top sheet, not an inversion.
    -------------------------------------------------------------------------- */
 :root {
-  --bg: #f4f5f7;
-  --bg-subtle: #eceef1;
-  --card: #ffffff;
-  --card-muted: #f8fafc;
-  --border: #e2e5ea;
-  --border-strong: #cbd2dc;
-  --fg: #10151f;
-  --fg-muted: #626d7d;
-  --fg-subtle: #8b95a4;
+  /* Stock */
+  --paper: #e9eee4;
+  --sheet: #fbfcf9;
+  --sheet-alt: #f3f6ef;
+  --rule: #c2ccbd;
+  --rule-strong: #9aa795;
+  --perforation: #d5ddcf;
 
-  --accent: #4f46e5;
-  --accent-fg: #ffffff;
-  --accent-soft: #eef0fe;
+  /* Inks */
+  --ink: #12161c;
+  --ink-2: #4a5560;
+  --ink-3: #5f6a75;
+  --carbon: #2f3b8c;
+  --carbon-2: #4d59b0;
+  --carbon-tint: #dee2f4;
+  --red: #a8231c;
+  --red-tint: #f7e3e1;
 
-  --income: #058767;
-  --income-soft: #e2f5ee;
-  --expense: #d8385c;
-  --expense-soft: #fdeaef;
-  --warning: #b3690a;
-  --warning-soft: #fdf1de;
-
-  --ring: #4f46e5;
-  --shadow-color: 220 30% 40%;
+  --caret: #2f3b8c;
+  --selection: #cfd6f0;
+  --shadow-rgb: 30 40 28;
 }
 
 .dark {
-  --bg: #0a0e15;
-  --bg-subtle: #10151e;
-  --card: #141a24;
-  --card-muted: #1a212d;
-  --border: #242c3a;
-  --border-strong: #35405233;
-  --fg: #e7ebf2;
-  --fg-muted: #98a3b4;
-  --fg-subtle: #6d7889;
+  --paper: #0f1116;
+  --sheet: #171a21;
+  --sheet-alt: #1d212a;
+  --rule: #2b313c;
+  --rule-strong: #414958;
+  --perforation: #232833;
 
-  --accent: #7f83f5;
-  --accent-fg: #0a0e15;
-  --accent-soft: #1e2138;
+  --ink: #e6e9e2;
+  --ink-2: #a8b0ba;
+  --ink-3: #8f97a2;
+  --carbon: #9aa2f2;
+  --carbon-2: #b3b9f7;
+  --carbon-tint: #232741;
+  --red: #f08b82;
+  --red-tint: #331b1c;
 
-  --income: #34d9a5;
-  --income-soft: #10291f;
-  --expense: #ff7a97;
-  --expense-soft: #2e1520;
-  --warning: #f0b357;
-  --warning-soft: #2c2113;
-
-  --ring: #7f83f5;
-  --shadow-color: 220 60% 2%;
+  --caret: #9aa2f2;
+  --selection: #2b3160;
+  --shadow-rgb: 0 0 0;
 }
 
 @theme inline {
-  --color-bg: var(--bg);
-  --color-bg-subtle: var(--bg-subtle);
-  --color-card: var(--card);
-  --color-card-muted: var(--card-muted);
-  --color-border-base: var(--border);
-  --color-border-strong: var(--border-strong);
-  --color-fg: var(--fg);
-  --color-fg-muted: var(--fg-muted);
-  --color-fg-subtle: var(--fg-subtle);
+  --color-paper: var(--paper);
+  --color-sheet: var(--sheet);
+  --color-sheet-alt: var(--sheet-alt);
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
+  --color-perforation: var(--perforation);
 
-  --color-accent: var(--accent);
-  --color-accent-fg: var(--accent-fg);
-  --color-accent-soft: var(--accent-soft);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-carbon: var(--carbon);
+  --color-carbon-2: var(--carbon-2);
+  --color-carbon-tint: var(--carbon-tint);
+  --color-red: var(--red);
+  --color-red-tint: var(--red-tint);
 
-  --color-income: var(--income);
-  --color-income-soft: var(--income-soft);
-  --color-expense: var(--expense);
-  --color-expense-soft: var(--expense-soft);
-  --color-warning: var(--warning);
-  --color-warning-soft: var(--warning-soft);
-
-  --font-sans: 'Inter var', 'Inter', ui-sans-serif, system-ui, -apple-system,
-    'Segoe UI', sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+  --font-sans: 'Archivo', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-narrow: 'Archivo Narrow', 'Archivo', ui-sans-serif, system-ui, sans-serif;
+  --font-stamp: 'Courier Prime', ui-monospace, 'Courier New', monospace;
 }
 
 @layer base {
   * {
-    border-color: var(--border);
+    border-color: var(--rule);
   }
 
   html {
     -webkit-text-size-adjust: 100%;
+    /* The browser's own surfaces belong to the design too. */
+    scrollbar-color: var(--rule-strong) transparent;
+    caret-color: var(--caret);
   }
 
   body {
-    background-color: var(--bg);
-    color: var(--fg);
+    background-color: var(--paper);
+    color: var(--ink);
     font-family: var(--font-sans);
-    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
 
-  /* One consistent focus ring for every interactive element. */
+  /* Every figure in this app is money in a column. None of them may shift. */
+  table,
+  .figure {
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+
   :focus-visible {
-    outline: 2px solid var(--ring);
-    outline-offset: 2px;
-    border-radius: 4px;
+    outline: 2px solid var(--carbon);
+    outline-offset: 1px;
   }
 
   ::selection {
-    background-color: var(--accent);
-    color: var(--accent-fg);
+    background-color: var(--selection);
+    color: var(--ink);
   }
 
-  /* Numeric columns line up when digits share a width. */
-  .tabular {
-    font-variant-numeric: tabular-nums;
+  ::-webkit-scrollbar {
+    width: 11px;
+    height: 11px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--rule-strong);
+    border: 3px solid var(--paper);
+    border-radius: 99px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--ink-3);
+  }
+
+  a {
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+  }
+
+  /* Native date pickers are ink-coloured rather than browser blue. */
+  ::-webkit-calendar-picker-indicator {
+    filter: var(--picker-filter, none);
+    cursor: pointer;
+    opacity: 0.55;
+  }
+  ::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+  }
+  .dark ::-webkit-calendar-picker-indicator {
+    filter: invert(1) opacity(0.7);
+  }
+}
+
+@layer components {
+  /* The printed column head: the one place small caps earn their keep. */
+  .col-head {
+    font-family: var(--font-narrow);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  /* Machine-stamped reference layer — codes, stamps, perforation microtext. */
+  .stamp {
+    font-family: var(--font-stamp);
+    font-size: 11px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  /* Ledger convention: money you do not have is printed in red. */
+  .dr {
+    color: var(--red);
+  }
+
+  /* The bound edge of the book, printed once down the left of the sheet. */
+  .stub-edge {
+    background-image: repeating-linear-gradient(
+      to bottom,
+      var(--perforation) 0 4px,
+      transparent 4px 9px
+    );
   }
 }
 
 @layer utilities {
   .animate-in {
-    animation: fade-slide-in 240ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation: sheet-in 260ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
-  .animate-scale-in {
-    animation: scale-in 180ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  .animate-entry {
+    animation: entry-strike 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
   .animate-fade-in {
     animation: fade-in 160ms ease-out both;
   }
 
-  .animate-toast-in {
-    animation: toast-in 260ms cubic-bezier(0.16, 1, 0.3, 1) both;
-  }
-
   .shimmer {
     background: linear-gradient(
       90deg,
-      var(--card-muted) 0%,
-      var(--bg-subtle) 40%,
-      var(--card-muted) 80%
+      var(--sheet-alt) 0%,
+      var(--paper) 45%,
+      var(--sheet-alt) 85%
     );
     background-size: 200% 100%;
-    animation: shimmer 1.4s ease-in-out infinite;
+    animation: shimmer 1.5s ease-in-out infinite;
   }
 }
 
-@keyframes fade-slide-in {
+@keyframes sheet-in {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(6px);
   }
   to {
     opacity: 1;
@@ -161,14 +221,20 @@
   }
 }
 
-@keyframes scale-in {
+/* A new entry is struck onto the sheet: it arrives from the left, the way a
+   printer's carriage lays a line down, and settles. The one authored moment. */
+@keyframes entry-strike {
   from {
     opacity: 0;
-    transform: scale(0.97) translateY(6px);
+    transform: translateX(-6px);
+    background-color: var(--carbon-tint);
   }
-  to {
+  60% {
     opacity: 1;
     transform: none;
+  }
+  to {
+    background-color: transparent;
   }
 }
 
@@ -178,17 +244,6 @@
   }
   to {
     opacity: 1;
-  }
-}
-
-@keyframes toast-in {
-  from {
-    opacity: 0;
-    transform: translateY(12px) scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: none;
   }
 }
 

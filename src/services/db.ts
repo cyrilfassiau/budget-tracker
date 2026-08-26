@@ -38,17 +38,69 @@ export const db = {
  * something to show. Runs exactly once — a user who deletes everything keeps
  * an empty app.
  */
+export const SCHEMA_VERSION = 2
+
 export function ensureSeeded(): void {
-  if (readJSON<boolean>(STORAGE_KEYS.seeded, false)) return
+  if (readJSON<boolean>(STORAGE_KEYS.seeded, false)) {
+    migrate()
+    return
+  }
 
   db.categories.write(DEFAULT_CATEGORIES)
   db.transactions.write(buildSeedTransactions())
   db.budgets.write(buildSeedBudgets())
   db.settings.write(DEFAULT_SETTINGS)
   writeJSON(STORAGE_KEYS.seeded, true)
+  writeJSON(STORAGE_KEYS.schema, SCHEMA_VERSION)
 }
 
-/** Wipes every table and re-seeds — wired to "Reset demo data" in Settings. */
+/**
+ * Brings an existing book up to date with the current model.
+ *
+ * Transfers were introduced after the first release, so a book written before
+ * it holds "Savings" entries typed as expenses. Re-seeding would fix the demo
+ * and destroy anyone's real data, so instead each entry whose category is now
+ * a transfer category is retyped in place. Runs at most once per book.
+ */
+export function migrate(): void {
+  if (readJSON<number>(STORAGE_KEYS.schema, 0) >= SCHEMA_VERSION) return
+
+  // The stored categories were written by the old seed, so their `kind` is
+  // stale too. Reconcile only the narrow case this migration is for — a
+  // built-in category that has become a transfer category — so a kind the
+  // user chose themselves is never overwritten.
+  const storedCategories = db.categories.read()
+  const defaultKinds = new Map(DEFAULT_CATEGORIES.map((entry) => [entry.id, entry.kind]))
+
+  let categoriesChanged = false
+  const reconciled = storedCategories.map((category) => {
+    if (category.kind === 'expense' && defaultKinds.get(category.id) === 'transfer') {
+      categoriesChanged = true
+      return { ...category, kind: 'transfer' as const }
+    }
+    return category
+  })
+  if (categoriesChanged) db.categories.write(reconciled)
+
+  const transferCategories = new Set(
+    reconciled.filter((category) => category.kind === 'transfer').map((category) => category.id),
+  )
+
+  if (transferCategories.size > 0) {
+    const rows = db.transactions.read()
+    let changed = 0
+    const next = rows.map((row) => {
+      if (row.type === 'transfer' || !transferCategories.has(row.categoryId)) return row
+      changed += 1
+      return { ...row, type: 'transfer' as const, updatedAt: new Date().toISOString() }
+    })
+    if (changed > 0) db.transactions.write(next)
+  }
+
+  writeJSON(STORAGE_KEYS.schema, SCHEMA_VERSION)
+}
+
+/** Wipes every table and re-seeds — wired to "Restore the sample book". */
 export function resetToSeed(): void {
   writeJSON(STORAGE_KEYS.seeded, false)
   ensureSeeded()

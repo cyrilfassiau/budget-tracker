@@ -2,7 +2,7 @@ import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it } from 'vitest'
 
-import { TransactionsPage } from '@/pages/TransactionsPage'
+import { RegisterPage } from '@/pages/RegisterPage'
 import { renderWithRouter, resetApp } from '@/test/renderApp'
 import { makeTransaction } from '@/test/factories'
 import { useTransactionsStore } from '@/store/useTransactionsStore'
@@ -12,44 +12,51 @@ import { useTransactionsStore } from '@/store/useTransactionsStore'
  * fill the form, submit, and see the transaction in the list. It exercises the
  * form, validation, the store and the service together.
  */
-describe('adding a transaction', () => {
+describe('recording an entry', () => {
   beforeEach(() => {
     resetApp()
   })
 
   async function openDialog(user: ReturnType<typeof userEvent.setup>) {
-    await user.click(screen.getByRole('button', { name: /add transaction/i }))
+    await user.click(screen.getByRole('button', { name: /enter transaction/i }))
     return screen.findByRole('dialog')
   }
 
   it('adds a transaction and shows it in the list', async () => {
     const user = userEvent.setup()
-    renderWithRouter(<TransactionsPage />)
+    renderWithRouter(<RegisterPage />)
 
-    await screen.findByText(/no transactions yet/i)
+    await screen.findByText(/the register is empty/i)
 
     const dialog = await openDialog(user)
     await user.type(within(dialog).getByLabelText(/amount/i), '32.90')
     await user.selectOptions(within(dialog).getByLabelText(/category/i), 'cat-groceries')
-    await user.type(within(dialog).getByLabelText(/note/i), 'Market run')
-    await user.click(within(dialog).getByRole('button', { name: /^add transaction$/i }))
+    await user.type(within(dialog).getByLabelText(/particulars/i), 'Market run')
+    await user.click(within(dialog).getByRole('button', { name: /^record$/i }))
 
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
 
-    expect(await screen.findByText('Market run')).toBeInTheDocument()
-    expect(screen.getByText(/−€32\.90/)).toBeInTheDocument()
-    expect(screen.getByText(/transaction added/i)).toBeInTheDocument()
+    // Assert the columns, not just the figure: an expense belongs in "paid
+    // out", and the balance column must carry what it left behind.
+    const row = (await screen.findByText('Market run')).closest('tr')!
+    const cell = (column: string) => row.querySelector(`[data-column="${column}"]`)!
+
+    expect(cell('paid-out')).toHaveTextContent('32.90')
+    expect(cell('paid-in')).toBeEmptyDOMElement()
+    expect(cell('transfer')).toBeEmptyDOMElement()
+    expect(cell('balance')).toHaveTextContent('32.90')
+    expect(screen.getByText(/entry recorded/i)).toBeInTheDocument()
   })
 
   it('persists the new transaction through the service layer', async () => {
     const user = userEvent.setup()
-    renderWithRouter(<TransactionsPage />)
-    await screen.findByText(/no transactions yet/i)
+    renderWithRouter(<RegisterPage />)
+    await screen.findByText(/the register is empty/i)
 
     const dialog = await openDialog(user)
     await user.type(within(dialog).getByLabelText(/amount/i), '10')
     await user.selectOptions(within(dialog).getByLabelText(/category/i), 'cat-rent')
-    await user.click(within(dialog).getByRole('button', { name: /^add transaction$/i }))
+    await user.click(within(dialog).getByRole('button', { name: /^record$/i }))
 
     await waitFor(() => {
       expect(useTransactionsStore.getState().items).toHaveLength(1)
@@ -63,11 +70,11 @@ describe('adding a transaction', () => {
 
   it('blocks submission and explains why when the form is invalid', async () => {
     const user = userEvent.setup()
-    renderWithRouter(<TransactionsPage />)
-    await screen.findByText(/no transactions yet/i)
+    renderWithRouter(<RegisterPage />)
+    await screen.findByText(/the register is empty/i)
 
     const dialog = await openDialog(user)
-    await user.click(within(dialog).getByRole('button', { name: /^add transaction$/i }))
+    await user.click(within(dialog).getByRole('button', { name: /^record$/i }))
 
     expect(await within(dialog).findByText(/enter an amount/i)).toBeInTheDocument()
     expect(within(dialog).getByText(/pick a category/i)).toBeInTheDocument()
@@ -77,24 +84,24 @@ describe('adding a transaction', () => {
 
   it('rejects a zero amount', async () => {
     const user = userEvent.setup()
-    renderWithRouter(<TransactionsPage />)
-    await screen.findByText(/no transactions yet/i)
+    renderWithRouter(<RegisterPage />)
+    await screen.findByText(/the register is empty/i)
 
     const dialog = await openDialog(user)
     await user.type(within(dialog).getByLabelText(/amount/i), '0')
     await user.selectOptions(within(dialog).getByLabelText(/category/i), 'cat-groceries')
-    await user.click(within(dialog).getByRole('button', { name: /^add transaction$/i }))
+    await user.click(within(dialog).getByRole('button', { name: /^record$/i }))
 
     expect(await within(dialog).findByText(/greater than zero/i)).toBeInTheDocument()
   })
 
   it('offers only income categories once the type is switched', async () => {
     const user = userEvent.setup()
-    renderWithRouter(<TransactionsPage />)
-    await screen.findByText(/no transactions yet/i)
+    renderWithRouter(<RegisterPage />)
+    await screen.findByText(/the register is empty/i)
 
     const dialog = await openDialog(user)
-    await user.click(within(dialog).getByRole('radio', { name: /income/i }))
+    await user.click(within(dialog).getByRole('radio', { name: /paid in/i }))
 
     const options = within(within(dialog).getByLabelText(/category/i)).getAllByRole('option')
     const labels = options.map((option) => option.textContent)
@@ -105,8 +112,8 @@ describe('adding a transaction', () => {
 
   it('closes on Escape without saving', async () => {
     const user = userEvent.setup()
-    renderWithRouter(<TransactionsPage />)
-    await screen.findByText(/no transactions yet/i)
+    renderWithRouter(<RegisterPage />)
+    await screen.findByText(/the register is empty/i)
 
     const dialog = await openDialog(user)
     await user.type(within(dialog).getByLabelText(/amount/i), '15')
@@ -128,17 +135,17 @@ describe('editing and deleting a transaction', () => {
 
   it('edits an existing transaction', async () => {
     const user = userEvent.setup()
-    renderWithRouter(<TransactionsPage />)
+    renderWithRouter(<RegisterPage />)
 
     await screen.findByText('Weekly shop')
     await user.click(screen.getByRole('button', { name: /actions for weekly shop/i }))
-    await user.click(screen.getByRole('menuitem', { name: /edit/i }))
+    await user.click(screen.getByRole('menuitem', { name: /amend/i }))
 
     const dialog = await screen.findByRole('dialog')
-    const noteField = within(dialog).getByLabelText(/note/i)
+    const noteField = within(dialog).getByLabelText(/particulars/i)
     await user.clear(noteField)
     await user.type(noteField, 'Big shop')
-    await user.click(within(dialog).getByRole('button', { name: /save changes/i }))
+    await user.click(within(dialog).getByRole('button', { name: /^save$/i }))
 
     expect(await screen.findByText('Big shop')).toBeInTheDocument()
     expect(screen.queryByText('Weekly shop')).not.toBeInTheDocument()
@@ -146,14 +153,14 @@ describe('editing and deleting a transaction', () => {
 
   it('asks for confirmation before deleting', async () => {
     const user = userEvent.setup()
-    renderWithRouter(<TransactionsPage />)
+    renderWithRouter(<RegisterPage />)
 
     await screen.findByText('Weekly shop')
     await user.click(screen.getByRole('button', { name: /actions for weekly shop/i }))
     await user.click(screen.getByRole('menuitem', { name: /delete/i }))
 
     const dialog = await screen.findByRole('dialog')
-    expect(within(dialog).getByText(/delete this transaction\?/i)).toBeInTheDocument()
+    expect(within(dialog).getByText(/delete this entry\?/i)).toBeInTheDocument()
 
     await user.click(within(dialog).getByRole('button', { name: /^cancel$/i }))
     expect(useTransactionsStore.getState().items).toHaveLength(1)
@@ -161,7 +168,7 @@ describe('editing and deleting a transaction', () => {
 
   it('deletes after confirming', async () => {
     const user = userEvent.setup()
-    renderWithRouter(<TransactionsPage />)
+    renderWithRouter(<RegisterPage />)
 
     await screen.findByText('Weekly shop')
     await user.click(screen.getByRole('button', { name: /actions for weekly shop/i }))
@@ -171,6 +178,6 @@ describe('editing and deleting a transaction', () => {
     await user.click(within(dialog).getByRole('button', { name: /^delete$/i }))
 
     await waitFor(() => expect(useTransactionsStore.getState().items).toHaveLength(0))
-    expect(await screen.findByText(/transaction deleted/i)).toBeInTheDocument()
+    expect(await screen.findByText(/entry deleted/i)).toBeInTheDocument()
   })
 })

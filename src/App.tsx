@@ -3,15 +3,12 @@ import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-d
 
 import { RouteFallback } from '@/components/layout/RouteFallback'
 
-/**
- * Routes are code-split so the initial load does not pay for Recharts, which
- * only the dashboard needs.
- */
-const DashboardPage = lazy(() =>
-  import('@/pages/DashboardPage').then((module) => ({ default: module.DashboardPage })),
+/** Routes are code-split so the first load does not pay for Recharts. */
+const StatementPage = lazy(() =>
+  import('@/pages/StatementPage').then((module) => ({ default: module.StatementPage })),
 )
-const TransactionsPage = lazy(() =>
-  import('@/pages/TransactionsPage').then((module) => ({ default: module.TransactionsPage })),
+const RegisterPage = lazy(() =>
+  import('@/pages/RegisterPage').then((module) => ({ default: module.RegisterPage })),
 )
 const BudgetsPage = lazy(() =>
   import('@/pages/BudgetsPage').then((module) => ({ default: module.BudgetsPage })),
@@ -19,8 +16,8 @@ const BudgetsPage = lazy(() =>
 const CategoriesPage = lazy(() =>
   import('@/pages/CategoriesPage').then((module) => ({ default: module.CategoriesPage })),
 )
-const SettingsPage = lazy(() =>
-  import('@/pages/SettingsPage').then((module) => ({ default: module.SettingsPage })),
+const AccountPage = lazy(() =>
+  import('@/pages/AccountPage').then((module) => ({ default: module.AccountPage })),
 )
 
 export function App() {
@@ -28,18 +25,18 @@ export function App() {
     <Router>
       <a
         href="#main-content"
-        className="sr-only rounded-lg bg-accent px-4 py-2 text-sm font-medium text-accent-fg focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[70]"
+        className="sr-only bg-ink px-3 py-2 font-narrow text-[12px] font-semibold uppercase tracking-[0.07em] text-sheet focus:not-sr-only focus:absolute focus:left-3 focus:top-3 focus:z-[70]"
       >
         Skip to content
       </a>
 
       <Suspense fallback={<RouteFallback />}>
         <Routes>
-          <Route path="/" element={<DashboardPage />} />
-          <Route path="/transactions" element={<TransactionsPage />} />
+          <Route path="/" element={<StatementPage />} />
+          <Route path="/transactions" element={<RegisterPage />} />
           <Route path="/budgets" element={<BudgetsPage />} />
           <Route path="/categories" element={<CategoriesPage />} />
-          <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/settings" element={<AccountPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>

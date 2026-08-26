@@ -1,11 +1,20 @@
 import type { Budget, Category, Transaction, TransactionType } from '@/types'
 
-import { lastNMonths, monthBounds, toMonthKey } from './dates'
+import {
+  daysElapsed,
+  daysInMonth,
+  isCurrentMonth,
+  lastNMonths,
+  monthProgress,
+  toMonthKey,
+} from './dates'
 import { roundMoney } from './money'
 
 export interface PeriodSummary {
   income: number
   expenses: number
+  /** Money moved between the user's own accounts. Never part of `net`. */
+  transfers: number
   net: number
   /** Share of income that was not spent; `null` when there was no income. */
   savingsRate: number | null
@@ -28,6 +37,8 @@ export interface MonthlyPoint {
   income: number
   expenses: number
   net: number
+  /** Marks the month still in progress so charts can say so. */
+  partial: boolean
 }
 
 export type BudgetStatus = 'on-track' | 'warning' | 'over'
@@ -43,7 +54,21 @@ export interface BudgetProgress {
   /** Spent ÷ limit, uncapped, so "142%" can be displayed. */
   ratio: number
   status: BudgetStatus
+  /** Days elapsed ÷ days in month — what `ratio` should be measured against. */
+  pace: number
+  /**
+   * Spend minus the share of the limit the month has earned so far. Positive
+   * means ahead of schedule (overspending for this point in the month).
+   */
+  paceDelta: number
+  aheadOfSchedule: boolean
   budgetId?: string
+}
+
+/** A register row: the entry plus the balance it left behind. */
+export interface LedgerRow {
+  transaction: Transaction
+  balance: number
 }
 
 /** Spending is considered "at risk" from this share of the limit onwards. */
@@ -82,6 +107,7 @@ export function summarise(transactions: Transaction[]): PeriodSummary {
   return {
     income,
     expenses,
+    transfers: sumBy(transactions, 'transfer'),
     net: roundMoney(income - expenses),
     savingsRate: income > 0 ? roundMoney((income - expenses) / income) : null,
     transactionCount: transactions.length,
@@ -90,7 +116,7 @@ export function summarise(transactions: Transaction[]): PeriodSummary {
 
 /**
  * Totals per category for one transaction type, largest first. Categories with
- * no activity are omitted — an empty slice is noise in a donut chart.
+ * no activity are omitted — an empty slice is noise in a chart.
  */
 export function totalsByCategory(
   transactions: Transaction[],
@@ -131,17 +157,18 @@ export function monthlySeries(
   transactions: Transaction[],
   month: string,
   count = 6,
+  today = new Date(),
 ): MonthlyPoint[] {
   const months = lastNMonths(count, month)
   const buckets = new Map(
-    months.map((key) => [key, { month: key, income: 0, expenses: 0, net: 0 }]),
+    months.map((key) => [key, { month: key, income: 0, expenses: 0 }]),
   )
 
   for (const transaction of transactions) {
     const bucket = buckets.get(toMonthKey(transaction.date))
     if (!bucket) continue
     if (transaction.type === 'income') bucket.income += transaction.amount
-    else bucket.expenses += transaction.amount
+    else if (transaction.type === 'expense') bucket.expenses += transaction.amount
   }
 
   return months.map((key) => {
@@ -151,6 +178,7 @@ export function monthlySeries(
       income: roundMoney(bucket.income),
       expenses: roundMoney(bucket.expenses),
       net: roundMoney(bucket.income - bucket.expenses),
+      partial: isCurrentMonth(key, today),
     }
   })
 }
@@ -163,18 +191,19 @@ export function budgetStatus(ratio: number): BudgetStatus {
 
 /**
  * Joins budgets, categories and the month's transactions into the rows the
- * budget UI renders. Expense categories without a limit are included with
- * `limit: 0` so the UI can offer to set one.
+ * budget sheet renders — including how the spend compares with how much of the
+ * month has actually been used, which is the only honest reading mid-month.
  */
 export function budgetProgress(
   budgets: Budget[],
   transactions: Transaction[],
   categories: Category[],
   month: string,
-  { includeUnbudgeted = false } = {},
+  { includeUnbudgeted = false, today = new Date() } = {},
 ): BudgetProgress[] {
   const monthTransactions = filterByMonth(transactions, month)
   const spentByCategory = new Map<string, number>()
+  const pace = monthProgress(month, today)
 
   for (const transaction of monthTransactions) {
     if (transaction.type !== 'expense') continue
@@ -189,13 +218,14 @@ export function budgetProgress(
   )
 
   return categories
-    .filter((category) => category.kind !== 'income')
+    .filter((category) => category.kind === 'expense' || category.kind === 'both')
     .filter((category) => includeUnbudgeted || monthBudgets.has(category.id))
     .map((category) => {
       const budget = monthBudgets.get(category.id)
       const limit = budget?.limit ?? 0
       const spent = roundMoney(spentByCategory.get(category.id) ?? 0)
       const ratio = limit > 0 ? spent / limit : 0
+      const paceDelta = roundMoney(spent - limit * pace)
       return {
         categoryId: category.id,
         name: category.name,
@@ -206,6 +236,10 @@ export function budgetProgress(
         remaining: roundMoney(limit - spent),
         ratio,
         status: limit > 0 ? budgetStatus(ratio) : 'on-track',
+        pace,
+        paceDelta,
+        // A tolerance keeps a few euros of noise from reading as a warning.
+        aheadOfSchedule: limit > 0 && paceDelta > limit * 0.02,
         budgetId: budget?.id,
       }
     })
@@ -218,15 +252,45 @@ export function percentChange(current: number, previous: number): number | null 
   return roundMoney((current - previous) / Math.abs(previous))
 }
 
-/** Average daily spend for the month, useful as a dashboard sub-stat. */
-export function averageDailySpend(transactions: Transaction[], month: string): number {
-  const { to } = monthBounds(month)
-  const daysInMonth = Number(to.slice(-2))
-  const expenses = sumBy(filterByMonth(transactions, month), 'expense')
-  return roundMoney(expenses / daysInMonth)
+/**
+ * The previous month truncated to the same day of the month, so a month that
+ * is 26 days old is never compared against a full one.
+ */
+export function comparableSlice(
+  transactions: Transaction[],
+  month: string,
+  throughDay: number,
+): Transaction[] {
+  const cutoff = `${month}-${String(throughDay).padStart(2, '0')}`
+  return transactions.filter(
+    (transaction) => isInMonth(transaction, month) && transaction.date <= cutoff,
+  )
 }
 
-/** Largest single expense in the period — surfaced on the dashboard. */
+/**
+ * Average spend per day *elapsed*. Dividing by the length of the month
+ * understates the run rate of a month still in progress.
+ */
+export function averageDailySpend(
+  transactions: Transaction[],
+  month: string,
+  today = new Date(),
+): number {
+  const elapsed = daysElapsed(month, today)
+  if (elapsed === 0) return 0
+  return roundMoney(sumBy(filterByMonth(transactions, month), 'expense') / elapsed)
+}
+
+/** What this month's spending reaches if the rest of it matches the pace so far. */
+export function projectedSpend(
+  transactions: Transaction[],
+  month: string,
+  today = new Date(),
+): number {
+  return roundMoney(averageDailySpend(transactions, month, today) * daysInMonth(month))
+}
+
+/** Largest single expense in the period. */
 export function largestExpense(transactions: Transaction[]): Transaction | null {
   return transactions
     .filter((transaction) => transaction.type === 'expense')
@@ -235,4 +299,46 @@ export function largestExpense(transactions: Transaction[]): Transaction | null 
         !largest || transaction.amount > largest.amount ? transaction : largest,
       null,
     )
+}
+
+/** Signed effect of one entry on the balance. Transfers move nothing. */
+export function entryDelta(transaction: Transaction): number {
+  if (transaction.type === 'income') return transaction.amount
+  if (transaction.type === 'expense') return -transaction.amount
+  return 0
+}
+
+/**
+ * The register's defining column. Rows are returned in the order given, each
+ * carrying the balance after that entry, computed oldest-first from
+ * `openingBalance` regardless of the display order.
+ */
+export function withRunningBalance(
+  rows: Transaction[],
+  openingBalance = 0,
+): LedgerRow[] {
+  const chronological = [...rows].sort((a, b) =>
+    a.date === b.date ? a.createdAt.localeCompare(b.createdAt) : a.date.localeCompare(b.date),
+  )
+
+  let balance = openingBalance
+  const balanceById = new Map<string, number>()
+  for (const transaction of chronological) {
+    balance = roundMoney(balance + entryDelta(transaction))
+    balanceById.set(transaction.id, balance)
+  }
+
+  return rows.map((transaction) => ({
+    transaction,
+    balance: balanceById.get(transaction.id) ?? openingBalance,
+  }))
+}
+
+/** Everything before `month`, netted — the passbook's "brought forward". */
+export function broughtForward(transactions: Transaction[], month: string): number {
+  return roundMoney(
+    transactions
+      .filter((transaction) => toMonthKey(transaction.date) < month)
+      .reduce((total, transaction) => total + entryDelta(transaction), 0),
+  )
 }

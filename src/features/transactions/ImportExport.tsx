@@ -5,24 +5,34 @@ import { Button } from '@/components/ui'
 import { useCategoriesStore } from '@/store/useCategoriesStore'
 import { toMessage, toast } from '@/store/useToastStore'
 import { useTransactionsStore } from '@/store/useTransactionsStore'
+import type { Transaction } from '@/types'
 import { downloadFile, fromCSV, toCSV } from '@/utils/csv'
 import { toDateKey } from '@/utils/dates'
 
-/** CSV round-trip: export what is on screen, import what a spreadsheet made. */
-export function ImportExport() {
-  const transactions = useTransactionsStore((state) => state.items)
+interface ImportExportProps {
+  /**
+   * The rows currently on screen. Export writes exactly these — an export
+   * button that quietly ignores the filters above it is a lie.
+   */
+  rows: Transaction[]
+  scopeLabel: string
+}
+
+export function ImportExport({ rows, scopeLabel }: ImportExportProps) {
   const addMany = useTransactionsStore((state) => state.addMany)
   const categories = useCategoriesStore((state) => state.items)
   const inputRef = useRef<HTMLInputElement>(null)
   const [importing, setImporting] = useState(false)
 
   const handleExport = () => {
-    if (transactions.length === 0) {
-      toast.info('There is nothing to export yet.')
+    if (rows.length === 0) {
+      toast.info('Nothing to export', { description: 'No entries match the current view.' })
       return
     }
-    downloadFile(`budget-tracker-${toDateKey(new Date())}.csv`, toCSV(transactions, categories))
-    toast.success(`Exported ${transactions.length} transactions`)
+    downloadFile(`budget-tracker-${toDateKey(new Date())}.csv`, toCSV(rows, categories))
+    toast.success(`Exported ${rows.length} ${rows.length === 1 ? 'entry' : 'entries'}`, {
+      description: scopeLabel,
+    })
   }
 
   const handleImport = async (file: File) => {
@@ -31,16 +41,18 @@ export function ImportExport() {
       const { transactions: parsed, errors } = fromCSV(await file.text(), categories)
 
       if (parsed.length === 0) {
-        toast.error('Nothing could be imported.', {
+        toast.error('Nothing could be imported', {
           description: errors[0] ?? 'The file had no usable rows.',
         })
         return
       }
 
-      await addMany(parsed)
-      toast.success(`Imported ${parsed.length} transactions`, {
+      const created = await addMany(parsed)
+      toast.success(`Imported ${created.length} ${created.length === 1 ? 'entry' : 'entries'}`, {
         description:
-          errors.length > 0 ? `${errors.length} row(s) were skipped.` : undefined,
+          errors.length > 0
+            ? `${errors.length} ${errors.length === 1 ? 'row was' : 'rows were'} skipped: ${errors[0]}`
+            : undefined,
       })
     } catch (error) {
       toast.error(toMessage(error, 'Could not read that file.'))
@@ -51,14 +63,14 @@ export function ImportExport() {
   }
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-1.5">
       <input
         ref={inputRef}
         type="file"
         accept=".csv,text/csv"
         className="sr-only"
-        aria-hidden="true"
         tabIndex={-1}
+        aria-hidden="true"
         onChange={(event) => {
           const file = event.target.files?.[0]
           if (file) void handleImport(file)
@@ -68,7 +80,7 @@ export function ImportExport() {
       <Button
         variant="secondary"
         size="sm"
-        icon={<Upload className="size-3.5" />}
+        icon={<Upload className="size-3" />}
         loading={importing}
         onClick={() => inputRef.current?.click()}
       >
@@ -77,7 +89,7 @@ export function ImportExport() {
       <Button
         variant="secondary"
         size="sm"
-        icon={<Download className="size-3.5" />}
+        icon={<Download className="size-3" />}
         onClick={handleExport}
       >
         Export

@@ -1,8 +1,9 @@
 import {
   Bar,
+  BarChart,
   CartesianGrid,
-  ComposedChart,
-  Line,
+  Cell,
+  ReferenceLine,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -12,131 +13,136 @@ import {
 import { useCurrencyFormat } from '@/store/useSettingsStore'
 import type { MonthlyPoint } from '@/utils/calculations'
 import { formatMonthLabel } from '@/utils/dates'
-import { formatMoney, formatMoneyCompact, formatSigned } from '@/utils/money'
-
-import { ChartTooltip } from './ChartTooltip'
-
-interface TrendChartProps {
-  data: MonthlyPoint[]
-  /** Highlights the month currently selected elsewhere in the app. */
-  activeMonth?: string
-}
+import { formatMoney, formatMoneyCompact } from '@/utils/money'
 
 /**
- * Income vs. expenses over the last six months, with net as an overlaid line —
- * bars answer "how much", the line answers "am I ahead or behind".
+ * Six periods of paid in against paid out.
+ *
+ * The period still in progress is hatched rather than drawn solid: a partial
+ * bar sitting flush beside five complete ones is the single most misleading
+ * mark a budget app can print.
  */
-export function TrendChart({ data, activeMonth }: TrendChartProps) {
+export function TrendChart({ data, activeMonth }: { data: MonthlyPoint[]; activeMonth?: string }) {
   const { currency, locale } = useCurrencyFormat()
 
   return (
-    <div className="h-64 w-full">
+    <div className="h-52 w-full">
       <ResponsiveContainer width="100%" height="100%">
-        <ComposedChart data={data} margin={{ top: 8, right: 4, bottom: 0, left: -18 }}>
-          <CartesianGrid vertical={false} stroke="var(--border)" strokeDasharray="3 3" />
+        <BarChart data={data} margin={{ top: 6, right: 4, bottom: 0, left: -14 }} barGap={2}>
+          <defs>
+            {/* Hatching marks a period that has not finished. */}
+            <pattern id="partial-out" width="5" height="5" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+              <rect width="5" height="5" fill="var(--sheet)" />
+              <line x1="0" y1="0" x2="0" y2="5" stroke="var(--ink)" strokeWidth="2.5" />
+            </pattern>
+            <pattern id="partial-in" width="5" height="5" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+              <rect width="5" height="5" fill="var(--sheet)" />
+              <line x1="0" y1="0" x2="0" y2="5" stroke="var(--carbon)" strokeWidth="2.5" />
+            </pattern>
+          </defs>
+
+          <CartesianGrid vertical={false} stroke="var(--rule)" />
 
           <XAxis
             dataKey="month"
-            tickFormatter={(month: string) => formatMonthLabel(month, 'MMM')}
-            tick={{ fill: 'var(--fg-subtle)', fontSize: 11 }}
-            axisLine={false}
+            tickFormatter={(month: string) => formatMonthLabel(month, 'MMM').toUpperCase()}
+            tick={{ fill: 'var(--ink-3)', fontSize: 10, letterSpacing: '0.06em' }}
+            axisLine={{ stroke: 'var(--rule-strong)' }}
             tickLine={false}
             dy={4}
           />
           <YAxis
             tickFormatter={(value: number) => formatMoneyCompact(value, currency, locale)}
-            tick={{ fill: 'var(--fg-subtle)', fontSize: 11 }}
+            tick={{ fill: 'var(--ink-3)', fontSize: 10 }}
             axisLine={false}
             tickLine={false}
-            width={64}
+            width={58}
           />
 
+          <ReferenceLine y={0} stroke="var(--ink)" />
+
           <Tooltip
-            cursor={{ fill: 'var(--card-muted)', radius: 8 }}
+            cursor={{ fill: 'var(--sheet-alt)' }}
             content={({ active, payload }) => {
               if (!active || !payload?.length) return null
               const point = payload[0]!.payload as MonthlyPoint
               return (
-                <ChartTooltip
-                  title={formatMonthLabel(point.month)}
-                  rows={[
-                    {
-                      label: 'Income',
-                      value: formatMoney(point.income, currency, locale),
-                      color: 'var(--income)',
-                    },
-                    {
-                      label: 'Expenses',
-                      value: formatMoney(point.expenses, currency, locale),
-                      color: 'var(--expense)',
-                    },
-                    {
-                      label: 'Net',
-                      value: formatSigned(point.net, currency, locale),
-                      color: 'var(--accent)',
-                    },
-                  ]}
-                />
+                <div className="min-w-44 border border-ink bg-sheet p-2">
+                  <p className="col-head mb-1 text-ink">
+                    {formatMonthLabel(point.month)}
+                    {point.partial ? ' · in progress' : ''}
+                  </p>
+                  <dl className="flex flex-col gap-0.5 text-[12px]">
+                    <div className="flex justify-between gap-4">
+                      <dt className="text-ink-3">Paid in</dt>
+                      <dd className="figure text-ink">{formatMoney(point.income, currency, locale)}</dd>
+                    </div>
+                    <div className="flex justify-between gap-4">
+                      <dt className="text-ink-3">Paid out</dt>
+                      <dd className="figure text-ink">{formatMoney(point.expenses, currency, locale)}</dd>
+                    </div>
+                    <div className="flex justify-between gap-4 border-t border-rule pt-0.5">
+                      <dt className="text-ink-3">Net</dt>
+                      <dd className={`figure font-semibold ${point.net < 0 ? 'dr' : 'text-ink'}`}>
+                        {formatMoney(point.net, currency, locale)}
+                      </dd>
+                    </div>
+                  </dl>
+                </div>
               )
             }}
           />
 
-          {/* Entry animations are off across the app's charts: Recharts does not
-              settle them reliably under React 19's StrictMode double-render and
-              leaves bars flat and pie slices as slivers. */}
-          <Bar
-            dataKey="income"
-            name="Income"
-            fill="var(--income)"
-            radius={[4, 4, 0, 0]}
-            maxBarSize={22}
-            opacity={activeMonth ? 0.9 : 1}
-            isAnimationActive={false}
-          />
-          <Bar
-            dataKey="expenses"
-            name="Expenses"
-            fill="var(--expense)"
-            radius={[4, 4, 0, 0]}
-            maxBarSize={22}
-            isAnimationActive={false}
-          />
-          <Line
-            type="monotone"
-            dataKey="net"
-            name="Net"
-            stroke="var(--accent)"
-            strokeWidth={2}
-            dot={{ r: 2.5, strokeWidth: 0, fill: 'var(--accent)' }}
-            activeDot={{ r: 4 }}
-            isAnimationActive={false}
-          />
-        </ComposedChart>
+          {/* Animations stay off: Recharts does not settle them under React 19's
+              StrictMode double-render, which leaves bars stuck flat. */}
+          <Bar dataKey="income" name="Paid in" maxBarSize={16} isAnimationActive={false}>
+            {data.map((point) => (
+              <Cell
+                key={point.month}
+                fill={point.partial ? 'url(#partial-in)' : 'var(--carbon)'}
+                stroke={point.partial ? 'var(--carbon)' : undefined}
+              />
+            ))}
+          </Bar>
+          <Bar dataKey="expenses" name="Paid out" maxBarSize={16} isAnimationActive={false}>
+            {data.map((point) => (
+              <Cell
+                key={point.month}
+                fill={point.partial ? 'url(#partial-out)' : 'var(--ink)'}
+                stroke={point.partial ? 'var(--ink)' : undefined}
+                opacity={activeMonth && point.month === activeMonth ? 1 : 0.85}
+              />
+            ))}
+          </Bar>
+        </BarChart>
       </ResponsiveContainer>
     </div>
   )
 }
 
-/** Small legend rendered next to the chart title. */
-export function TrendLegend() {
-  const items = [
-    { label: 'Income', color: 'var(--income)' },
-    { label: 'Expenses', color: 'var(--expense)' },
-    { label: 'Net', color: 'var(--accent)' },
-  ]
-
+/** Key for the chart, including what the hatching means. */
+export function TrendKey() {
   return (
-    <ul className="flex items-center gap-3">
-      {items.map((item) => (
-        <li key={item.label} className="flex items-center gap-1.5 text-[11px] text-fg-muted">
-          <span
-            aria-hidden="true"
-            className="size-2 rounded-full"
-            style={{ backgroundColor: item.color }}
-          />
-          {item.label}
-        </li>
-      ))}
+    <ul className="flex flex-wrap items-center gap-3">
+      <li className="flex items-center gap-1.5 text-[11px] text-ink-3">
+        <span aria-hidden="true" className="h-2.5 w-2 bg-carbon" />
+        Paid in
+      </li>
+      <li className="flex items-center gap-1.5 text-[11px] text-ink-3">
+        <span aria-hidden="true" className="h-2.5 w-2 bg-ink" />
+        Paid out
+      </li>
+      <li className="flex items-center gap-1.5 text-[11px] text-ink-3">
+        <span
+          aria-hidden="true"
+          className="h-2.5 w-2 border border-ink"
+          style={{
+            backgroundImage:
+              'repeating-linear-gradient(45deg, var(--ink) 0 1px, var(--sheet) 1px 3px)',
+          }}
+        />
+        In progress
+      </li>
     </ul>
   )
 }

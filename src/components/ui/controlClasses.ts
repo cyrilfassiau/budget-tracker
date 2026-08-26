@@ -1,10 +1,13 @@
 import { cn } from '@/lib/cn'
 
-/** Shared visual contract for Input, Textarea and Select. */
+/**
+ * Fields are ruled boxes on the sheet, not rounded inputs: square corners, a
+ * hairline that darkens on hover, and the carbon ink on focus.
+ */
 export const controlClasses = cn(
-  'w-full rounded-xl border border-border-base bg-card px-3 py-2 text-sm text-fg',
-  'placeholder:text-fg-subtle transition-colors duration-150',
-  'hover:border-border-strong focus:border-accent',
-  'disabled:cursor-not-allowed disabled:opacity-60',
-  'aria-[invalid=true]:border-expense',
+  'w-full border border-rule bg-sheet px-2.5 py-1.5 text-[13px] text-ink',
+  'placeholder:text-ink-3 transition-colors duration-100',
+  'hover:border-rule-strong focus:border-carbon',
+  'disabled:cursor-not-allowed disabled:opacity-50',
+  'aria-[invalid=true]:border-red aria-[invalid=true]:bg-red-tint',
 )

@@ -1,5 +1,5 @@
 import { X } from 'lucide-react'
-import { useCallback, useRef, type ReactNode } from 'react'
+import { useCallback, useId, useRef, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 
 import { useFocusTrap, useScrollLock } from '@/hooks/useFocusTrap'
@@ -11,22 +11,15 @@ interface ModalProps {
   title: string
   description?: string
   children: ReactNode
-  /** Sticky action row at the bottom of the dialog. */
   footer?: ReactNode
-  size?: 'sm' | 'md' | 'lg'
-  /** Set to false for destructive flows where a stray click should not cancel. */
+  size?: 'sm' | 'md'
   closeOnBackdrop?: boolean
 }
 
-const SIZES = {
-  sm: 'sm:max-w-sm',
-  md: 'sm:max-w-lg',
-  lg: 'sm:max-w-2xl',
-}
-
 /**
- * Accessible dialog: focus is trapped while open, Escape closes it, the page
- * behind cannot scroll, and focus returns to the trigger on close.
+ * A slip laid over the book. Focus is trapped, Escape closes, the page behind
+ * cannot scroll, and focus returns to the trigger. Ids are generated per
+ * instance so two open dialogs never collide.
  */
 export function Modal({
   open,
@@ -39,6 +32,8 @@ export function Modal({
   closeOnBackdrop = true,
 }: ModalProps) {
   const panelRef = useRef<HTMLDivElement>(null)
+  const titleId = useId()
+  const descriptionId = useId()
   const handleEscape = useCallback(() => onClose(), [onClose])
 
   useFocusTrap(panelRef, open, handleEscape)
@@ -49,7 +44,7 @@ export function Modal({
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
       <div
-        className="absolute inset-0 animate-fade-in bg-[rgb(8_11_18/0.55)] backdrop-blur-[2px]"
+        className="absolute inset-0 animate-fade-in bg-[rgb(12_16_14/0.5)]"
         onClick={closeOnBackdrop ? onClose : undefined}
         aria-hidden="true"
       />
@@ -58,21 +53,24 @@ export function Modal({
         ref={panelRef}
         role="dialog"
         aria-modal="true"
-        aria-labelledby="modal-title"
-        aria-describedby={description ? 'modal-description' : undefined}
+        aria-labelledby={titleId}
+        aria-describedby={description ? descriptionId : undefined}
         className={cn(
-          'relative z-10 flex max-h-[92dvh] w-full flex-col animate-scale-in',
-          'rounded-t-2xl border border-border-base bg-card shadow-2xl sm:rounded-2xl',
-          SIZES[size],
+          'relative z-10 flex max-h-[92dvh] w-full animate-in flex-col',
+          'border border-ink bg-sheet',
+          size === 'sm' ? 'sm:max-w-sm' : 'sm:max-w-md',
         )}
       >
-        <header className="flex items-start justify-between gap-4 border-b border-border-base px-5 py-4">
+        <header className="flex items-start justify-between gap-4 border-b border-rule px-4 py-2.5">
           <div className="min-w-0">
-            <h2 id="modal-title" className="text-base font-semibold tracking-tight text-fg">
+            <h2
+              id={titleId}
+              className="font-narrow text-[13px] font-semibold uppercase tracking-[0.08em] text-ink"
+            >
               {title}
             </h2>
             {description ? (
-              <p id="modal-description" className="mt-0.5 text-[13px] text-fg-muted">
+              <p id={descriptionId} className="mt-0.5 text-[12px] text-ink-3">
                 {description}
               </p>
             ) : null}
@@ -80,17 +78,17 @@ export function Modal({
           <button
             type="button"
             onClick={onClose}
-            aria-label="Close dialog"
-            className="-mr-1 -mt-1 rounded-lg p-1.5 text-fg-subtle transition-colors hover:bg-card-muted hover:text-fg"
+            aria-label="Close"
+            className="-mr-1 -mt-0.5 p-1 text-ink-3 transition-colors hover:bg-sheet-alt hover:text-ink"
           >
             <X className="size-4" />
           </button>
         </header>
 
-        <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4">{children}</div>
+        <div className="min-h-0 flex-1 overflow-y-auto px-4 py-3.5">{children}</div>
 
         {footer ? (
-          <footer className="flex items-center justify-end gap-2 border-t border-border-base px-5 py-3.5">
+          <footer className="flex items-center justify-end gap-2 border-t border-rule px-4 py-2.5">
             {footer}
           </footer>
         ) : null}

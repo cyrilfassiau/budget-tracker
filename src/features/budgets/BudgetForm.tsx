@@ -88,8 +88,8 @@ export function BudgetForm({
     <Modal
       open={open}
       onClose={onClose}
-      title={isEditing ? 'Edit budget' : 'Set a budget'}
-      description={`Monthly limit for ${formatMonthLabel(month)}`}
+      title={isEditing ? 'Change limit' : 'Set a limit'}
+      description={`For ${formatMonthLabel(month)}`}
       size="sm"
       footer={
         <>
@@ -97,7 +97,7 @@ export function BudgetForm({
             Cancel
           </Button>
           <Button variant="primary" type="submit" form="budget-form" loading={submitting}>
-            {isEditing ? 'Save changes' : 'Set budget'}
+            {isEditing ? 'Save' : 'Set limit'}
           </Button>
         </>
       }
@@ -111,7 +111,7 @@ export function BudgetForm({
               disabled={isEditing}
               onChange={(event) => setSelectedCategory(event.target.value)}
             >
-              {options.length === 0 ? <option value="">Every category has a budget</option> : null}
+              {options.length === 0 ? <option value="">Every category already has a limit</option> : null}
               {options.map((category) => (
                 <option key={category.id} value={category.id}>
                   {category.name}
@@ -122,10 +122,10 @@ export function BudgetForm({
         </Field>
 
         <Field
-          label="Monthly limit"
+          label="Limit for the period"
           error={error}
           required
-          hint="You will be warned at 80% and highlighted when you go over."
+          hint="Progress is measured against how much of the period has passed."
         >
           {({ id, describedBy, invalid }) => (
             <Input

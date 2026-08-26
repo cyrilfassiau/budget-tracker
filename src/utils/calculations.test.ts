@@ -4,15 +4,22 @@ import { makeBudget, makeCategory, makeTransaction } from '@/test/factories'
 
 import {
   averageDailySpend,
+  broughtForward,
   budgetProgress,
   budgetStatus,
+  comparableSlice,
+  entryDelta,
   filterByMonth,
   largestExpense,
   monthlySeries,
   percentChange,
+  projectedSpend,
   summarise,
   totalsByCategory,
+  withRunningBalance,
 } from './calculations'
+
+import { daysElapsed, monthProgress } from './dates'
 
 const groceries = makeCategory({ id: 'cat-groceries', name: 'Groceries', color: '#f97316' })
 const rent = makeCategory({ id: 'cat-rent', name: 'Rent', color: '#6366f1' })
@@ -191,5 +198,176 @@ describe('largestExpense', () => {
 
   it('returns null when there are no expenses', () => {
     expect(largestExpense([march[0]!])).toBeNull()
+  })
+})
+
+describe('transfers', () => {
+  const withTransfer = [
+    ...march,
+    makeTransaction({ amount: 300, type: 'transfer', categoryId: 'cat-savings', date: '2026-03-20' }),
+  ]
+
+  it('leaves transfers out of income and expenses', () => {
+    const summary = summarise(withTransfer)
+    expect(summary.income).toBe(2000)
+    expect(summary.expenses).toBe(800)
+    expect(summary.transfers).toBe(300)
+  })
+
+  it('does not let a transfer change the net', () => {
+    expect(summarise(withTransfer).net).toBe(summarise(march).net)
+  })
+
+  it('does not let a transfer lower the savings rate', () => {
+    expect(summarise(withTransfer).savingsRate).toBe(summarise(march).savingsRate)
+  })
+
+  it('keeps transfers out of the category analysis of spending', () => {
+    const totals = totalsByCategory(withTransfer, [...categories, makeCategory({ id: 'cat-savings', kind: 'transfer' })], 'expense')
+    expect(totals.map((entry) => entry.categoryId)).not.toContain('cat-savings')
+  })
+
+  it('keeps transfers out of the monthly series', () => {
+    const [, , latest] = monthlySeries(withTransfer, '2026-03', 3)
+    expect(latest).toMatchObject({ income: 2000, expenses: 800 })
+  })
+
+  it('moves no money on the balance', () => {
+    expect(entryDelta(makeTransaction({ amount: 300, type: 'transfer' }))).toBe(0)
+    expect(entryDelta(makeTransaction({ amount: 300, type: 'income' }))).toBe(300)
+    expect(entryDelta(makeTransaction({ amount: 300, type: 'expense' }))).toBe(-300)
+  })
+})
+
+describe('month pacing', () => {
+  const midMarch = new Date('2026-03-13T12:00:00Z')
+
+  it('reports a finished month as fully elapsed', () => {
+    expect(monthProgress('2026-01', midMarch)).toBe(1)
+    expect(daysElapsed('2026-01', midMarch)).toBe(31)
+  })
+
+  it('reports a month that has not started as not elapsed', () => {
+    expect(monthProgress('2026-06', midMarch)).toBe(0)
+  })
+
+  it('reports the current month by days elapsed', () => {
+    expect(daysElapsed('2026-03', midMarch)).toBe(13)
+    expect(monthProgress('2026-03', midMarch)).toBeCloseTo(13 / 31, 5)
+  })
+
+  it('divides the daily rate by days elapsed, not days in the month', () => {
+    // 800 spent by the 13th is ~61.54/day, not 800/31 = 25.81.
+    expect(averageDailySpend(march, '2026-03', midMarch)).toBeCloseTo(800 / 13, 2)
+  })
+
+  it('projects the month at the rate established so far', () => {
+    expect(projectedSpend(march, '2026-03', midMarch)).toBeCloseTo((800 / 13) * 31, 0)
+  })
+
+  it('marks the current month partial in the series', () => {
+    const series = monthlySeries(march, '2026-03', 3, midMarch)
+    expect(series.at(-1)?.partial).toBe(true)
+    expect(series[0]?.partial).toBe(false)
+  })
+})
+
+describe('budget pacing', () => {
+  const midMarch = new Date('2026-03-13T12:00:00Z')
+  const budgets = [makeBudget({ categoryId: 'cat-groceries', month: '2026-03', limit: 400 })]
+
+  it('reports how far through the month the reader is', () => {
+    const [row] = budgetProgress(budgets, march, categories, '2026-03', { today: midMarch })
+    expect(row?.pace).toBeCloseTo(13 / 31, 5)
+  })
+
+  it('flags spending that has outrun the month', () => {
+    // 200 of 400 spent, but only 13/31 of the month gone.
+    const [row] = budgetProgress(budgets, march, categories, '2026-03', { today: midMarch })
+    expect(row?.aheadOfSchedule).toBe(true)
+    expect(row?.paceDelta).toBeCloseTo(200 - 400 * (13 / 31), 2)
+  })
+
+  it('does not flag spending that is behind schedule', () => {
+    const light = [makeTransaction({ amount: 20, categoryId: 'cat-groceries', date: '2026-03-02' })]
+    const [row] = budgetProgress(budgets, light, categories, '2026-03', { today: midMarch })
+    expect(row?.aheadOfSchedule).toBe(false)
+    expect(row?.paceDelta).toBeLessThan(0)
+  })
+
+  it('never flags a finished month as ahead of schedule', () => {
+    const [row] = budgetProgress(budgets, march, categories, '2026-03', {
+      today: new Date('2026-05-01T12:00:00Z'),
+    })
+    expect(row?.pace).toBe(1)
+    expect(row?.aheadOfSchedule).toBe(false)
+  })
+
+  it('excludes transfer categories from budgets entirely', () => {
+    const savings = makeCategory({ id: 'cat-savings', name: 'Savings', kind: 'transfer' })
+    const rows = budgetProgress(
+      [makeBudget({ categoryId: 'cat-savings', month: '2026-03', limit: 300 })],
+      march,
+      [...categories, savings],
+      '2026-03',
+    )
+    expect(rows).toHaveLength(0)
+  })
+})
+
+describe('comparableSlice', () => {
+  it('cuts a month at the given day so comparisons are like-for-like', () => {
+    const sliced = comparableSlice(march, '2026-03', 5)
+    expect(sliced.map((entry) => entry.date)).toEqual(['2026-03-01', '2026-03-05', '2026-03-02'])
+  })
+
+  it('excludes entries after the cutoff', () => {
+    expect(comparableSlice(march, '2026-03', 1)).toHaveLength(1)
+  })
+})
+
+describe('withRunningBalance', () => {
+  const entries = [
+    makeTransaction({ id: 'a', amount: 1000, type: 'income', date: '2026-03-01' }),
+    makeTransaction({ id: 'b', amount: 250, type: 'expense', date: '2026-03-02' }),
+    makeTransaction({ id: 'c', amount: 100, type: 'transfer', date: '2026-03-03' }),
+    makeTransaction({ id: 'd', amount: 50, type: 'expense', date: '2026-03-04' }),
+  ]
+
+  it('carries the balance forward entry by entry', () => {
+    const balances = Object.fromEntries(
+      withRunningBalance(entries).map((row) => [row.transaction.id, row.balance]),
+    )
+    expect(balances).toEqual({ a: 1000, b: 750, c: 750, d: 700 })
+  })
+
+  it('starts from an opening balance', () => {
+    expect(withRunningBalance(entries, 500)[0]?.balance).toBe(1500)
+  })
+
+  it('computes chronologically even when the rows are newest-first', () => {
+    const reversed = [...entries].reverse()
+    const last = withRunningBalance(reversed).find((row) => row.transaction.id === 'd')
+    expect(last?.balance).toBe(700)
+  })
+
+  it('goes negative when more went out than came in', () => {
+    const overdrawn = [makeTransaction({ amount: 40, type: 'expense', date: '2026-03-01' })]
+    expect(withRunningBalance(overdrawn)[0]?.balance).toBe(-40)
+  })
+})
+
+describe('broughtForward', () => {
+  it('nets everything before the month', () => {
+    const history = [
+      makeTransaction({ amount: 500, type: 'income', date: '2026-01-10' }),
+      makeTransaction({ amount: 200, type: 'expense', date: '2026-02-10' }),
+      makeTransaction({ amount: 999, type: 'expense', date: '2026-03-10' }),
+    ]
+    expect(broughtForward(history, '2026-03')).toBe(300)
+  })
+
+  it('is zero when there is no history', () => {
+    expect(broughtForward(march, '2026-01')).toBe(0)
   })
 })
