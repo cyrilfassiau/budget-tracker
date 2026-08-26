@@ -141,14 +141,16 @@ export function BudgetsPage() {
 
             {rows.length > 0 ? (
               <div className="border-b border-rule px-4 py-3 sm:px-5">
-                <div className="flex items-baseline justify-between gap-3">
-                  <p className="text-[13px] text-ink-2">Total against limits</p>
-                  <p className="text-[15px] font-semibold text-ink">
-                    <Amount value={totals.spent} plain />
-                    <span className="font-normal text-ink-3">
-                      {' of '}
-                      <Amount value={totals.limit} plain />
-                    </span>
+                <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                  <div>
+                    <p className="col-head text-ink-3">Paid against limits</p>
+                    <p className="mt-0.5 font-narrow text-[30px] font-bold leading-none tracking-[-0.01em] text-ink sm:text-[38px]">
+                      <Amount value={totals.spent} plain />
+                    </p>
+                  </div>
+                  <p className="text-[13px] text-ink-3">
+                    of <Amount value={totals.limit} plain className="font-semibold text-ink-2" />{' '}
+                    budgeted
                   </p>
                 </div>
                 <PaceBar

@@ -20,8 +20,18 @@ import { formatMonthLabel } from '@/utils/dates'
 import { formatMoney } from '@/utils/money'
 
 export function RegisterPage() {
-  const { rows, matched, summary, page, totalPages, total, pageSize, isEmpty, isFilteredEmpty } =
-    useRegister()
+  const {
+    rows,
+    matched,
+    summary,
+    page,
+    totalPages,
+    total,
+    pageSize,
+    isEmpty,
+    isFilteredEmpty,
+    closingBalance,
+  } = useRegister()
   const loading = useIsLoading()
   const categories = useCategoryMap()
   const scope = useUIStore((state) => state.registerScope)
@@ -83,6 +93,18 @@ export function RegisterPage() {
         <RegisterControls />
 
         <Sheet className="overflow-hidden">
+          {!loading && !isEmpty && !isFilteredEmpty ? (
+            <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-rule px-4 py-3 sm:px-5">
+              <div>
+                <p className="col-head text-ink-3">Balance after the last entry</p>
+                <p className="mt-0.5 font-narrow text-[30px] font-bold leading-none tracking-[-0.01em] sm:text-[38px]">
+                  <Amount value={closingBalance} />
+                </p>
+              </div>
+              <p className="stamp text-ink-3">{scopeLabel}</p>
+            </div>
+          ) : null}
+
           {loading ? (
             <SkeletonRows rows={8} />
           ) : isEmpty ? (
@@ -147,7 +169,7 @@ export function RegisterPage() {
                       <td className="hidden whitespace-nowrap px-2 py-1.5 text-right text-[13px] text-ink-2 sm:table-cell">
                         <Amount value={summary.transfers} plain blankZero />
                       </td>
-                      <td className="hidden px-2 py-1.5 lg:table-cell" />
+                      <td className="hidden px-2 py-1.5 sm:table-cell" />
                       <td className="py-1.5 pl-1 pr-3 sm:pr-4" />
                     </tr>
                   </tfoot>

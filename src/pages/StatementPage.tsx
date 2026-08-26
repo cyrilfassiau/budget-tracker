@@ -65,20 +65,6 @@ export function StatementPage() {
 
           <div className="grid gap-4 lg:grid-cols-2">
             <Sheet>
-              <SheetHead title="Six periods" action={<TrendKey />} />
-              <div className="px-3 py-3 sm:px-4">
-                <TrendChart data={data.series} activeMonth={data.month} />
-              </div>
-            </Sheet>
-
-            <Sheet>
-              <SheetHead title="Analysis of payments" />
-              <AnalysisTable rows={data.spendingByCategory} total={data.summary.expenses} />
-            </Sheet>
-          </div>
-
-          <div className="grid gap-4 lg:grid-cols-2">
-            <Sheet>
               <SheetHead
                 title="Budgets"
                 meta={
@@ -164,6 +150,20 @@ export function StatementPage() {
               </div>
             </Sheet>
           </div>
+          <div className="grid gap-4 lg:grid-cols-2">
+            <Sheet>
+              <SheetHead title="Six periods" action={<TrendKey />} />
+              <div className="px-3 py-3 sm:px-4">
+                <TrendChart data={data.series} activeMonth={data.month} />
+              </div>
+            </Sheet>
+
+            <Sheet>
+              <SheetHead title="Analysis of payments" />
+              <AnalysisTable rows={data.spendingByCategory} total={data.summary.expenses} />
+            </Sheet>
+          </div>
+
         </div>
       )}
     </AppLayout>

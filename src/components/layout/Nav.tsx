@@ -12,8 +12,7 @@ export function Sidebar() {
   return (
     <aside className="hidden w-52 shrink-0 border-r border-rule bg-sheet lg:flex lg:flex-col">
       <div className="border-b border-rule px-5 py-4">
-        <p className="stamp text-ink-3">Account book</p>
-        <p className="mt-0.5 font-narrow text-[15px] font-bold uppercase tracking-[0.06em] text-ink">
+        <p className="font-narrow text-[15px] font-bold uppercase tracking-[0.06em] text-ink">
           Budget Tracker
         </p>
       </div>
@@ -26,7 +25,7 @@ export function Sidebar() {
             end={to === '/'}
             className={({ isActive }) =>
               cn(
-                'flex items-baseline gap-3 border-l-2 px-5 py-2',
+                'flex items-baseline gap-3 border-l px-5 py-2',
                 'font-narrow text-[13px] font-semibold uppercase tracking-[0.07em]',
                 'transition-colors duration-100',
                 isActive

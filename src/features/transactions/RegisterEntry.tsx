@@ -138,11 +138,17 @@ export function RegisterEntry({
       <td className="w-full py-2 pr-2 align-top">
         <div className="flex items-baseline gap-2">
           <p className="min-w-0 truncate text-[13px] text-ink">{label}</p>
-          {isTransfer ? <span className="stamp shrink-0 text-[9px] text-ink-3">TFR</span> : null}
-          {/* On a phone the money columns collapse into one, so direction
-              moves onto a tag rather than being lost. */}
+          {/* On a phone the money columns collapse into one, so direction moves
+              onto a ruled tag — set as an object on the sheet, not a whisper. */}
+          {isTransfer ? (
+            <span className="stamp shrink-0 border border-rule px-1 py-px text-[9px] leading-none text-ink-2">
+              TFR
+            </span>
+          ) : null}
           {transaction.type === 'income' ? (
-            <span className="stamp shrink-0 text-[9px] text-ink-3 sm:hidden">IN</span>
+            <span className="stamp shrink-0 border border-rule px-1 py-px text-[9px] leading-none text-ink-2 sm:hidden">
+              IN
+            </span>
           ) : null}
         </div>
         <p className="mt-0.5 flex items-center gap-1.5 text-[11px] text-ink-3">
@@ -157,6 +163,11 @@ export function RegisterEntry({
         className="whitespace-nowrap px-2 py-2 text-right align-top text-[13px] text-ink sm:hidden"
       >
         <Amount value={transaction.amount} plain />
+        {showBalance && balance !== undefined ? (
+          <span className="mt-0.5 block text-[11px] font-semibold text-ink-3">
+            <Amount value={balance} />
+          </span>
+        ) : null}
       </td>
 
       <td
@@ -183,7 +194,7 @@ export function RegisterEntry({
       {showBalance ? (
         <td
           data-column="balance"
-          className="hidden whitespace-nowrap px-2 py-2 text-right align-top text-[13px] font-semibold text-ink lg:table-cell"
+          className="hidden whitespace-nowrap px-2 py-2 text-right align-top text-[14px] font-semibold text-ink sm:table-cell"
         >
           {balance === undefined ? null : <Amount value={balance} />}
         </td>
@@ -214,7 +225,7 @@ export function RegisterHead({ showBalance = false }: { showBalance?: boolean })
           Particulars
         </th>
         <th scope="col" className="col-head px-2 py-1.5 text-right sm:hidden">
-          Amount
+          Amount · balance
         </th>
         <th scope="col" className="col-head hidden px-2 py-1.5 text-right sm:table-cell">
           Paid out
@@ -226,7 +237,7 @@ export function RegisterHead({ showBalance = false }: { showBalance?: boolean })
           Transfer
         </th>
         {showBalance ? (
-          <th scope="col" className="col-head hidden px-2 py-1.5 text-right lg:table-cell">
+          <th scope="col" className="col-head hidden px-2 py-1.5 text-right sm:table-cell">
             Balance
           </th>
         ) : null}

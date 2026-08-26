@@ -8,27 +8,32 @@ interface LineProps {
   label: string
   value: number
   note?: string
-  emphasis?: boolean
+  /** The two figures the arithmetic resolves to. */
+  weight?: 'net' | 'total'
   plain?: boolean
 }
 
-function Line({ label, value, note, emphasis, plain }: LineProps) {
+function Line({ label, value, note, weight, plain }: LineProps) {
   return (
-    <tr className={cn('border-t border-rule', emphasis && 'border-t-2 border-ink')}>
+    <tr className={cn('border-t border-rule', weight === 'total' && 'border-t-2 border-ink')}>
       <th
         scope="row"
         className={cn(
-          'py-2 pl-4 pr-2 text-left font-normal sm:pl-5',
-          emphasis ? 'col-head text-ink' : 'text-[13px] text-ink-2',
+          'py-2 pl-4 pr-2 text-left align-middle font-normal sm:pl-5',
+          weight ? 'col-head text-ink' : 'text-[13px] text-ink-2',
         )}
       >
         {label}
       </th>
-      <td className="hidden py-2 pr-2 text-[11px] text-ink-3 sm:table-cell">{note}</td>
+      <td className="hidden py-2 pr-2 align-middle text-[11px] text-ink-3 sm:table-cell">{note}</td>
       <td
         className={cn(
-          'whitespace-nowrap py-2 pl-2 pr-4 text-right sm:pr-5',
-          emphasis ? 'text-[15px] font-semibold' : 'text-[13px]',
+          'whitespace-nowrap py-2 pl-2 pr-4 text-right align-middle sm:pr-5',
+          weight === 'total'
+            ? 'font-narrow text-[30px] font-bold leading-none tracking-[-0.01em] sm:text-[38px]'
+            : weight === 'net'
+              ? 'text-[15px] font-semibold'
+              : 'text-[13px]',
         )}
       >
         <Amount value={value} plain={plain} />
@@ -38,14 +43,16 @@ function Line({ label, value, note, emphasis, plain }: LineProps) {
 }
 
 /**
- * The passbook's account summary: brought forward, what moved, carried
- * forward. It replaces the row of stat cards because those four boxes were
- * four unrelated facts pretending to be a structure — this is one arithmetic
- * the reader can follow down the column and check.
+ * The passbook's account summary: one arithmetic the reader can follow down a
+ * shared decimal and check — brought forward, what moved, what is left.
+ *
+ * It replaces the row of stat cards, so it must not quietly grow one back: the
+ * derived figures that used to sit under it restated the elapsed rule the head
+ * already carries, and carried forward is the number the page is for.
  */
 export function SummaryBlock({ data }: { data: StatementData }) {
   const { currency, locale } = useCurrencyFormat()
-  const { summary, previousSummary, expenseChange, complete, elapsed } = data
+  const { summary, previousSummary, complete, elapsed } = data
 
   const comparison = complete
     ? 'against the previous period'
@@ -89,45 +96,27 @@ export function SummaryBlock({ data }: { data: StatementData }) {
               note="Moved between your own accounts — not counted above"
             />
           ) : null}
-          <Line label="Carried forward" value={data.carriedForward} emphasis />
+          <Line
+            label="Net this period"
+            value={summary.net}
+            weight="net"
+            note={
+              summary.savingsRate === null
+                ? 'No income recorded this period'
+                : `${formatPercent(summary.savingsRate, locale)} of income kept`
+            }
+          />
+          <Line label="Carried forward" value={data.carriedForward} weight="total" />
         </tbody>
       </table>
 
-      <dl className="grid grid-cols-2 gap-x-4 gap-y-2 border-t border-rule px-4 py-3 sm:grid-cols-4 sm:px-5">
-        <div>
-          <dt className="col-head text-ink-3">Net this period</dt>
-          <dd className="mt-0.5 text-[14px] font-semibold">
-            <Amount value={summary.net} />
-          </dd>
-        </div>
-        <div>
-          <dt className="col-head text-ink-3">Kept of income</dt>
-          <dd className="figure mt-0.5 text-[14px] font-semibold text-ink">
-            {summary.savingsRate === null ? '—' : formatPercent(summary.savingsRate, locale)}
-          </dd>
-        </div>
-        <div>
-          <dt className="col-head text-ink-3">Per day so far</dt>
-          <dd className="mt-0.5 text-[14px] font-semibold text-ink">
-            <Amount value={data.averageDaily} plain whole />
-          </dd>
-        </div>
-        <div>
-          <dt className="col-head text-ink-3">
-            {complete ? 'Entries' : 'At this rate'}
-          </dt>
-          <dd className="mt-0.5 text-[14px] font-semibold text-ink">
-            {complete ? (
-              <span className="figure">{summary.transactionCount}</span>
-            ) : (
-              <Amount value={data.projected} plain whole />
-            )}
-          </dd>
-        </div>
-      </dl>
-
-      {!complete && expenseChange !== null ? (
+      {!complete ? (
         <p className="border-t border-rule px-4 py-2 text-[11px] leading-snug text-ink-3 sm:px-5">
+          {summary.savingsRate === null ? null : (
+            <span className="sm:hidden">
+              {formatPercent(summary.savingsRate, locale)} of income kept.{' '}
+            </span>
+          )}
           Comparisons are cut to the same day of the previous period, so a period still running is
           never measured against a finished one.
         </p>

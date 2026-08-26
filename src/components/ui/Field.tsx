@@ -44,7 +44,7 @@ export function Field({
         {/* The control carries `required`, so this marker is for sighted
             readers only — in the accessible name it just muddies the label. */}
         {required ? (
-          <span aria-hidden="true" className="ml-1 text-red">
+          <span aria-hidden="true" className="ml-1 text-ink-3">
             required
           </span>
         ) : null}

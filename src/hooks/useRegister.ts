@@ -28,6 +28,8 @@ export interface RegisterResult {
   pageSize: number
   isEmpty: boolean
   isFilteredEmpty: boolean
+  /** Balance after the most recent entry in scope — the passbook's headline. */
+  closingBalance: number
 }
 
 /**
@@ -79,6 +81,18 @@ export function useRegister(): RegisterResult {
   const safePage = Math.min(page, totalPages)
   const pageRows = paginate(matched, safePage, PAGE_SIZE)
 
+  const latest = useMemo(
+    () =>
+      matched.reduce<Transaction | null>(
+        (newest, row) =>
+          !newest || row.date > newest.date || (row.date === newest.date && row.createdAt > newest.createdAt)
+            ? row
+            : newest,
+        null,
+      ),
+    [matched],
+  )
+
   return {
     rows: pageRows.map((transaction, index) => ({
       transaction,
@@ -93,5 +107,6 @@ export function useRegister(): RegisterResult {
     pageSize: PAGE_SIZE,
     isEmpty: scoped.length === 0,
     isFilteredEmpty: scoped.length > 0 && matched.length === 0,
+    closingBalance: latest ? (balanceById.get(latest.id) ?? 0) : 0,
   }
 }

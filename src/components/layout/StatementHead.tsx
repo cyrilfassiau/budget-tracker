@@ -38,19 +38,17 @@ export function StatementHead({ title, actions, showPeriod = true }: StatementHe
           and lets any control with internal state desync from its twin. */}
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 px-4 pb-1.5 pt-2.5 sm:px-6">
         <div className="min-w-0 flex-1">
-          <p className="stamp text-ink-3">Budget Tracker</p>
           <h1 className="font-narrow text-[17px] font-bold uppercase leading-tight tracking-[0.05em] text-ink sm:text-[19px]">
             {title}
           </h1>
         </div>
 
-        {actions ? (
-          <div className="order-3 flex w-full items-center gap-2 overflow-x-auto pb-0.5 sm:order-none sm:w-auto sm:overflow-visible sm:pb-0">
-            {actions}
-          </div>
-        ) : null}
-
-        <ThemeToggle className="hidden sm:flex" />
+        {/* Wraps rather than scrolls: a clipped control with no scroll
+            affordance reads as a broken row, not as more content. */}
+        <div className="order-3 flex w-full flex-wrap items-center gap-2 sm:order-none sm:w-auto">
+          {actions}
+          <ThemeToggle />
+        </div>
 
         <Button
           variant="primary"

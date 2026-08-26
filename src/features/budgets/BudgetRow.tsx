@@ -25,7 +25,15 @@ function verdict(budget: BudgetProgress, currency: string, locale: string): stri
     return `${formatMoney(Math.abs(budget.remaining), currency, locale)} over the limit`
   }
   if (budget.pace >= 1) {
-    return `${formatMoney(budget.remaining, currency, locale)} unspent`
+    return budget.spent === 0
+      ? 'Nothing paid all period'
+      : `${formatMoney(budget.remaining, currency, locale)} unspent`
+  }
+  // A fixed monthly charge still unpaid on day 26 is not comfortably ahead —
+  // reporting it as "within pace" is exactly the artefact of timing this app
+  // exists to refuse.
+  if (budget.spent === 0 && budget.pace >= 0.5) {
+    return `Nothing paid yet, ${formatPercent(budget.pace, locale)} of the period gone`
   }
   // "Ahead"/"behind schedule" reads as praise and warning the wrong way round
   // for spending, where going slower than the month is the good outcome.
@@ -38,6 +46,7 @@ function verdict(budget: BudgetProgress, currency: string, locale: string): stri
 export function BudgetRow({ budget, onEdit, onDelete, compact = false }: BudgetRowProps) {
   const { currency, locale } = useCurrencyFormat()
   const isOver = budget.status === 'over'
+  const unpaidLate = budget.limit > 0 && budget.spent === 0 && budget.pace >= 0.5
 
   return (
     <li className={cn('group border-t border-rule px-4 sm:px-5', compact ? 'py-2' : 'py-2.5')}>
@@ -88,7 +97,7 @@ export function BudgetRow({ budget, onEdit, onDelete, compact = false }: BudgetR
       <p
         className={cn(
           'mt-1 flex items-baseline justify-between gap-2 text-[11px]',
-          isOver ? 'text-red' : 'text-ink-3',
+          isOver ? 'text-red' : unpaidLate ? 'text-ink' : 'text-ink-3',
         )}
       >
         <span>{verdict(budget, currency, locale)}</span>
