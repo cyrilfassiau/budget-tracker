@@ -39,5 +39,6 @@
     "typescript": "~6.0.2",
     "vite": "^8.2.2",
     "vitest": "^4.1.11"
-  }
+  },
+  "description": "A client-side personal budget and expense tracker built with React, TypeScript and Vite."
 }
