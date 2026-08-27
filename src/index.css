@@ -18,13 +18,13 @@
 
   --fg: #0b0c0f;
   --fg-muted: #61646e;
-  --fg-faint: #8b8f9a;
+  --fg-faint: #6e727d;
 
   --accent: #1f5eff;
   --accent-fg: #ffffff;
   --accent-soft: #e6edff;
 
-  --positive: #07914a;
+  --positive: #06753c;
   --positive-soft: #e2f5eb;
   --negative: #d4342f;
   --negative-soft: #fdeceb;
@@ -44,7 +44,7 @@
 
   --fg: #ffffff;
   --fg-muted: #9ba0ac;
-  --fg-faint: #71767f;
+  --fg-faint: #8f95a1;
 
   --accent: #5b8bff;
   --accent-fg: #06070a;
@@ -163,6 +163,19 @@
   .pill {
     border-radius: 999px;
   }
+
+  /* 44px minimum hit area without inflating the visual control. */
+  .tap {
+    position: relative;
+  }
+  .tap::after {
+    content: '';
+    position: absolute;
+    inset: 50% 50%;
+    width: 44px;
+    height: 44px;
+    transform: translate(-50%, -50%);
+  }
 }
 
 @layer utilities {
@@ -173,7 +186,7 @@
   /* The one authored moment: a new entry drops onto the stack and settles,
      the way a pending transaction lands in a banking feed. */
   .animate-drop {
-    animation: drop 460ms cubic-bezier(0.22, 1.2, 0.36, 1) both;
+    animation: drop 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
   .animate-sheet {
@@ -202,14 +215,11 @@
 }
 
 @keyframes drop {
-  0% {
+  from {
     opacity: 0;
     transform: translateY(-14px) scale(0.98);
   }
-  70% {
-    opacity: 1;
-  }
-  100% {
+  to {
     opacity: 1;
     transform: none;
   }

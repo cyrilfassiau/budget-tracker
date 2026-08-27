@@ -56,7 +56,7 @@ function RowMenu({
         aria-haspopup="menu"
         aria-expanded={open}
         className={cn(
-          'flex size-8 items-center justify-center rounded-full text-fg-faint transition-colors',
+          'tap flex size-9 items-center justify-center rounded-full text-fg-faint transition-colors',
           'hover:bg-surface-2 hover:text-fg',
           open && 'bg-surface-2 text-fg',
         )}
@@ -133,7 +133,7 @@ export function TransactionRow({
         <div className="flex items-center gap-1.5">
           <p className="min-w-0 truncate text-[15px] font-bold text-fg">{label}</p>
           {isTransfer ? (
-            <span className="pill shrink-0 bg-surface-2 px-1.5 py-0.5 text-[10px] font-bold uppercase text-fg-muted">
+            <span className="pill shrink-0 bg-surface-2 px-2 py-0.5 text-[12px] font-semibold text-fg-muted">
               Transfer
             </span>
           ) : null}

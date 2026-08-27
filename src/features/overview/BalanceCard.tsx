@@ -18,7 +18,7 @@ export function BalanceCard({ data }: { data: StatementData }) {
   const { summary, complete, elapsed, totalDays, progress } = data
 
   return (
-    <Card className="flex flex-col gap-5">
+    <Card className="flex flex-col gap-5 lg:grid lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:gap-x-10">
       <div>
         <p className="text-[14px] font-semibold text-fg-muted">Balance</p>
         <p className="figure mt-1 text-[40px] font-extrabold leading-none tracking-[-0.035em] text-fg sm:text-[52px]">
@@ -44,7 +44,7 @@ export function BalanceCard({ data }: { data: StatementData }) {
         </div>
       </div>
 
-      <div className="flex gap-2 overflow-x-auto pb-1">
+      <div className="flex gap-2 overflow-x-auto pb-1 lg:justify-end lg:overflow-visible lg:pb-0">
         <QuickAction
           label="Add"
           variant="accent"
@@ -63,7 +63,7 @@ export function BalanceCard({ data }: { data: StatementData }) {
         />
       </div>
 
-      <div>
+      <div className="lg:col-span-2">
         <div className="flex items-baseline justify-between gap-3 text-[13px]">
           <span className="font-semibold text-fg-muted">
             {complete ? 'Month complete' : `Day ${elapsed} of ${totalDays}`}

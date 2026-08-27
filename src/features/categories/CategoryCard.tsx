@@ -1,4 +1,13 @@
-import { ChevronDown, ChevronUp, GripVertical, Lock, Pencil, Trash2 } from 'lucide-react'
+import {
+  ChevronDown,
+  ChevronUp,
+  GripVertical,
+  Lock,
+  MoreHorizontal,
+  Pencil,
+  Trash2,
+} from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
 
 import { Amount, CategoryAvatar } from '@/components/ui'
 import { cn } from '@/lib/cn'
@@ -38,6 +47,79 @@ const KIND_LABEL: Record<CategoryKind, string> = {
  * arrows are always rendered, never revealed on hover, because a touch device
  * has no hover to reveal them with.
  */
+function OverflowMenu({
+  category,
+  canMoveUp,
+  canMoveDown,
+  onEdit,
+  onDelete,
+  onMove,
+}: Pick<CategoryCardProps, 'category' | 'canMoveUp' | 'canMoveDown' | 'onEdit' | 'onDelete' | 'onMove'>) {
+  const [open, setOpen] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!open) return
+    const onPointerDown = (event: PointerEvent) => {
+      if (!containerRef.current?.contains(event.target as Node)) setOpen(false)
+    }
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpen(false)
+    }
+    document.addEventListener('pointerdown', onPointerDown)
+    document.addEventListener('keydown', onKeyDown)
+    return () => {
+      document.removeEventListener('pointerdown', onPointerDown)
+      document.removeEventListener('keydown', onKeyDown)
+    }
+  }, [open])
+
+  const item =
+    'flex w-full items-center gap-2.5 rounded-[12px] px-3 py-2.5 text-[14px] font-semibold transition-colors disabled:opacity-30'
+
+  return (
+    <div ref={containerRef} className="relative sm:hidden">
+      <button
+        type="button"
+        onClick={() => setOpen((value) => !value)}
+        aria-label={`Actions for ${category.name}`}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        className={cn(
+          'tap flex size-9 items-center justify-center rounded-full text-fg-faint transition-colors',
+          open && 'bg-surface-2 text-fg',
+        )}
+      >
+        <MoreHorizontal className="size-4" />
+      </button>
+
+      {open ? (
+        <div
+          role="menu"
+          className="absolute right-0 top-full z-20 mt-1 w-44 animate-in overflow-hidden rounded-[16px] bg-raised p-1 shadow-[0_10px_30px_-8px_rgb(var(--scrim)/0.35)]"
+        >
+          <button type="button" role="menuitem" onClick={() => { setOpen(false); onEdit(category) }} className={cn(item, 'text-fg hover:bg-surface-2')}>
+            <Pencil className="size-4" />
+            Edit
+          </button>
+          <button type="button" role="menuitem" disabled={!canMoveUp} onClick={() => onMove(category, -1)} className={cn(item, 'text-fg hover:bg-surface-2')}>
+            <ChevronUp className="size-4" />
+            Move up
+          </button>
+          <button type="button" role="menuitem" disabled={!canMoveDown} onClick={() => onMove(category, 1)} className={cn(item, 'text-fg hover:bg-surface-2')}>
+            <ChevronDown className="size-4" />
+            Move down
+          </button>
+          <button type="button" role="menuitem" disabled={category.isSystem} onClick={() => { setOpen(false); onDelete(category) }} className={cn(item, 'text-negative hover:bg-negative-soft')}>
+            <Trash2 className="size-4" />
+            Delete
+          </button>
+        </div>
+      ) : null}
+    </div>
+  )
+}
+
 export function CategoryCard({
   category,
   usage,
@@ -90,7 +172,16 @@ export function CategoryCard({
         </span>
       ) : null}
 
-      <div className="flex shrink-0 items-center gap-0.5">
+      <OverflowMenu
+        category={category}
+        canMoveUp={canMoveUp}
+        canMoveDown={canMoveDown}
+        onEdit={onEdit}
+        onDelete={onDelete}
+        onMove={onMove}
+      />
+
+      <div className="hidden shrink-0 items-center gap-0.5 sm:flex">
         <div className="flex flex-col">
           <button
             type="button"

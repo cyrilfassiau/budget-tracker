@@ -40,7 +40,9 @@ export function SegmentedPill<T extends string>({
             onClick={() => onChange(option.value)}
             className={cn(
               'pill h-9 flex-1 whitespace-nowrap px-4 text-[14px] font-bold transition-colors',
-              selected ? 'bg-raised text-fg shadow-sm' : 'text-fg-muted hover:text-fg',
+              selected
+                ? 'bg-fg text-bg'
+                : 'text-fg-muted hover:text-fg',
             )}
           >
             {option.label}

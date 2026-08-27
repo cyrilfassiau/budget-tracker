@@ -42,7 +42,7 @@ export function SpendingRing({ data, total, maxSlices = 7 }: SpendingRingProps) 
   const active = activeIndex !== null ? slices[activeIndex] : null
 
   return (
-    <div className="flex flex-col items-center gap-5 sm:flex-row sm:gap-6">
+    <div className="flex flex-col items-center gap-5">
       <div className="relative size-44 shrink-0">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>

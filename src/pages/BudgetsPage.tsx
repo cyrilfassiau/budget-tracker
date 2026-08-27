@@ -141,15 +141,13 @@ export function BudgetsPage() {
 
             {rows.length > 0 ? (
               <div className="pt-1">
-                <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                  <div>
-                    <p className="text-[13px] font-semibold text-fg-muted">Spent this month</p>
-                    <p className="figure mt-0.5 text-[30px] font-extrabold leading-none tracking-[-0.03em] text-fg sm:text-[36px]">
-                      <Amount value={totals.spent} plain />
-                    </p>
-                  </div>
-                  <p className="text-[13px] font-semibold text-fg-muted">
-                    of <Amount value={totals.limit} plain className="text-fg" /> budgeted
+                <div>
+                  <p className="text-[13px] font-semibold text-fg-muted">Spent this month</p>
+                  <p className="figure mt-0.5 text-[30px] font-extrabold leading-none tracking-[-0.03em] text-fg sm:text-[36px]">
+                    <Amount value={totals.spent} plain />
+                    <span className="ml-2 align-baseline text-[15px] font-semibold text-fg-muted">
+                      of <Amount value={totals.limit} plain /> budgeted
+                    </span>
                   </p>
                 </div>
                 <PaceBar

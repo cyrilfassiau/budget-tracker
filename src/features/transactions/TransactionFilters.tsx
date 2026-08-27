@@ -65,7 +65,7 @@ export function TransactionFilters() {
         ) : null}
       </div>
 
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <SegmentedPill<'month' | 'all'>
           label="Period scope"
           value={scope}

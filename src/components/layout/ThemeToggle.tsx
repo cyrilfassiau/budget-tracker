@@ -30,8 +30,8 @@ export function ThemeToggle({ className }: { className?: string }) {
           title={label}
           onClick={() => setTheme(value)}
           className={cn(
-            'flex size-8 items-center justify-center rounded-full transition-colors',
-            theme === value ? 'bg-raised text-fg shadow-sm' : 'text-fg-muted hover:text-fg',
+            'tap flex size-9 items-center justify-center rounded-full transition-colors',
+            theme === value ? 'bg-fg text-bg' : 'text-fg-muted hover:text-fg',
           )}
         >
           <Icon className="size-4" />

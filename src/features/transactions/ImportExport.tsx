@@ -63,7 +63,7 @@ export function ImportExport({ rows, scopeLabel }: ImportExportProps) {
   }
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2 max-sm:contents">
       <input
         ref={inputRef}
         type="file"

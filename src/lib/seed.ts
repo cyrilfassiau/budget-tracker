@@ -68,6 +68,19 @@ const RECIPES: SeedRecipe[] = [
 ]
 
 /**
+ * Month-to-month variation, oldest to newest.
+ *
+ * Without this every month came out within a few percent of the last, so the
+ * six-month chart — whose entire job is to show variation — showed a flat row
+ * of identical bars. Fixed charges (rent, salary) ignore it; discretionary
+ * spending does not, which is how a real year actually behaves.
+ */
+const MONTH_VARIATION = [0.78, 1.24, 0.9, 1.38, 0.84, 1.05]
+
+/** Categories whose amount is a fixed commitment, not discretionary spend. */
+const FIXED_CATEGORIES = new Set(['cat-rent', 'cat-salary'])
+
+/**
  * Six months of plausible history — a portfolio demo with empty charts sells
  * nothing, and this also exercises the month picker on first load.
  */
@@ -79,6 +92,7 @@ export function buildSeedTransactions(today = new Date()): Transaction[] {
     const monthStart = startOfMonth(addMonths(today, -offset))
     const isCurrentMonth = offset === 0
     const lastDay = isCurrentMonth ? today.getDate() : 28
+    const variation = MONTH_VARIATION[5 - offset] ?? 1
 
     for (const recipe of RECIPES) {
       for (let i = 0; i < recipe.perMonth; i += 1) {
@@ -88,7 +102,9 @@ export function buildSeedTransactions(today = new Date()): Transaction[] {
         const date = new Date(monthStart)
         date.setDate(day)
 
-        const amount = Math.round((recipe.min + random() * (recipe.max - recipe.min)) * 100) / 100
+        const base = recipe.min + random() * (recipe.max - recipe.min)
+        const scaled = FIXED_CATEGORIES.has(recipe.categoryId) ? base : base * variation
+        const amount = Math.round(scaled * 100) / 100
         const note = recipe.notes[Math.floor(random() * recipe.notes.length)] ?? ''
         const createdAt = new Date(date).toISOString()
 
