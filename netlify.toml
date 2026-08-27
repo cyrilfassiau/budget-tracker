@@ -2,6 +2,11 @@
   command = "npm run build"
   publish = "dist"
 
+[build.environment]
+  # Vite 8 needs ^20.19 || >=22.12; pin so the deploy does not drift onto
+  # whatever Netlify's default happens to be.
+  NODE_VERSION = "22"
+
 # Client-side routing: every path must serve index.html.
 [[redirects]]
   from = "/*"
