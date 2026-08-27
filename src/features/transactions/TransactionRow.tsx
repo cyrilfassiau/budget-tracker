@@ -56,7 +56,7 @@ function RowMenu({
         aria-haspopup="menu"
         aria-expanded={open}
         className={cn(
-          'tap flex size-9 items-center justify-center rounded-full text-fg-faint transition-colors',
+          'tap flex items-center justify-center rounded-full text-fg-faint transition-colors',
           'hover:bg-surface-2 hover:text-fg',
           open && 'bg-surface-2 text-fg',
         )}
@@ -130,15 +130,11 @@ export function TransactionRow({
       <CategoryAvatar color={category?.color ?? '#8b8f9a'} icon={category?.icon} />
 
       <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-1.5">
-          <p className="min-w-0 truncate text-[15px] font-bold text-fg">{label}</p>
-          {isTransfer ? (
-            <span className="pill shrink-0 bg-surface-2 px-2 py-0.5 text-[12px] font-semibold text-fg-muted">
-              Transfer
-            </span>
-          ) : null}
-        </div>
+        <p className="truncate text-[15px] font-bold text-fg">{label}</p>
+        {/* "Transfer" rides the meta line rather than a pill beside the title:
+            as a pill it took 64px and left the label a 45px slot. */}
         <p className="mt-0.5 truncate text-[13px] text-fg-muted">
+          {isTransfer ? 'Transfer · ' : ''}
           {category?.name ?? 'Uncategorized'} · {formatDateLabel(transaction.date, 'd MMM')}
         </p>
       </div>

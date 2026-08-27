@@ -26,7 +26,8 @@
 
   --positive: #06753c;
   --positive-soft: #e2f5eb;
-  --negative: #d4342f;
+  --negative: #c22a25;
+  --negative-fg: #ffffff;
   --negative-soft: #fdeceb;
   --caution: #a75c00;
   --caution-soft: #fdf0dd;
@@ -53,6 +54,7 @@
   --positive: #2fd07a;
   --positive-soft: #10281d;
   --negative: #ff6b66;
+  --negative-fg: #2a0f0e;
   --negative-soft: #2d1615;
   --caution: #f0a92e;
   --caution-soft: #2c2011;
@@ -79,6 +81,7 @@
   --color-positive: var(--positive);
   --color-positive-soft: var(--positive-soft);
   --color-negative: var(--negative);
+  --color-negative-fg: var(--negative-fg);
   --color-negative-soft: var(--negative-soft);
   --color-caution: var(--caution);
   --color-caution-soft: var(--caution-soft);
@@ -164,17 +167,18 @@
     border-radius: 999px;
   }
 
-  /* 44px minimum hit area without inflating the visual control. */
+  /* A real 44px target on touch, shrinking only where a pointer aims. An
+     invisible oversized overlay was worse: adjacent ones overlapped, so a tap
+     near an edge fired the neighbour — a wrong action, not a missed one. */
   .tap {
-    position: relative;
-  }
-  .tap::after {
-    content: '';
-    position: absolute;
-    inset: 50% 50%;
     width: 44px;
     height: 44px;
-    transform: translate(-50%, -50%);
+  }
+  @media (pointer: fine) {
+    .tap {
+      width: 36px;
+      height: 36px;
+    }
   }
 }
 

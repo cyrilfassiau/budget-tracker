@@ -22,7 +22,7 @@ function Toast({ toast }: { toast: ToastModel }) {
       className={cn(
         'pointer-events-auto flex w-full items-start gap-3 rounded-[18px] p-3.5 pr-2.5 animate-in',
         'shadow-[0_8px_28px_-8px_rgb(var(--scrim)/0.35)]',
-        toast.variant === 'error' ? 'bg-negative text-white' : 'bg-fg text-bg',
+        toast.variant === 'error' ? 'bg-negative text-negative-fg' : 'bg-fg text-bg',
       )}
     >
       <div className="min-w-0 flex-1">

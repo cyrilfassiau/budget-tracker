@@ -86,7 +86,7 @@ function OverflowMenu({
         aria-haspopup="menu"
         aria-expanded={open}
         className={cn(
-          'tap flex size-9 items-center justify-center rounded-full text-fg-faint transition-colors',
+          'tap flex items-center justify-center rounded-full text-fg-faint transition-colors',
           open && 'bg-surface-2 text-fg',
         )}
       >

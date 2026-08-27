@@ -1,0 +1,455 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-27T06:00:39.554Z",
+  "title": "Design System: Budget Tracker",
+  "note": "Sidecar written beside DESIGN.md rather than at .impeccable/design.json, because .impeccable/ in this repo is root-owned and unwritable.",
+  "extensions": {
+    "colorMeta": {
+      "bg": {
+        "role": "neutral",
+        "displayName": "Page",
+        "canonical": "oklch(100.0% 0.000 89.9)",
+        "tonalRamp": [
+          "oklch(15% 0.000 89.9)",
+          "oklch(26% 0.000 89.9)",
+          "oklch(37% 0.000 89.9)",
+          "oklch(48% 0.000 89.9)",
+          "oklch(59% 0.000 89.9)",
+          "oklch(70% 0.000 89.9)",
+          "oklch(81% 0.000 89.9)",
+          "oklch(92% 0.000 89.9)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Surface",
+        "canonical": "oklch(97.0% 0.003 264.5)",
+        "tonalRamp": [
+          "oklch(15% 0.003 264.5)",
+          "oklch(26% 0.003 264.5)",
+          "oklch(37% 0.003 264.5)",
+          "oklch(48% 0.003 264.5)",
+          "oklch(59% 0.003 264.5)",
+          "oklch(70% 0.003 264.5)",
+          "oklch(81% 0.003 264.5)",
+          "oklch(92% 0.003 264.5)"
+        ]
+      },
+      "surface-2": {
+        "role": "neutral",
+        "displayName": "Surface Raised",
+        "canonical": "oklch(94.3% 0.006 264.5)",
+        "tonalRamp": [
+          "oklch(15% 0.006 264.5)",
+          "oklch(26% 0.006 264.5)",
+          "oklch(37% 0.006 264.5)",
+          "oklch(48% 0.006 264.5)",
+          "oklch(59% 0.006 264.5)",
+          "oklch(70% 0.006 264.5)",
+          "oklch(81% 0.006 264.5)",
+          "oklch(92% 0.006 264.5)"
+        ]
+      },
+      "surface-3": {
+        "role": "neutral",
+        "displayName": "Surface Deep",
+        "canonical": "oklch(91.2% 0.009 264.5)",
+        "tonalRamp": [
+          "oklch(15% 0.009 264.5)",
+          "oklch(26% 0.009 264.5)",
+          "oklch(37% 0.009 264.5)",
+          "oklch(48% 0.009 264.5)",
+          "oklch(59% 0.009 264.5)",
+          "oklch(70% 0.009 264.5)",
+          "oklch(81% 0.009 264.5)",
+          "oklch(92% 0.009 264.5)"
+        ]
+      },
+      "fg": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "oklch(15.5% 0.007 271.0)",
+        "tonalRamp": [
+          "oklch(15% 0.007 271.0)",
+          "oklch(26% 0.007 271.0)",
+          "oklch(37% 0.007 271.0)",
+          "oklch(48% 0.007 271.0)",
+          "oklch(59% 0.007 271.0)",
+          "oklch(70% 0.007 271.0)",
+          "oklch(81% 0.007 271.0)",
+          "oklch(92% 0.007 271.0)"
+        ]
+      },
+      "fg-muted": {
+        "role": "neutral",
+        "displayName": "Ink Muted",
+        "canonical": "oklch(50.4% 0.016 272.5)",
+        "tonalRamp": [
+          "oklch(15% 0.016 272.5)",
+          "oklch(26% 0.016 272.5)",
+          "oklch(37% 0.016 272.5)",
+          "oklch(48% 0.016 272.5)",
+          "oklch(59% 0.016 272.5)",
+          "oklch(70% 0.016 272.5)",
+          "oklch(81% 0.016 272.5)",
+          "oklch(92% 0.016 272.5)"
+        ],
+        "contrast": "5.91:1 light / 6.78:1 dark"
+      },
+      "fg-faint": {
+        "role": "neutral",
+        "displayName": "Ink Faint",
+        "canonical": "oklch(55.2% 0.018 269.8)",
+        "tonalRamp": [
+          "oklch(15% 0.018 269.8)",
+          "oklch(26% 0.018 269.8)",
+          "oklch(37% 0.018 269.8)",
+          "oklch(48% 0.018 269.8)",
+          "oklch(59% 0.018 269.8)",
+          "oklch(70% 0.018 269.8)",
+          "oklch(81% 0.018 269.8)",
+          "oklch(92% 0.018 269.8)"
+        ],
+        "contrast": "4.81:1 light / 5.90:1 dark"
+      },
+      "accent": {
+        "role": "primary",
+        "displayName": "Signal Blue",
+        "canonical": "oklch(55.3% 0.247 263.7)",
+        "tonalRamp": [
+          "oklch(15% 0.247 263.7)",
+          "oklch(26% 0.247 263.7)",
+          "oklch(37% 0.247 263.7)",
+          "oklch(48% 0.247 263.7)",
+          "oklch(59% 0.247 263.7)",
+          "oklch(70% 0.247 263.7)",
+          "oklch(81% 0.247 263.7)",
+          "oklch(92% 0.247 263.7)"
+        ],
+        "contrast": "5.12:1 on bg, 4.69:1 on surface, 6.13:1 dark"
+      },
+      "accent-soft": {
+        "role": "primary",
+        "displayName": "Signal Blue Wash",
+        "canonical": "oklch(94.6% 0.025 268.8)",
+        "tonalRamp": [
+          "oklch(15% 0.025 268.8)",
+          "oklch(26% 0.025 268.8)",
+          "oklch(37% 0.025 268.8)",
+          "oklch(48% 0.025 268.8)",
+          "oklch(59% 0.025 268.8)",
+          "oklch(70% 0.025 268.8)",
+          "oklch(81% 0.025 268.8)",
+          "oklch(92% 0.025 268.8)"
+        ]
+      },
+      "positive": {
+        "role": "success",
+        "displayName": "Money In",
+        "canonical": "oklch(49.4% 0.126 152.6)",
+        "tonalRamp": [
+          "oklch(15% 0.126 152.6)",
+          "oklch(26% 0.126 152.6)",
+          "oklch(37% 0.126 152.6)",
+          "oklch(48% 0.126 152.6)",
+          "oklch(59% 0.126 152.6)",
+          "oklch(70% 0.126 152.6)",
+          "oklch(81% 0.126 152.6)",
+          "oklch(92% 0.126 152.6)"
+        ],
+        "contrast": "5.81:1 light / 8.82:1 dark"
+      },
+      "negative": {
+        "role": "danger",
+        "displayName": "Trouble",
+        "canonical": "oklch(57.4% 0.197 27.4)",
+        "tonalRamp": [
+          "oklch(15% 0.197 27.4)",
+          "oklch(26% 0.197 27.4)",
+          "oklch(37% 0.197 27.4)",
+          "oklch(48% 0.197 27.4)",
+          "oklch(59% 0.197 27.4)",
+          "oklch(70% 0.197 27.4)",
+          "oklch(81% 0.197 27.4)",
+          "oklch(92% 0.197 27.4)"
+        ],
+        "contrast": "4.85:1 light / 6.38:1 dark"
+      },
+      "caution": {
+        "role": "warning",
+        "displayName": "Ahead Of Pace",
+        "canonical": "oklch(55.1% 0.129 59.9)",
+        "tonalRamp": [
+          "oklch(15% 0.129 59.9)",
+          "oklch(26% 0.129 59.9)",
+          "oklch(37% 0.129 59.9)",
+          "oklch(48% 0.129 59.9)",
+          "oklch(59% 0.129 59.9)",
+          "oklch(70% 0.129 59.9)",
+          "oklch(81% 0.129 59.9)",
+          "oklch(92% 0.129 59.9)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "The balance, and one figure per page. Manrope 800, tabular, -0.035em. Never used for prose."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Page title in the sticky header."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Card heading."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Row labels and prose. 15px, weight 400-700."
+      },
+      "note": {
+        "displayName": "Note",
+        "purpose": "Row subtitles and hints. 13px, muted."
+      },
+      "figure": {
+        "displayName": "Figure",
+        "purpose": "Every money value. tabular-nums lining-nums at -0.02em, so digits never reflow as amounts change."
+      }
+    },
+    "shadows": [
+      {
+        "name": "card-hairline-light",
+        "value": "0 0 0 1px rgb(11 12 15 / 0.06)",
+        "purpose": "Light theme only. White cards on a white page need separation; dark theme separates by fill alone and must not get this."
+      },
+      {
+        "name": "menu",
+        "value": "0 10px 30px -8px rgb(var(--scrim) / 0.35)",
+        "purpose": "Overflow menus that float above a row."
+      },
+      {
+        "name": "toast",
+        "value": "0 8px 28px -8px rgb(var(--scrim) / 0.35)",
+        "purpose": "Toast slips above the tab bar."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out-expo",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "The only easing in the system. No overshoot anywhere."
+      },
+      {
+        "name": "drop",
+        "value": "drop 420ms cubic-bezier(0.16, 1, 0.3, 1) both",
+        "purpose": "The one authored moment: a new row landing on the stack."
+      },
+      {
+        "name": "sheet-up",
+        "value": "sheet-up 320ms cubic-bezier(0.16, 1, 0.3, 1) both",
+        "purpose": "Entry sheet arriving from the bottom edge on a phone."
+      },
+      {
+        "name": "rise",
+        "value": "rise 280ms cubic-bezier(0.16, 1, 0.3, 1) both",
+        "purpose": "Route and panel entrance."
+      },
+      {
+        "name": "state",
+        "value": "150ms",
+        "purpose": "Colour and opacity transitions on hover and press."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      }
+    ],
+    "radii": [
+      {
+        "name": "card",
+        "value": "20px"
+      },
+      {
+        "name": "row",
+        "value": "16px"
+      },
+      {
+        "name": "control",
+        "value": "14px"
+      },
+      {
+        "name": "sheet-top",
+        "value": "28px"
+      },
+      {
+        "name": "pill",
+        "value": "999px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one action per surface. Pill, flat accent fill, presses in.",
+      "html": "<button class=\"ds-btn-primary\">Add</button>",
+      "css": ".ds-btn-primary{background:#1f5eff;color:#fff;border:none;border-radius:999px;height:44px;padding:0 20px;font-family:Manrope,system-ui,sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:opacity 150ms,transform 150ms}.ds-btn-primary:hover{opacity:.9}.ds-btn-primary:active{transform:scale(.98);opacity:.8}.ds-btn-primary:focus-visible{outline:2px solid #1f5eff;outline-offset:2px}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Everything that is not the one action. Fill from the surface ramp, never a border.",
+      "html": "<button class=\"ds-btn-secondary\">Cancel</button>",
+      "css": ".ds-btn-secondary{background:#eaecf0;color:#0b0c0f;border:none;border-radius:999px;height:44px;padding:0 20px;font-family:Manrope,system-ui,sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:background 150ms,transform 150ms}.ds-btn-secondary:hover{background:#dfe2e8}.ds-btn-secondary:active{transform:scale(.98)}.ds-btn-secondary:focus-visible{outline:2px solid #1f5eff;outline-offset:2px}"
+    },
+    {
+      "name": "Quick Action",
+      "kind": "button",
+      "refersTo": "quick-action",
+      "description": "Circular verb under the balance: filled disc, label beneath. The accent variant is the primary add.",
+      "html": "<button class=\"ds-quick\"><span class=\"ds-quick-disc\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"><path d=\"M12 5v14M5 12h14\"/></svg></span><span class=\"ds-quick-label\">Add</span></button>",
+      "css": ".ds-quick{display:flex;flex-direction:column;align-items:center;gap:6px;width:64px;background:none;border:none;cursor:pointer}.ds-quick-disc{display:flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:999px;background:#1f5eff;color:#fff;transition:transform 150ms}.ds-quick:hover .ds-quick-disc{transform:scale(1.05)}.ds-quick:active .ds-quick-disc{transform:scale(.95)}.ds-quick-label{font-family:Manrope,system-ui,sans-serif;font-size:12px;font-weight:600;color:#61646e}"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Filled and borderless until focus. Radius 14px, never a rule.",
+      "html": "<input class=\"ds-input\" placeholder=\"Search\" />",
+      "css": ".ds-input{width:100%;height:48px;background:#eaecf0;border:none;border-radius:14px;padding:0 14px;font-family:Manrope,system-ui,sans-serif;font-size:15px;font-weight:500;color:#0b0c0f;transition:background 150ms}.ds-input::placeholder{color:#6e727d;font-weight:400}.ds-input:hover{background:#dfe2e8}.ds-input:focus{background:#f4f5f7;outline:2px solid #1f5eff;outline-offset:2px}"
+    },
+    {
+      "name": "Transaction Row",
+      "kind": "custom",
+      "refersTo": "transaction-row",
+      "description": "The signature component. Circular category avatar, label and meta, amount right. The sign carries direction; green is money in, and ordinary spending is never red.",
+      "html": "<div class=\"ds-row\"><span class=\"ds-avatar\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.25\" stroke-linecap=\"round\"><path d=\"M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7\"/></svg></span><div class=\"ds-row-main\"><p class=\"ds-row-title\">Coffee &amp; pastry</p><p class=\"ds-row-meta\">Dining out · 27 Aug</p></div><div class=\"ds-row-amt\"><p class=\"ds-row-value\">−€68.16</p><p class=\"ds-row-bal\">€14,017.18</p></div></div>",
+      "css": ".ds-row{display:flex;align-items:center;gap:12px;padding:10px 8px;border-radius:16px;font-family:Manrope,system-ui,sans-serif;transition:background 150ms}.ds-row:hover{background:#f4f5f7}.ds-avatar{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:999px;background:#d4342f;color:#fff;flex-shrink:0}.ds-row-main{flex:1;min-width:0}.ds-row-title{margin:0;font-size:15px;font-weight:700;color:#0b0c0f}.ds-row-meta{margin:2px 0 0;font-size:13px;color:#61646e}.ds-row-amt{text-align:right}.ds-row-value{margin:0;font-size:15px;font-weight:800;color:#0b0c0f;font-variant-numeric:tabular-nums lining-nums;letter-spacing:-.02em}.ds-row-bal{margin:2px 0 0;font-size:12px;font-weight:600;color:#6e727d;font-variant-numeric:tabular-nums}"
+    },
+    {
+      "name": "Balance Card",
+      "kind": "card",
+      "refersTo": "balance-card",
+      "description": "The lead surface. Display balance over the in/out/moved line; flat 20px card, hairline in light only.",
+      "html": "<section class=\"ds-card\"><p class=\"ds-card-label\">Balance</p><p class=\"ds-balance\">€14,017.18</p><p class=\"ds-card-line\"><span class=\"ds-in\">€3,146.75 in</span> · €695.86 out · <span class=\"ds-moved\">€341.03 moved</span></p></section>",
+      "css": ".ds-card{background:#fff;border-radius:20px;padding:20px;box-shadow:0 0 0 1px rgb(11 12 15 / .06);font-family:Manrope,system-ui,sans-serif}.ds-card-label{margin:0;font-size:14px;font-weight:600;color:#61646e}.ds-balance{margin:4px 0 0;font-size:52px;font-weight:800;line-height:1;letter-spacing:-.035em;color:#0b0c0f;font-variant-numeric:tabular-nums lining-nums}.ds-card-line{margin:10px 0 0;font-size:14px;font-weight:700;color:#0b0c0f}.ds-in{color:#06753c}.ds-moved{color:#61646e;font-weight:600}"
+    },
+    {
+      "name": "Segmented Pill",
+      "kind": "chip",
+      "refersTo": "segmented",
+      "description": "Radio group as a pill track. The selected segment fills with the foreground ink so it stays legible on a near-white track.",
+      "html": "<div class=\"ds-seg\" role=\"radiogroup\" aria-label=\"Type\"><button class=\"ds-seg-item ds-seg-on\" role=\"radio\" aria-checked=\"true\">Spent</button><button class=\"ds-seg-item\" role=\"radio\" aria-checked=\"false\">Received</button><button class=\"ds-seg-item\" role=\"radio\" aria-checked=\"false\">Moved</button></div>",
+      "css": ".ds-seg{display:inline-flex;gap:4px;padding:4px;border-radius:999px;background:#eaecf0}.ds-seg-item{flex:1;height:36px;padding:0 16px;border:none;border-radius:999px;background:none;font-family:Manrope,system-ui,sans-serif;font-size:14px;font-weight:700;color:#61646e;cursor:pointer;transition:background 150ms,color 150ms}.ds-seg-item:hover{color:#0b0c0f}.ds-seg-on{background:#0b0c0f;color:#fff}.ds-seg-on:hover{color:#fff}.ds-seg-item:focus-visible{outline:2px solid #1f5eff;outline-offset:2px}"
+    },
+    {
+      "name": "Pace Bar",
+      "kind": "custom",
+      "refersTo": "pace-bar",
+      "description": "Spend against limit with a tick marking how much of the month has elapsed. Without the tick a percentage carries no verdict.",
+      "html": "<div class=\"ds-pace\" role=\"progressbar\" aria-valuenow=\"58\" aria-valuetext=\"58% of Groceries spent, 87% of the month elapsed\"><span class=\"ds-pace-fill\"></span><span class=\"ds-pace-tick\"></span></div>",
+      "css": ".ds-pace{position:relative;height:8px;border-radius:999px;background:#dfe2e8;overflow:hidden}.ds-pace-fill{position:absolute;inset:0 auto 0 0;width:58%;border-radius:999px;background:#f97316}.ds-pace-tick{position:absolute;top:0;bottom:0;left:87%;width:2px;border-radius:999px;background:rgb(11 12 15 / .7)}"
+    },
+    {
+      "name": "Bottom Sheet",
+      "kind": "custom",
+      "refersTo": "sheet",
+      "description": "Entry arrives from the bottom edge on a phone. Grab handle, 28px top radius; becomes a centred dialog from sm.",
+      "html": "<div class=\"ds-sheet\" role=\"dialog\" aria-label=\"New transaction\"><span class=\"ds-grab\"></span><h2 class=\"ds-sheet-title\">New transaction</h2><p class=\"ds-sheet-desc\">Money in, out, or moved between your accounts.</p></div>",
+      "css": ".ds-sheet{background:#fff;border-radius:28px 28px 0 0;padding:10px 20px 20px;font-family:Manrope,system-ui,sans-serif}.ds-grab{display:block;width:36px;height:4px;margin:0 auto 14px;border-radius:999px;background:#dfe2e8}.ds-sheet-title{margin:0;font-size:19px;font-weight:800;letter-spacing:-.02em;color:#0b0c0f}.ds-sheet-desc{margin:2px 0 0;font-size:13px;color:#61646e}"
+    },
+    {
+      "name": "Tab Bar",
+      "kind": "nav",
+      "refersTo": "tab-bar",
+      "description": "The only navigation below lg. Active item takes the accent; labels are always present, never icon-only.",
+      "html": "<nav class=\"ds-tabs\" aria-label=\"Sections\"><a class=\"ds-tab ds-tab-on\" aria-current=\"page\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"><path d=\"M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\"/></svg>Home</a><a class=\"ds-tab\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"><path d=\"M8 3L4 7l4 4M4 7h16M16 21l4-4-4-4M20 17H4\"/></svg>Transactions</a></nav>",
+      "css": ".ds-tabs{display:flex;background:#fff;border-top:1px solid #eaecf0}.ds-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;height:56px;font-family:Manrope,system-ui,sans-serif;font-size:11px;font-weight:700;color:#6e727d;text-decoration:none;cursor:pointer}.ds-tab-on{color:#1f5eff}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Pocket Bank",
+    "overview": "A consumer banking app, not a document. It behaves like the thing people already have in their pocket: a balance that leads at display scale, a stack of tappable rows underneath it, circular category avatars doing the recognition work, and every surface a flat rounded card floating on a near-black or pure-white ground. Nothing is ruled, framed, or tabulated.\n\nThe density is generous and thumb-first. Cards are 20px-rounded and separated by air, not by lines. Rows are 44px-plus. Controls are pills. Entry arrives from the bottom edge on a phone and from the centre on a desktop. Weight, not case or rule, makes hierarchy: Manrope runs 400 through 800 and the heavy end is reserved for money.\n\nThe world is pinned to Revolut and played straight, with one deliberate departure: no gradients anywhere, including where the reference uses them. Depth is done entirely with surface tone and radius.",
+    "keyCharacteristics": [
+      "Flat rounded cards as the only container; zero gradients, verified live",
+      "A display-scale balance in Manrope 800 with tight negative tracking",
+      "Circular category avatars in flat, full-strength category colour",
+      "Pill controls; the selected segment fills with the foreground ink",
+      "Colour means exactly three things: identity, money in, trouble",
+      "One navigation at every width — sidebar from lg, tab bar below it",
+      "One authored motion moment: a new row dropping onto the stack"
+    ],
+    "rules": [
+      {
+        "name": "No Gradient, Ever",
+        "body": "No gradient on any background, button, chart fill or fade mask — including where the pinned reference uses one. Depth comes from stepping the surface ramp and from radius. Verified live: zero elements with any background-image.",
+        "section": "colors"
+      },
+      {
+        "name": "Colour Means Three Things",
+        "body": "Category colour is identity, green is money arriving, red is trouble. Ordinary spending is never red — the minus sign carries direction. A fourth meaning would make all four unreadable.",
+        "section": "colors"
+      },
+      {
+        "name": "Weight, Not Case",
+        "body": "Hierarchy is made with Manrope's 400-800 range. No uppercase letter-spaced micro-labels, no second typeface, no monospace.",
+        "section": "typography"
+      },
+      {
+        "name": "Money Is Tabular",
+        "body": "Every money value runs through .figure: tabular-nums lining-nums at -0.02em, so digits never reflow as amounts change.",
+        "section": "typography"
+      },
+      {
+        "name": "Air, Not Rules",
+        "body": "Surfaces separate by fill and space. The only 1px lines in the system are the tab bar's top edge and the light-theme card hairline, which exists solely because white cards on a white page need an edge.",
+        "section": "elevation"
+      },
+      {
+        "name": "Forty-Four",
+        "body": "Every thumb target gets a 44px hit area through the invisible .tap helper, never by inflating the visual control.",
+        "section": "elevation"
+      },
+      {
+        "name": "Say It In Words",
+        "body": "Status is stated in language as well as colour — '€40 over', '38% of the month gone'. Nothing is carried by colour alone.",
+        "section": "colors"
+      }
+    ],
+    "dos": [
+      "Do put every new container in a flat 20px card on the surface ramp, with no border in dark and the 6% hairline in light.",
+      "Do run every money value through the tabular .figure treatment, and set it at weight 800.",
+      "Do let the minus sign carry direction on an expense, and reserve green for money arriving.",
+      "Do give a category its own colour at full strength in avatars, ring slices and budget fills — flat, never tinted.",
+      "Do give every thumb target a 44px hit area with the invisible tap helper rather than by growing the control.",
+      "Do state status in words as well as colour, never in colour alone.",
+      "Do keep exactly one navigation visible at every width.",
+      "Do open entry as a bottom sheet below sm and a centred dialog above it, from the one Modal component."
+    ],
+    "donts": [
+      "Don't use a gradient anywhere — background, button, chart fill, or fade mask. This holds even where the pinned reference uses one.",
+      "Don't add a shadow to make something read as raised; step the surface tone instead.",
+      "Don't colour ordinary spending red. Red means trouble: errors, destructive actions, over-budget.",
+      "Don't introduce a second typeface, a monospace, or uppercase letter-spaced micro-labels.",
+      "Don't ship a square corner; the floor is 12px.",
+      "Don't rule the interface — no hairline dividers as structure, no column tables, no bordered inputs.",
+      "Don't reveal an action only on hover; a touch device has no hover to reveal it with.",
+      "Don't draw a partial month's bar the same as a complete one, or let a clamped percentage stand in for the true figure in assistive text.",
+      "Don't add a second signature animation. There is one drop, and it belongs to a new row landing."
+    ],
+    "knownGaps": [
+      "The entry sheet's amount field is an ordinary text input; the reference's signature keypad-style entry is not built.",
+      "Rows have hover states but no :active press feedback, on a surface whose premise is tappable rows.",
+      "Desktop is largely a widened phone layout; only the balance card has a genuinely desktop composition."
+    ]
+  }
+}

@@ -30,7 +30,7 @@ export function ThemeToggle({ className }: { className?: string }) {
           title={label}
           onClick={() => setTheme(value)}
           className={cn(
-            'tap flex size-9 items-center justify-center rounded-full transition-colors',
+            'tap flex items-center justify-center rounded-full transition-colors',
             theme === value ? 'bg-fg text-bg' : 'text-fg-muted hover:text-fg',
           )}
         >

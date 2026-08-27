@@ -27,7 +27,7 @@ export function PeriodPicker({ className, range = 24 }: { className?: string; ra
         type="button"
         onClick={() => setMonth(shiftMonth(month, -1))}
         aria-label="Previous month"
-        className="flex size-8 items-center justify-center rounded-full text-fg-muted transition-colors hover:bg-surface-3 hover:text-fg"
+        className="tap hidden items-center justify-center rounded-full text-fg-muted transition-colors hover:bg-surface-3 hover:text-fg sm:flex"
       >
         <ChevronLeft className="size-4" />
       </button>
@@ -36,7 +36,7 @@ export function PeriodPicker({ className, range = 24 }: { className?: string; ra
         value={month}
         onChange={(event) => setMonth(event.target.value)}
         aria-label="Month"
-        className="h-8 min-w-[8.5rem] cursor-pointer appearance-none bg-transparent px-1 text-center text-[14px] font-bold text-fg"
+        className="h-11 min-w-[8rem] cursor-pointer appearance-none bg-transparent px-2 text-center text-[14px] font-bold text-fg sm:h-8"
       >
         {!options.includes(month) ? (
           <option value={month}>{formatMonthLabel(month)}</option>
@@ -54,7 +54,7 @@ export function PeriodPicker({ className, range = 24 }: { className?: string; ra
         onClick={() => setMonth(shiftMonth(month, 1))}
         disabled={month >= thisMonth}
         aria-label="Next month"
-        className="flex size-8 items-center justify-center rounded-full text-fg-muted transition-colors hover:bg-surface-3 hover:text-fg disabled:pointer-events-none disabled:opacity-30"
+        className="tap hidden items-center justify-center rounded-full text-fg-muted transition-colors hover:bg-surface-3 hover:text-fg disabled:pointer-events-none disabled:opacity-30 sm:flex"
       >
         <ChevronRight className="size-4" />
       </button>

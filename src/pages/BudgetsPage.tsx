@@ -132,17 +132,25 @@ export function BudgetsPage() {
                       ? 'All on schedule'
                       : undefined
               }
-              action={
-                <Button variant="ghost" size="sm" loading={copying} onClick={handleCopy}>
-                  Copy last month
-                </Button>
-              }
+
             />
 
             {rows.length > 0 ? (
               <div className="pt-1">
                 <div>
-                  <p className="text-[13px] font-semibold text-fg-muted">Spent this month</p>
+                  <div className="flex flex-wrap items-baseline justify-between gap-x-4">
+                    <p className="text-[13px] font-semibold text-fg-muted">Spent this month</p>
+                    {/* On the same baseline as the label it belongs to, rather
+                        than floating in a column of its own. */}
+                    <button
+                      type="button"
+                      onClick={handleCopy}
+                      disabled={copying}
+                      className="text-[13px] font-bold text-accent transition-opacity hover:opacity-70 disabled:opacity-40"
+                    >
+                      {copying ? 'Copying…' : 'Copy last month'}
+                    </button>
+                  </div>
                   <p className="figure mt-0.5 text-[30px] font-extrabold leading-none tracking-[-0.03em] text-fg sm:text-[36px]">
                     <Amount value={totals.spent} plain />
                     <span className="ml-2 align-baseline text-[15px] font-semibold text-fg-muted">

@@ -70,12 +70,12 @@ export function BudgetRow({ budget, onEdit, onDelete, compact = false }: BudgetR
         </div>
 
         {!compact && onEdit && onDelete ? (
-          <div className="flex shrink-0 items-center gap-0.5">
+          <div className="flex shrink-0 items-center gap-1">
             <button
               type="button"
               onClick={() => onEdit(budget)}
               aria-label={`Change the limit for ${budget.name}`}
-              className="flex size-8 items-center justify-center rounded-full text-fg-faint transition-colors hover:bg-surface-2 hover:text-fg"
+              className="tap flex items-center justify-center rounded-full text-fg-faint transition-colors hover:bg-surface-2 hover:text-fg"
             >
               <Pencil className="size-3.5" />
             </button>
@@ -83,7 +83,7 @@ export function BudgetRow({ budget, onEdit, onDelete, compact = false }: BudgetR
               type="button"
               onClick={() => onDelete(budget)}
               aria-label={`Remove the limit for ${budget.name}`}
-              className="flex size-8 items-center justify-center rounded-full text-fg-faint transition-colors hover:bg-negative-soft hover:text-negative"
+              className="tap flex items-center justify-center rounded-full text-fg-faint transition-colors hover:bg-negative-soft hover:text-negative"
             >
               <Trash2 className="size-3.5" />
             </button>

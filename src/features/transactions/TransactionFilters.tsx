@@ -65,45 +65,16 @@ export function TransactionFilters() {
         ) : null}
       </div>
 
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-        <SegmentedPill<'month' | 'all'>
-          label="Period scope"
-          value={scope}
-          onChange={setScope}
-          options={[
-            { value: 'month', label: 'This month' },
-            { value: 'all', label: 'All time' },
-          ]}
-        />
-
-        <div className="ml-auto flex items-center gap-1">
-          <span className="text-[13px] font-semibold text-fg-faint">Sort</span>
-          {SORT_FIELDS.map(({ field, label }) => {
-            const active = sort.field === field
-            return (
-              <button
-                key={field}
-                type="button"
-                onClick={() => toggleSort(field)}
-                aria-pressed={active}
-                className={cn(
-                  'pill inline-flex items-center gap-1 px-3 py-1.5 text-[13px] font-bold transition-colors',
-                  active ? 'bg-surface-2 text-fg' : 'text-fg-muted hover:bg-surface hover:text-fg',
-                )}
-              >
-                {label}
-                {active ? (
-                  sort.direction === 'asc' ? (
-                    <ArrowUp className="size-3" />
-                  ) : (
-                    <ArrowDown className="size-3" />
-                  )
-                ) : null}
-              </button>
-            )
-          })}
-        </div>
-      </div>
+      <SegmentedPill<'month' | 'all'>
+        label="Period scope"
+        value={scope}
+        onChange={setScope}
+        options={[
+          { value: 'month', label: 'This month' },
+          { value: 'all', label: 'All time' },
+        ]}
+        className="self-start"
+      />
 
       <div
         id="transaction-filters"
@@ -167,6 +138,37 @@ export function TransactionFilters() {
               min={filters.from ?? undefined}
               onChange={(event) => setFilters({ to: event.target.value || null })}
             />
+          )}
+        </Field>
+
+        <Field label="Sort by" className="sm:col-span-2 lg:col-span-4">
+          {() => (
+            <div className="flex items-center gap-1.5">
+              {SORT_FIELDS.map(({ field, label }) => {
+                const active = sort.field === field
+                return (
+                  <button
+                    key={field}
+                    type="button"
+                    onClick={() => toggleSort(field)}
+                    aria-pressed={active}
+                    className={cn(
+                      'pill inline-flex h-9 items-center gap-1 px-4 text-[14px] font-bold transition-colors',
+                      active ? 'bg-fg text-bg' : 'bg-surface-2 text-fg-muted hover:text-fg',
+                    )}
+                  >
+                    {label}
+                    {active ? (
+                      sort.direction === 'asc' ? (
+                        <ArrowUp className="size-3.5" />
+                      ) : (
+                        <ArrowDown className="size-3.5" />
+                      )
+                    ) : null}
+                  </button>
+                )
+              })}
+            </div>
           )}
         </Field>
       </div>
