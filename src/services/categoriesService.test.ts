@@ -40,8 +40,8 @@ describe('categoriesService', () => {
 
   it('updates a category', async () => {
     const created = await service.create(input)
-    const updated = await service.update(created.id, { name: 'Espresso', color: '#000000' })
-    expect(updated).toMatchObject({ name: 'Espresso', color: '#000000' })
+    const updated = await service.update(created.id, { name: 'Espresso', color: '#64748b' })
+    expect(updated).toMatchObject({ name: 'Espresso', color: '#64748b' })
   })
 
   it('rejects renaming onto an existing name', async () => {

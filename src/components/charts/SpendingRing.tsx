@@ -21,7 +21,7 @@ function collapse(data: CategoryTotal[], maxSlices: number): CategoryTotal[] {
     {
       categoryId: '__other__',
       name: `Other (${tail.length})`,
-      color: '#8b8f9a',
+      color: 'var(--category-none)',
       icon: 'circle',
       total: tail.reduce((sum, entry) => sum + entry.total, 0),
       share: tail.reduce((sum, entry) => sum + entry.share, 0),

@@ -127,7 +127,7 @@ export function TransactionRow({
         fresh && 'animate-drop',
       )}
     >
-      <CategoryAvatar color={category?.color ?? '#8b8f9a'} icon={category?.icon} />
+      <CategoryAvatar color={category?.color ?? 'var(--category-none)'} icon={category?.icon} />
 
       <div className="min-w-0 flex-1">
         <p className="truncate text-[15px] font-bold text-fg">{label}</p>

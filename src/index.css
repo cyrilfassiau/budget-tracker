@@ -32,6 +32,10 @@
   --caution: #a75c00;
   --caution-soft: #fdf0dd;
 
+  /* Category identity for rows with no category, and the collapsed
+     "Other" slice. A role, not a one-off grey. */
+  --category-none: #6e727d;
+
   --scrim: 11 12 15;
   --ring: #1f5eff;
 }
@@ -59,6 +63,8 @@
   --caution: #f0a92e;
   --caution-soft: #2c2011;
 
+  --category-none: #8f95a1;
+
   --scrim: 0 0 0;
   --ring: #5b8bff;
 }
@@ -85,6 +91,7 @@
   --color-negative-soft: var(--negative-soft);
   --color-caution: var(--caution);
   --color-caution-soft: var(--caution-soft);
+  --color-category-none: var(--category-none);
 
   --font-sans: 'Manrope', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
 

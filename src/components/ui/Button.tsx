@@ -5,7 +5,7 @@ import { cn } from '@/lib/cn'
 import { Spinner } from './Spinner'
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger'
-export type ButtonSize = 'sm' | 'md' | 'lg'
+export type ButtonSize = 'sm' | 'md'
 
 const VARIANTS: Record<ButtonVariant, string> = {
   primary: 'bg-accent text-accent-fg hover:opacity-90 active:opacity-80',
@@ -17,7 +17,6 @@ const VARIANTS: Record<ButtonVariant, string> = {
 const SIZES: Record<ButtonSize, string> = {
   sm: 'h-9 px-3.5 text-[14px] gap-1.5',
   md: 'h-11 px-5 text-[15px] gap-2',
-  lg: 'h-13 px-6 text-[16px] gap-2',
 }
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {

@@ -15,10 +15,26 @@ colors:
   accent-soft: "#e6edff"
   positive: "#06753c"
   positive-soft: "#e2f5eb"
-  negative: "#d4342f"
+  negative: "#c22a25"
+  negative-fg: "#ffffff"
   negative-soft: "#fdeceb"
   caution: "#a75c00"
   caution-soft: "#fdf0dd"
+  category-none: "#6e727d"
+  category-rose: "#e11d48"
+  category-orange: "#f97316"
+  category-amber: "#f59e0b"
+  category-lime: "#84cc16"
+  category-emerald: "#10b981"
+  category-teal: "#14b8a6"
+  category-cyan: "#06b6d4"
+  category-blue: "#3b82f6"
+  category-indigo: "#6366f1"
+  category-violet: "#8b5cf6"
+  category-fuchsia: "#d946ef"
+  category-pink: "#ec4899"
+  category-slate: "#64748b"
+  category-pine: "#0f766e"
   bg-dark: "#0b0c0f"
   surface-dark: "#16181d"
   surface-2-dark: "#202329"
@@ -33,23 +49,64 @@ colors:
   positive-dark: "#2fd07a"
   positive-soft-dark: "#10281d"
   negative-dark: "#ff6b66"
+  negative-fg-dark: "#2a0f0e"
   negative-soft-dark: "#2d1615"
   caution-dark: "#f0a92e"
   caution-soft-dark: "#2c2011"
+  category-none-dark: "#8f95a1"
 typography:
   display:
+    fontFamily: "Manrope, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif"
+    fontSize: "52px"
+    fontWeight: 800
+    lineHeight: 1
+    letterSpacing: "-0.035em"
+    fontFeature: "tabular-nums lining-nums"
+  display-sm:
     fontFamily: "Manrope, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif"
     fontSize: "40px"
     fontWeight: 800
     lineHeight: 1
     letterSpacing: "-0.035em"
     fontFeature: "tabular-nums lining-nums"
+  display-page:
+    fontFamily: "Manrope, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif"
+    fontSize: "36px"
+    fontWeight: 800
+    lineHeight: 1
+    letterSpacing: "-0.03em"
+    fontFeature: "tabular-nums lining-nums"
+  display-page-sm:
+    fontFamily: "Manrope, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif"
+    fontSize: "30px"
+    fontWeight: 800
+    lineHeight: 1
+    letterSpacing: "-0.03em"
+    fontFeature: "tabular-nums lining-nums"
+  amount-symbol:
+    fontFamily: "Manrope, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif"
+    fontSize: "18px"
+    fontWeight: 800
+    lineHeight: 1.2
+    letterSpacing: "-0.02em"
+  amount-entry:
+    fontFamily: "Manrope, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif"
+    fontSize: "22px"
+    fontWeight: 800
+    lineHeight: 1.2
+    letterSpacing: "-0.02em"
   headline:
     fontFamily: "Manrope, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif"
     fontSize: "24px"
     fontWeight: 800
     lineHeight: 1.5
     letterSpacing: "-0.03em"
+  sheet-title:
+    fontFamily: "Manrope, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif"
+    fontSize: "19px"
+    fontWeight: 800
+    lineHeight: 1.3
+    letterSpacing: "-0.02em"
   title:
     fontFamily: "Manrope, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif"
     fontSize: "17px"
@@ -62,6 +119,12 @@ typography:
     fontWeight: 700
     lineHeight: 1.4
     letterSpacing: "normal"
+  control:
+    fontFamily: "Manrope, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif"
+    fontSize: "14px"
+    fontWeight: 700
+    lineHeight: 1.3
+    letterSpacing: "normal"
   meta:
     fontFamily: "Manrope, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif"
     fontSize: "13px"
@@ -73,6 +136,18 @@ typography:
     fontSize: "13px"
     fontWeight: 700
     lineHeight: 1.3
+    letterSpacing: "normal"
+  caption:
+    fontFamily: "Manrope, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif"
+    fontSize: "12px"
+    fontWeight: 600
+    lineHeight: 1.3
+    letterSpacing: "normal"
+  tab:
+    fontFamily: "Manrope, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif"
+    fontSize: "11px"
+    fontWeight: 700
+    lineHeight: 1.2
     letterSpacing: "normal"
   figure:
     fontFamily: "Manrope, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif"
@@ -278,6 +353,12 @@ Fourteen flat, saturated hues offered in the category picker (values in the side
 **The Tabular Money Rule.** Every money value goes through the `.figure` treatment — tabular lining numerals and −0.02em tracking — so a balance never reflows as its digits change. If a number is currency, it is tabular; if it is not currency, it is not.
 
 **The Weight-Not-Case Rule.** Hierarchy is made with weight and size only. No uppercase letter-spaced micro-labels, no small caps, no letter-spaced eyebrows. Sentence case everywhere, including buttons and field labels.
+
+### The category palette
+
+Colour is identity in this system, so the fourteen category colours are part of it, not decoration chosen per-category by a user. They live in `CATEGORY_COLORS` (`src/lib/constants.ts`) and are used at **full strength, flat**, in avatars, ring slices and budget-bar fills — never tinted, never as a background wash. `category-none` is the role for a row whose category was deleted and for the collapsed "Other" ring slice; it is a named token, not a grey picked by hand.
+
+Category colour never appears in the semantic layer. A budget bar carries its category's colour while on track, and switches to `caution` or `negative` when the verdict changes — the swap is the signal.
 
 ## Layout
 

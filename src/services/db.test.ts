@@ -67,7 +67,7 @@ describe('migrate: stale category kinds', () => {
   it('never overwrites a kind the user chose for their own category', () => {
     db.categories.write([
       ...DEFAULT_CATEGORIES,
-      { id: 'cat-mine', name: 'Mine', color: '#000000', icon: 'circle', kind: 'expense', order: 50 },
+      { id: 'cat-mine', name: 'Mine', color: '#64748b', icon: 'circle', kind: 'expense', order: 50 },
     ])
     db.transactions.write([makeTransaction({ type: 'expense', categoryId: 'cat-mine' })])
 

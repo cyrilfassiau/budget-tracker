@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-08-27T06:00:39.554Z",
+  "generatedAt": "2026-08-27T06:08:19.240Z",
   "title": "Design System: Budget Tracker",
   "note": "Sidecar written beside DESIGN.md rather than at .impeccable/design.json, because .impeccable/ in this repo is root-owned and unwritable.",
   "extensions": {
@@ -173,7 +173,7 @@
           "oklch(81% 0.197 27.4)",
           "oklch(92% 0.197 27.4)"
         ],
-        "contrast": "4.85:1 light / 6.38:1 dark"
+        "contrast": "4.85:1 light on bg, 5.03:1 on its own wash / 6.38:1 dark"
       },
       "caution": {
         "role": "warning",
@@ -189,6 +189,22 @@
           "oklch(81% 0.129 59.9)",
           "oklch(92% 0.129 59.9)"
         ]
+      },
+      "category-none": {
+        "role": "neutral",
+        "displayName": "No Category",
+        "canonical": "oklch(51.9% 0.024 264.4)",
+        "tonalRamp": [
+          "oklch(15% 0.024 264.4)",
+          "oklch(26% 0.024 264.4)",
+          "oklch(37% 0.024 264.4)",
+          "oklch(48% 0.024 264.4)",
+          "oklch(59% 0.024 264.4)",
+          "oklch(70% 0.024 264.4)",
+          "oklch(81% 0.024 264.4)",
+          "oklch(92% 0.024 264.4)"
+        ],
+        "purpose": "Rows whose category was deleted, and the collapsed Other ring slice."
       }
     },
     "typographyMeta": {
@@ -292,7 +308,27 @@
         "name": "pill",
         "value": "999px"
       }
-    ]
+    ],
+    "categoryPalette": {
+      "purpose": "Colour is identity in this system. These fourteen are used flat and at full strength in avatars, ring slices and budget fills, never tinted. They never appear in the semantic layer.",
+      "source": "src/lib/constants.ts CATEGORY_COLORS",
+      "values": [
+        "#e11d48",
+        "#f97316",
+        "#f59e0b",
+        "#84cc16",
+        "#10b981",
+        "#14b8a6",
+        "#06b6d4",
+        "#3b82f6",
+        "#6366f1",
+        "#8b5cf6",
+        "#d946ef",
+        "#ec4899",
+        "#64748b",
+        "#0f766e"
+      ]
+    }
   },
   "components": [
     {
@@ -422,6 +458,11 @@
       {
         "name": "Say It In Words",
         "body": "Status is stated in language as well as colour — '€40 over', '38% of the month gone'. Nothing is carried by colour alone.",
+        "section": "colors"
+      },
+      {
+        "name": "Category Colour Is Identity Only",
+        "body": "The fourteen category colours are used flat and at full strength for identity. A budget bar carries its category colour while on track and switches to caution or negative when the verdict changes — the swap is the signal.",
         "section": "colors"
       }
     ],
