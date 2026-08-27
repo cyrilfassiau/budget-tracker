@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import { AppLayout } from '@/components/layout/AppLayout'
 import { ThemeToggle } from '@/components/layout/ThemeToggle'
-import { Button, ConfirmDialog, Field, Select, Sheet, SheetHead } from '@/components/ui'
+import { Button, Card, CardHead, ConfirmDialog, Field, Select } from '@/components/ui'
 import { CURRENCIES } from '@/lib/constants'
 import { clearAll, resetToSeed } from '@/services/db'
 import { useBudgetsStore } from '@/store/useBudgetsStore'
@@ -33,10 +33,10 @@ function ToggleRow({
   onChange: (checked: boolean) => void
 }) {
   return (
-    <label className="flex cursor-pointer items-start justify-between gap-4 border-t border-rule px-4 py-3 sm:px-5">
+    <label className="flex cursor-pointer items-start justify-between gap-4 py-1">
       <span className="min-w-0">
-        <span className="block text-[13px] font-semibold text-ink">{label}</span>
-        <span className="mt-0.5 block text-[11px] leading-relaxed text-ink-2">{description}</span>
+        <span className="block text-[15px] font-bold text-fg">{label}</span>
+        <span className="mt-0.5 block text-[13px] leading-relaxed text-fg-muted">{description}</span>
       </span>
       <input
         type="checkbox"
@@ -47,13 +47,13 @@ function ToggleRow({
       />
       <span
         aria-hidden="true"
-        className="relative mt-0.5 h-5 w-9 shrink-0 border border-rule-strong bg-sheet-alt transition-colors peer-checked:border-carbon peer-checked:bg-carbon peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-[var(--carbon)] after:absolute after:left-0.5 after:top-0.5 after:size-3.5 after:bg-ink after:transition-transform peer-checked:after:translate-x-4 peer-checked:after:bg-sheet"
+        className="relative mt-0.5 h-7 w-12 shrink-0 rounded-full bg-surface-3 transition-colors peer-checked:bg-accent peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-[var(--ring)] after:absolute after:left-1 after:top-1 after:size-5 after:rounded-full after:bg-white after:transition-transform peer-checked:after:translate-x-5"
       />
     </label>
   )
 }
 
-export function AccountPage() {
+export function SettingsPage() {
   const settings = useSettingsStore()
   const transactions = useTransactionsStore((state) => state.items)
   const categories = useCategoriesStore((state) => state.items)
@@ -69,8 +69,11 @@ export function AccountPage() {
       toast.info('Nothing to export yet')
       return
     }
-    downloadFile(`budget-tracker-backup-${toDateKey(new Date())}.csv`, toCSV(transactions, categories))
-    toast.success(`Backed up ${transactions.length} entries`)
+    downloadFile(
+      `budget-tracker-backup-${toDateKey(new Date())}.csv`,
+      toCSV(transactions, categories),
+    )
+    toast.success(`Backed up ${transactions.length} transactions`)
   }
 
   const handleDataAction = async () => {
@@ -81,9 +84,9 @@ export function AccountPage() {
       else clearAll()
       await Promise.all([invalidateTransactions(), invalidateCategories(), invalidateBudgets()])
       setPendingAction(null)
-      toast.success(action === 'reset' ? 'Sample book restored' : 'Everything deleted')
+      toast.success(action === 'reset' ? 'Sample data restored' : 'Everything deleted')
     } catch (error) {
-      toast.error(toMessage(error, 'Could not update the book.'))
+      toast.error(toMessage(error, 'Could not update your data.'))
     }
   }
 
@@ -94,16 +97,19 @@ export function AccountPage() {
   }
 
   return (
-    <AppLayout title="Account" showPeriod={false}>
+    <AppLayout title="Settings">
       <div className="flex max-w-2xl animate-in flex-col gap-4">
-        <Sheet>
-          <SheetHead title="Presentation" />
-          <div className="flex items-center justify-between gap-4 border-t border-rule px-4 py-3 sm:px-5">
-            <span className="text-[13px] font-semibold text-ink">Sheet side</span>
+        <Card className="flex flex-col gap-4">
+          <CardHead title="Appearance" />
+          <div className="flex items-center justify-between gap-4">
+            <span className="text-[15px] font-bold text-fg">Theme</span>
             <ThemeToggle />
           </div>
+        </Card>
 
-          <div className="grid gap-3 border-t border-rule px-4 py-3 sm:grid-cols-2 sm:px-5">
+        <Card className="flex flex-col gap-4">
+          <CardHead title="Money" meta="How amounts are shown" />
+          <div className="grid gap-4 sm:grid-cols-2">
             <Field label="Currency">
               {({ id }) => (
                 <Select
@@ -120,7 +126,7 @@ export function AccountPage() {
               )}
             </Field>
 
-            <Field label="Locale">
+            <Field label="Language">
               {({ id }) => (
                 <Select
                   id={id}
@@ -136,82 +142,76 @@ export function AccountPage() {
               )}
             </Field>
           </div>
-          <p className="border-t border-rule px-4 py-2 text-[11px] text-ink-3 sm:px-5">
-            Presentation only. Amounts are never converted between currencies.
+          <p className="text-[13px] text-fg-faint">
+            Display only. Amounts are never converted between currencies.
           </p>
-        </Sheet>
+        </Card>
 
-        <Sheet>
-          <SheetHead title="Entry" />
+        <Card className="flex flex-col gap-3">
+          <CardHead title="Adding transactions" />
           <ToggleRow
-            label="Planning"
-            description="Allow entries dated in the future, for bills and income you already know about."
+            label="Planning mode"
+            description="Allow transactions dated in the future, for bills and income you already know about."
             checked={settings.allowFutureDates}
             onChange={(allowFutureDates) => update({ allowFutureDates })}
           />
-        </Sheet>
+        </Card>
 
-        <Sheet>
-          <SheetHead
-            title="The book"
-            meta={`${transactions.length} entries · ${categories.length} categories · ${budgets.length} limits`}
+        <Card className="flex flex-col gap-4">
+          <CardHead
+            title="Your data"
+            meta={`${transactions.length} transactions · ${categories.length} categories · ${budgets.length} budgets`}
           />
 
-          <div className="border-t border-rule px-4 py-3 sm:px-5">
-            <p className="text-[13px] leading-relaxed text-ink-2">
-              This book is held in this browser alone. There is no account and no server, so
-              clearing your browsing data erases it and nobody can restore it for you.
-            </p>
-            <div className="mt-3 flex flex-wrap gap-2">
-              <Button variant="secondary" onClick={exportBackup}>
-                Export a backup
-              </Button>
-              <Button variant="secondary" onClick={() => setPendingAction('reset')}>
-                Restore the sample book
-              </Button>
-            </div>
+          <p className="text-[14px] leading-relaxed text-fg-muted">
+            Everything lives in this browser alone. There is no account and no server, so clearing
+            your browsing data erases it and nobody can restore it for you.
+          </p>
+
+          <div className="flex flex-wrap gap-2">
+            <Button variant="secondary" onClick={exportBackup}>
+              Export a backup
+            </Button>
+            <Button variant="secondary" onClick={() => setPendingAction('reset')}>
+              Restore sample data
+            </Button>
           </div>
 
           {/* Kept apart from everything reversible, and styled as what it is. */}
-          <div className="border-t-2 border-red px-4 py-3 sm:px-5">
-            <p className="col-head text-red">Irreversible</p>
-            <p className="mt-1 text-[13px] leading-relaxed text-ink-2">
-              Deleting everything removes {transactions.length} entries and {budgets.length} limits
-              permanently. Export a backup first if there is anything here you want to keep.
+          <div className="rounded-[16px] bg-negative-soft p-4">
+            <p className="text-[14px] font-bold text-negative">Delete everything</p>
+            <p className="mt-1 text-[13px] leading-relaxed text-fg-muted">
+              Removes {transactions.length} transactions and {budgets.length} budgets permanently.
+              Export a backup first if there is anything here you want to keep.
             </p>
-            <Button
-              variant="danger"
-              className="mt-2.5"
-              onClick={() => setPendingAction('clear')}
-            >
+            <Button variant="danger" size="sm" className="mt-3" onClick={() => setPendingAction('clear')}>
               Delete everything
             </Button>
           </div>
-        </Sheet>
+        </Card>
       </div>
 
       <ConfirmDialog
         open={pendingAction !== null}
-        title={pendingAction === 'reset' ? 'Restore the sample book?' : 'Delete everything?'}
+        title={pendingAction === 'reset' ? 'Restore sample data?' : 'Delete everything?'}
         message={
           pendingAction === 'reset' ? (
             <>
-              Your {transactions.length} entries and {budgets.length} limits will be replaced by the
-              sample book. This cannot be undone.
+              Your {transactions.length} transactions and {budgets.length} budgets will be replaced
+              by the sample data. This cannot be undone.
             </>
           ) : (
             <>
-              <strong className="font-semibold text-ink">{transactions.length} entries</strong> and{' '}
-              <strong className="font-semibold text-ink">{budgets.length} limits</strong> will be
-              permanently deleted, and categories reset to the defaults. Nothing can bring them
-              back.
+              <strong className="font-bold text-fg">{transactions.length} transactions</strong> and{' '}
+              <strong className="font-bold text-fg">{budgets.length} budgets</strong> will be
+              permanently deleted, and categories reset to the defaults. Nothing can bring them back.
             </>
           )
         }
         confirmLabel={pendingAction === 'reset' ? 'Restore' : 'Delete everything'}
         typeToConfirm={pendingAction === 'clear' ? 'delete' : undefined}
         secondaryAction={
-          transactions.length > 0 ? { label: 'Export a backup', onClick: exportBackup } : undefined
+          transactions.length > 0 ? { label: 'Export a backup first', onClick: exportBackup } : undefined
         }
         onConfirm={handleDataAction}
         onCancel={() => setPendingAction(null)}

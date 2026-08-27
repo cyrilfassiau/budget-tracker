@@ -4,39 +4,53 @@ import { formatMoney } from '@/utils/money'
 
 interface AmountProps {
   value: number
-  /**
-   * Ledger convention: a negative figure prints in red. Set `plain` for
-   * figures where sign carries no judgement (a column total that is expected
-   * to be an outgoing).
-   */
+  /** Suppresses the sign and the positive/negative colouring. */
   plain?: boolean
-  /** Renders a dash instead of 0.00, the way a ruled column leaves a cell empty. */
   blankZero?: boolean
   whole?: boolean
+  /**
+   * Shows an explicit + or −. Money arriving turns green; money leaving stays
+   * in the default ink, because red is reserved for trouble.
+   */
+  signed?: boolean
   className?: string
 }
 
 /**
- * Every figure in the app goes through here, so alignment, tabular numerals
- * and the red-for-negative rule are decided in exactly one place.
+ * Every figure goes through here, so tabular numerals, tight tracking and the
+ * green-means-money-in rule are decided in one place.
  */
-export function Amount({ value, plain, blankZero, whole, className }: AmountProps) {
+export function Amount({ value, plain, blankZero, whole, signed, className }: AmountProps) {
   const { currency, locale } = useCurrencyFormat()
 
   if (blankZero && value === 0) {
-    return (
-      <span aria-hidden="true" className={cn('figure text-ink-3', className)}>
-        —
-      </span>
-    )
+    return <span className={cn('figure text-fg-faint', className)}>—</span>
   }
+
+  const formatted = formatMoney(
+    Math.abs(value),
+    currency,
+    locale,
+    whole ? { maximumFractionDigits: 0 } : {},
+  )
+
+  if (plain) {
+    return <span className={cn('figure whitespace-nowrap', className)}>{formatted}</span>
+  }
+
+  const positive = value > 0
 
   return (
     <span
-      className={cn('figure whitespace-nowrap', !plain && value < 0 && 'dr', className)}
+      className={cn(
+        'figure whitespace-nowrap',
+        signed && positive && 'text-positive',
+        !signed && value < 0 && 'text-negative',
+        className,
+      )}
     >
-      {formatMoney(Math.abs(value), currency, locale, whole ? { maximumFractionDigits: 0 } : {})}
-      {!plain && value < 0 ? <span className="ml-0.5 text-[0.85em]">DR</span> : null}
+      {signed && positive ? '+' : value < 0 ? '−' : ''}
+      {formatted}
     </span>
   )
 }

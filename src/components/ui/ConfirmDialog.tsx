@@ -11,21 +11,15 @@ interface ConfirmDialogProps {
   confirmLabel?: string
   cancelLabel?: string
   tone?: 'danger' | 'primary'
-  /**
-   * When set, the confirm button stays disabled until this word is typed.
-   * Reserved for losses that cannot be undone.
-   */
+  /** Gate for a loss that cannot be undone. */
   typeToConfirm?: string
-  /** Offered beside Cancel — e.g. "Export a backup first". */
   secondaryAction?: { label: string; onClick: () => void }
   onConfirm: () => void | Promise<void>
   onCancel: () => void
 }
 
-/**
- * Cancel holds the focus, always. A dialog that opens with the destructive
- * button focused turns a stray Enter into data loss.
- */
+/** Cancel holds focus. A dialog that opens on the destructive button turns a
+ *  stray Enter into data loss. */
 export function ConfirmDialog({
   open,
   title,
@@ -41,8 +35,6 @@ export function ConfirmDialog({
   const [busy, setBusy] = useState(false)
   const [typed, setTyped] = useState('')
 
-  // Clear the confirmation word each time the dialog opens, adjusting state
-  // during render rather than in an effect.
   const [wasOpen, setWasOpen] = useState(open)
   if (open !== wasOpen) {
     setWasOpen(open)
@@ -69,11 +61,6 @@ export function ConfirmDialog({
       closeOnBackdrop={false}
       footer={
         <>
-          {secondaryAction ? (
-            <Button variant="ghost" onClick={secondaryAction.onClick} disabled={busy}>
-              {secondaryAction.label}
-            </Button>
-          ) : null}
           <Button variant="secondary" onClick={onCancel} disabled={busy} data-autofocus>
             {cancelLabel}
           </Button>
@@ -88,15 +75,21 @@ export function ConfirmDialog({
         </>
       }
     >
-      <div className="text-[13px] leading-relaxed text-ink-2">{message}</div>
+      <div className="text-[15px] leading-relaxed text-fg-muted">{message}</div>
+
+      {secondaryAction ? (
+        <Button variant="ghost" className="mt-3" fullWidth onClick={secondaryAction.onClick}>
+          {secondaryAction.label}
+        </Button>
+      ) : null}
 
       {typeToConfirm ? (
-        <label className="mt-3 block">
-          <span className="col-head text-ink-2">
+        <label className="mt-4 block">
+          <span className="text-[13px] font-bold text-fg-muted">
             Type “{typeToConfirm}” to confirm
           </span>
           <Input
-            className="mt-1"
+            className="mt-1.5"
             value={typed}
             autoComplete="off"
             spellCheck={false}

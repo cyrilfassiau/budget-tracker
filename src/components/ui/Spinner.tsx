@@ -6,7 +6,7 @@ export function Spinner({ className, label = 'Working' }: { className?: string; 
       role="status"
       aria-label={label}
       className={cn(
-        'inline-block size-3.5 animate-spin rounded-full border border-current border-t-transparent',
+        'inline-block size-4 animate-spin rounded-full border-2 border-current border-t-transparent',
         className,
       )}
     />

@@ -36,7 +36,7 @@ Most client-side budget trackers are CRUD lists with a chart bolted on. This one
 
 ## Capabilities and Constraints
 
-**Confirmed functionality:** transaction CRUD with validation; filter by search/type/category/date range; sort by date or amount; pagination; category CRUD with colour, icon and manual ordering; per-category monthly budgets with progress and over-budget warning; dashboard summary, spending breakdown and six-month trend; month picker shared by dashboard and budgets; CSV import/export; light/dark/system theme; settings for currency and locale.
+**Confirmed functionality:** transaction CRUD with validation; filter by search/type/category/date range; sort by date or amount; pagination; category CRUD with colour, icon and manual ordering; per-category monthly budgets with progress and over-budget warning; balance, spending breakdown and six-month trend; month picker shared across Home, Transactions and Budgets; CSV import/export; light/dark/system theme; settings for currency and locale.
 
 **Confirmed additions for this redesign:**
 - A **transfer** transaction type, so moving money between one's own accounts is excluded from both income and expenses, and from the savings-rate calculation.
@@ -46,7 +46,7 @@ Most client-side budget trackers are CRUD lists with a chart bolted on. This one
 - The async service layer in `src/services` and its `localStorage`-behind-an-API architecture, plus the existing test suite.
 - Recharts as the charting library.
 - Tailwind CSS v4 and the CSS-custom-property token system.
-- The five-route structure: Dashboard, Transactions, Budgets, Categories, Settings.
+- The five-route structure: Home, Transactions, Budgets, Categories, Settings.
 - React 19 + TypeScript strict + Vite. No `any`.
 
 **Terminology:** income, expense, transfer, category, budget (a monthly limit per category), net balance, savings rate.
@@ -55,7 +55,11 @@ Most client-side budget trackers are CRUD lists with a chart bolted on. This one
 
 ## Brand Commitments
 
-No pre-existing brand, logo, palette, or typeface. Name: **Budget Tracker**. Voice is plain and non-jargon — "Where the money went", "Record money in or out", "Data lives in this browser only" — and that register is confirmed as correct and worth preserving.
+No pre-existing brand, logo, or typeface. Name: **Budget Tracker**. Voice is plain and non-jargon — "Record money in or out", "Data lives in this browser only" — and that register is confirmed as correct and worth preserving.
+
+**Pinned visual reference (standing preference).** The interface should sit alongside **Revolut** and read as a modern consumer banking app: flat surfaces, generously rounded cards, circular category avatars, a large display balance, pill controls, and a bottom sheet for entry. **No gradients anywhere** — an explicit constraint, including where the reference itself uses them.
+
+**Explicitly rejected.** The editorial-ledger vocabulary of the previous build: hairline rules as the structural device, ruled column tables, uppercase letter-spaced micro-labels, monospace "stamp" text, square corners, and paper tints. The user identified this as a recognisable house style and does not want it here.
 
 ## Evidence on Hand
 
@@ -76,4 +80,4 @@ No pre-existing brand, logo, palette, or typeface. Name: **Budget Tracker**. Voi
 
 WCAG 2.1 AA is the target. Established requirements: text contrast at 4.5:1; every flow completable by keyboard; visible focus; and no meaning carried by colour alone.
 
-All three were outstanding defects before the redesign and are now discharged: the muted-text token (then `--fg-subtle`, now `--ink-3`) measured 3.03:1 light and 3.91:1 dark, and measures ~5.4:1 light and ~6.6:1 dark; and colour no longer carries identity and status in the same element, because category colour is absent from the register and from budget bars while red is reserved for trouble alone.
+These were outstanding defects in the first build and must not regress: the muted-text tokens (now `--fg-muted` and `--fg-faint`) once measured 3.03:1, and colour once carried both category identity and budget status in the same element. In the current build category colour is identity, green means money arrived, and red is reserved for trouble.

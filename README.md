@@ -9,7 +9,7 @@ It is deliberately **not** a dashboard. Two decisions drive the whole design:
 
 **[Live demo](#)** · _replace with your deployed URL_
 
-![The statement](docs/screenshots/statement-light.png)
+![Home](docs/screenshots/home-dark.png)
 
 ---
 
@@ -69,7 +69,7 @@ It is deliberately **not** a dashboard. Two decisions drive the whole design:
 | Routing          | React Router                  | Five views with lazily loaded route chunks                             |
 | State            | Zustand                       | Small, hook-first, no provider tree. See the note on Redux below       |
 | Charts           | Recharts                      | Composable SVG charts that inherit the app's CSS custom properties     |
-| Type             | Archivo / Archivo Narrow / Courier Prime | A signage grotesk for the data columns, its narrow cut for column heads, and a typewriter face for the stamped reference layer |
+| Type             | Manrope                       | A geometric grotesque that holds up at 800 weight for the display balance |
 | Styling          | Tailwind CSS v4               | Design tokens in CSS variables, so theming is one swap at `:root`      |
 | Dates            | date-fns                      | Tree-shakeable, immutable, no global patching                          |
 | Tests            | Vitest + React Testing Library | Same transform pipeline as the app; tests behaviour, not internals     |

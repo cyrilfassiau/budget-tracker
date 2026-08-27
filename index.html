@@ -6,13 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Budget Tracker — a client-side personal account book. Every entry carries the balance it left behind."
+      content="Budget Tracker — a client-side personal finance app. Your balance, your spending, and your budgets in one place."
     />
-    <meta name="theme-color" content="#2f3b8c" />
+    <meta name="theme-color" content="#0b0c0f" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Archivo+Narrow:wght@400;500;600;700&family=Courier+Prime:wght@400;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
     <title>Budget Tracker</title>
@@ -31,23 +31,22 @@
   </head>
   <body>
     <!--
-      THESIS: An account book, not a dashboard. Every entry carries the balance it
-      left behind, so "how am I doing" is answered by the register's own
-      construction. Refuses the KPI-card row, the donut, and the filter-table that
-      every budget app ships.
-      OWN-WORLD: Cheque safety-tint stock, carbon-copy blue as the committed ink,
-      ledger red reserved solely for trouble. Ruled columns and hairline rules
-      instead of cards; Archivo Narrow column heads, Archivo tabular figures,
-      Courier Prime for the stamped reference layer. Dark mode is the carbon copy.
-      STORY: The visitor reads a period, sees where the month stands against how
-      much of it has elapsed, and enters money in seconds without leaving the page.
-      FIRST VIEWPORT: Statement head with account name, period, and a DAY n OF n
-      rule. Beneath it the summary block — brought forward, paid in, paid out,
-      transfers, carried forward — right-aligned on a shared decimal, red only when
-      negative. Then the standing-order sheet with a scheduled tick per budget.
-      Primary action sits in the statement head as ENTER TRANSACTION.
-      FORM: The Passbook, candidate 1 of my ordered grounded list, chosen by the
-      user over the assigned roll (candidate 3, The Kursbuch); seed key eca57932.
+      THESIS: A consumer banking app, not a document. The balance leads at
+      display scale, money is a stack of tappable rows with circular category
+      avatars, and every surface is a flat rounded card. Refuses the ruled
+      editorial ledger it replaces: no hairline structure, no column tables, no
+      uppercase micro-labels, no monospace, no square corners.
+      OWN-WORLD: Near-black or pure-white ground with raised flat cards at 20px
+      radius, one vivid blue accent, green reserved for money in and red for
+      trouble. Manrope at 800 for figures, tight tracking. Circular avatars in
+      flat category colour. Pill controls. Absolutely no gradients.
+      STORY: The visitor sees what they have, how far through the month they
+      are, and adds an entry from a bottom sheet in two taps.
+      FIRST VIEWPORT: Balance in display type over the period and its pacing,
+      then a row of circular quick actions, then the spending ring and the
+      latest entries as avatar rows. Primary action is the centre quick action.
+      FORM: Brief-pinned world (Revolut, played straight, no gradients); the
+      roll is not consulted because a pinned decision beats it.
       FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance.
     -->
     <div id="root"></div>

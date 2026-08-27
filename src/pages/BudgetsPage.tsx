@@ -5,12 +5,12 @@ import { PeriodPicker } from '@/components/layout/PeriodPicker'
 import {
   Amount,
   Button,
-  CategoryMark,
+  Card,
+  CardHead,
+  CategoryAvatar,
   ConfirmDialog,
   EmptyState,
   PaceBar,
-  Sheet,
-  SheetHead,
   SkeletonRows,
 } from '@/components/ui'
 import { BudgetForm } from '@/features/budgets/BudgetForm'
@@ -70,15 +70,15 @@ export function BudgetsPage() {
       // A no-op is not a success: say plainly that nothing was there to copy.
       if (count === 0) {
         toast.info('Nothing to copy', {
-          description: `${formatMonthLabel(previous)} has no limits set.`,
+          description: `${formatMonthLabel(previous)} has no budgets set.`,
         })
       } else {
-        toast.success(`Copied ${count} ${count === 1 ? 'limit' : 'limits'}`, {
+        toast.success(`Copied ${count} budget${count === 1 ? '' : 's'}`, {
           description: `From ${formatMonthLabel(previous)}.`,
         })
       }
     } catch (error) {
-      toast.error(toMessage(error, 'Could not copy the previous period.'))
+      toast.error(toMessage(error, 'Could not copy last month.'))
     } finally {
       setCopying(false)
     }
@@ -90,9 +90,9 @@ export function BudgetsPage() {
     try {
       await removeBudget(target.budgetId)
       setPendingDelete(null)
-      toast.success(`Limit removed for ${target.name}`)
+      toast.success(`Budget removed for ${target.name}`)
     } catch (error) {
-      toast.error(toMessage(error, 'Could not remove the limit.'))
+      toast.error(toMessage(error, 'Could not remove the budget.'))
     }
   }
 
@@ -103,26 +103,26 @@ export function BudgetsPage() {
         <>
           <PeriodPicker />
           <Button
-            variant="secondary"
+            variant="primary"
             onClick={() => {
               setEditing(null)
               setFormOpen(true)
             }}
           >
-            Set limit
+            New
           </Button>
         </>
       }
     >
       {loading ? (
-        <Sheet>
+        <Card>
           <SkeletonRows rows={7} />
-        </Sheet>
+        </Card>
       ) : (
         <div className="flex animate-in flex-col gap-4">
-          <Sheet>
-            <SheetHead
-              title={`Limits for ${formatMonthLabel(month)}`}
+          <Card>
+            <CardHead
+              title="Budgets"
               meta={
                 overCount > 0
                   ? `${overCount} over the limit`
@@ -134,47 +134,48 @@ export function BudgetsPage() {
               }
               action={
                 <Button variant="ghost" size="sm" loading={copying} onClick={handleCopy}>
-                  Copy previous
+                  Copy last month
                 </Button>
               }
             />
 
             {rows.length > 0 ? (
-              <div className="border-b border-rule px-4 py-3 sm:px-5">
+              <div className="pt-1">
                 <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
                   <div>
-                    <p className="col-head text-ink-3">Paid against limits</p>
-                    <p className="mt-0.5 font-narrow text-[30px] font-bold leading-none tracking-[-0.01em] text-ink sm:text-[38px]">
+                    <p className="text-[13px] font-semibold text-fg-muted">Spent this month</p>
+                    <p className="figure mt-0.5 text-[30px] font-extrabold leading-none tracking-[-0.03em] text-fg sm:text-[36px]">
                       <Amount value={totals.spent} plain />
                     </p>
                   </div>
-                  <p className="text-[13px] text-ink-3">
-                    of <Amount value={totals.limit} plain className="font-semibold text-ink-2" />{' '}
-                    budgeted
+                  <p className="text-[13px] font-semibold text-fg-muted">
+                    of <Amount value={totals.limit} plain className="text-fg" /> budgeted
                   </p>
                 </div>
                 <PaceBar
-                  className="mt-2"
+                  className="mt-3"
                   value={totals.ratio}
                   pace={pace}
                   label="All budgets"
                   over={totals.ratio > 1}
                   aheadOfSchedule={totals.ratio > pace + 0.02}
                 />
-                <p className="mt-1 flex items-baseline justify-between gap-2 text-[11px] text-ink-3">
+                <p className="mt-2 flex flex-wrap items-baseline justify-between gap-x-3 text-[12px] text-fg-faint">
                   <span>
-                    The tick marks how much of the period has passed
+                    The tick marks how much of the month has passed
                     {pace < 1 ? ` — ${formatPercent(pace)} so far` : ''}.
                   </span>
-                  <span className="figure shrink-0">{formatPercent(totals.ratio)} spent</span>
+                  <span className="figure shrink-0 font-semibold">
+                    {formatPercent(totals.ratio)} spent
+                  </span>
                 </p>
               </div>
             ) : null}
 
             {rows.length === 0 ? (
               <EmptyState
-                title={`No limits for ${formatMonthLabel(month)}`}
-                description="A limit is what turns spending into something you can be ahead of, or behind."
+                title={`No budgets for ${formatMonthLabel(month)}`}
+                description="A limit turns spending into something you can be ahead of, or behind."
                 action={
                   <>
                     <Button
@@ -184,10 +185,10 @@ export function BudgetsPage() {
                         setFormOpen(true)
                       }}
                     >
-                      Set the first limit
+                      Set your first budget
                     </Button>
                     <Button variant="secondary" loading={copying} onClick={handleCopy}>
-                      Copy previous period
+                      Copy last month
                     </Button>
                   </>
                 }
@@ -207,12 +208,12 @@ export function BudgetsPage() {
                 ))}
               </ul>
             )}
-          </Sheet>
+          </Card>
 
           {unbudgeted.length > 0 ? (
-            <Sheet>
-              <SheetHead title="Without a limit" meta="Categories not budgeted this period" />
-              <ul className="flex flex-wrap gap-1.5 p-3 sm:p-4">
+            <Card>
+              <CardHead title="No budget set" meta="Categories without a limit this month" />
+              <ul className="mt-3 flex flex-wrap gap-2">
                 {unbudgeted.map((row) => (
                   <li key={row.categoryId}>
                     <button
@@ -221,12 +222,12 @@ export function BudgetsPage() {
                         setEditing({ ...row, limit: 0 })
                         setFormOpen(true)
                       }}
-                      className="flex items-center gap-1.5 border border-rule bg-sheet px-2 py-1 text-[12px] text-ink-2 transition-colors hover:border-ink hover:text-ink"
+                      className="pill flex items-center gap-2 bg-surface-2 py-1.5 pl-1.5 pr-3.5 text-[14px] font-semibold text-fg transition-colors hover:bg-surface-3"
                     >
-                      <CategoryMark icon={row.icon} size="sm" />
+                      <CategoryAvatar color={row.color} icon={row.icon} size="sm" />
                       {row.name}
                       {row.spent > 0 ? (
-                        <span className="text-ink-3">
+                        <span className="text-fg-muted">
                           <Amount value={row.spent} plain whole />
                         </span>
                       ) : null}
@@ -234,7 +235,7 @@ export function BudgetsPage() {
                   </li>
                 ))}
               </ul>
-            </Sheet>
+            </Card>
           ) : null}
         </div>
       )}
@@ -249,9 +250,9 @@ export function BudgetsPage() {
 
       <ConfirmDialog
         open={pendingDelete !== null}
-        title={`Remove the limit for ${pendingDelete?.name ?? ''}?`}
-        message="The limit is removed for this period only. Your entries are untouched."
-        confirmLabel="Remove limit"
+        title={`Remove the budget for ${pendingDelete?.name ?? ''}?`}
+        message="The limit is removed for this month only. Your transactions are untouched."
+        confirmLabel="Remove"
         onConfirm={handleDelete}
         onCancel={() => setPendingDelete(null)}
       />

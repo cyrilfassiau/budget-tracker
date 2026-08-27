@@ -4,11 +4,11 @@ import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-d
 import { RouteFallback } from '@/components/layout/RouteFallback'
 
 /** Routes are code-split so the first load does not pay for Recharts. */
-const StatementPage = lazy(() =>
-  import('@/pages/StatementPage').then((module) => ({ default: module.StatementPage })),
+const OverviewPage = lazy(() =>
+  import('@/pages/OverviewPage').then((module) => ({ default: module.OverviewPage })),
 )
-const RegisterPage = lazy(() =>
-  import('@/pages/RegisterPage').then((module) => ({ default: module.RegisterPage })),
+const TransactionsPage = lazy(() =>
+  import('@/pages/TransactionsPage').then((module) => ({ default: module.TransactionsPage })),
 )
 const BudgetsPage = lazy(() =>
   import('@/pages/BudgetsPage').then((module) => ({ default: module.BudgetsPage })),
@@ -16,8 +16,8 @@ const BudgetsPage = lazy(() =>
 const CategoriesPage = lazy(() =>
   import('@/pages/CategoriesPage').then((module) => ({ default: module.CategoriesPage })),
 )
-const AccountPage = lazy(() =>
-  import('@/pages/AccountPage').then((module) => ({ default: module.AccountPage })),
+const SettingsPage = lazy(() =>
+  import('@/pages/SettingsPage').then((module) => ({ default: module.SettingsPage })),
 )
 
 export function App() {
@@ -25,18 +25,18 @@ export function App() {
     <Router>
       <a
         href="#main-content"
-        className="sr-only bg-ink px-3 py-2 font-narrow text-[12px] font-semibold uppercase tracking-[0.07em] text-sheet focus:not-sr-only focus:absolute focus:left-3 focus:top-3 focus:z-[70]"
+        className="pill sr-only bg-accent px-4 py-2 text-[14px] font-bold text-accent-fg focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[70]"
       >
         Skip to content
       </a>
 
       <Suspense fallback={<RouteFallback />}>
         <Routes>
-          <Route path="/" element={<StatementPage />} />
-          <Route path="/transactions" element={<RegisterPage />} />
+          <Route path="/" element={<OverviewPage />} />
+          <Route path="/transactions" element={<TransactionsPage />} />
           <Route path="/budgets" element={<BudgetsPage />} />
           <Route path="/categories" element={<CategoriesPage />} />
-          <Route path="/settings" element={<AccountPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>

@@ -9,14 +9,14 @@ export function Select({ className, children, ...props }: SelectHTMLAttributes<H
   return (
     <div className="relative">
       <select
-        className={cn(controlClasses, 'h-9 cursor-pointer appearance-none pr-8', className)}
+        className={cn(controlClasses, 'h-12 cursor-pointer appearance-none pr-10', className)}
         {...props}
       >
         {children}
       </select>
       <ChevronDown
         aria-hidden="true"
-        className="pointer-events-none absolute right-2.5 top-1/2 size-3.5 -translate-y-1/2 text-ink-3"
+        className="pointer-events-none absolute right-3.5 top-1/2 size-4 -translate-y-1/2 text-fg-faint"
       />
     </div>
   )

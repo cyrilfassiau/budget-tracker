@@ -20,39 +20,38 @@ function pageWindow(page: number, totalPages: number): (number | 'gap')[] {
   })
 }
 
-/** The foot of the sheet: which entries these are, out of how many. */
 export function Pagination({ page, totalPages, total, pageSize, onChange }: PaginationProps) {
   const first = (page - 1) * pageSize + 1
   const last = Math.min(page * pageSize, total)
 
   return (
     <nav
-      aria-label="Register pages"
-      className="flex flex-wrap items-center justify-between gap-2 px-4 py-2 sm:px-5"
+      aria-label="Transaction pages"
+      className="flex flex-wrap items-center justify-between gap-2 pt-3"
     >
-      <p className="stamp text-ink-3">
+      <p className="text-[13px] font-semibold text-fg-faint">
         {total === 0
-          ? 'No entries'
+          ? 'Nothing to show'
           : totalPages <= 1
-            ? `${total} ${total === 1 ? 'entry' : 'entries'}`
-            : `Entries ${first}–${last} of ${total}`}
+            ? `${total} transaction${total === 1 ? '' : 's'}`
+            : `${first}–${last} of ${total}`}
       </p>
 
       {totalPages > 1 ? (
-        <div className="flex items-center gap-0.5">
+        <div className="flex items-center gap-1">
           <button
             type="button"
             onClick={() => onChange(page - 1)}
             disabled={page === 1}
             aria-label="Previous page"
-            className="p-1 text-ink-3 transition-colors hover:bg-sheet-alt hover:text-ink disabled:pointer-events-none disabled:opacity-30"
+            className="flex size-8 items-center justify-center rounded-full text-fg-muted transition-colors hover:bg-surface-2 hover:text-fg disabled:pointer-events-none disabled:opacity-30"
           >
             <ChevronLeft className="size-4" />
           </button>
 
           {pageWindow(page, totalPages).map((entry, index) =>
             entry === 'gap' ? (
-              <span key={`gap-${index}`} className="stamp px-0.5 text-ink-3" aria-hidden="true">
+              <span key={`gap-${index}`} className="px-0.5 text-fg-faint" aria-hidden="true">
                 …
               </span>
             ) : (
@@ -63,10 +62,10 @@ export function Pagination({ page, totalPages, total, pageSize, onChange }: Pagi
                 aria-label={`Page ${entry}`}
                 aria-current={entry === page ? 'page' : undefined}
                 className={cn(
-                  'figure size-6 text-[12px] transition-colors',
+                  'figure size-8 rounded-full text-[13px] font-bold transition-colors',
                   entry === page
-                    ? 'bg-ink font-semibold text-sheet'
-                    : 'text-ink-3 hover:bg-sheet-alt hover:text-ink',
+                    ? 'bg-accent text-accent-fg'
+                    : 'text-fg-muted hover:bg-surface-2 hover:text-fg',
                 )}
               >
                 {entry}
@@ -79,7 +78,7 @@ export function Pagination({ page, totalPages, total, pageSize, onChange }: Pagi
             onClick={() => onChange(page + 1)}
             disabled={page === totalPages}
             aria-label="Next page"
-            className="p-1 text-ink-3 transition-colors hover:bg-sheet-alt hover:text-ink disabled:pointer-events-none disabled:opacity-30"
+            className="flex size-8 items-center justify-center rounded-full text-fg-muted transition-colors hover:bg-surface-2 hover:text-fg disabled:pointer-events-none disabled:opacity-30"
           >
             <ChevronRight className="size-4" />
           </button>

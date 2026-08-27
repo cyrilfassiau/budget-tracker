@@ -2,7 +2,7 @@ import { Plus } from 'lucide-react'
 import { useMemo, useState } from 'react'
 
 import { AppLayout } from '@/components/layout/AppLayout'
-import { Button, ConfirmDialog, EmptyState, Sheet, SheetHead, SkeletonRows } from '@/components/ui'
+import { Button, Card, CardHead, ConfirmDialog, EmptyState, SkeletonRows } from '@/components/ui'
 import { CategoryCard, type CategoryUsage } from '@/features/categories/CategoryCard'
 import { CategoryForm } from '@/features/categories/CategoryForm'
 import { useIsLoading } from '@/hooks/useAppData'
@@ -82,7 +82,7 @@ export function CategoriesPage() {
       toast.success(`${target.name} deleted`, {
         description:
           moved > 0
-            ? `${moved} ${moved === 1 ? 'entry' : 'entries'} moved to Uncategorized.`
+            ? `${moved} transaction${moved === 1 ? '' : 's'} moved to Uncategorized.`
             : undefined,
       })
     } catch (error) {
@@ -103,42 +103,41 @@ export function CategoriesPage() {
   return (
     <AppLayout
       title="Categories"
-      showPeriod={false}
       actions={
-        <Button variant="secondary" icon={<Plus className="size-3.5" />} onClick={openCreate}>
-          New category
+        <Button variant="primary" icon={<Plus className="size-4" />} onClick={openCreate}>
+          New
         </Button>
       }
     >
       {loading ? (
-        <Sheet>
+        <Card>
           <SkeletonRows rows={8} />
-        </Sheet>
+        </Card>
       ) : categories.length === 0 ? (
-        <Sheet>
+        <Card>
           <EmptyState
             title="No categories"
-            description="Categories are how entries are analysed on the statement."
+            description="Categories are how your spending is grouped and coloured."
             action={
               <Button variant="primary" onClick={openCreate}>
                 Create a category
               </Button>
             }
           />
-        </Sheet>
+        </Card>
       ) : (
-        <Sheet className="animate-in">
-          <SheetHead
-            title="Index of categories"
-            meta={`${categories.length} in the book`}
+        <Card className="animate-in flex flex-col gap-3">
+          <CardHead
+            title="All categories"
+            meta={`${categories.length} total`}
           />
-          <p className="border-b border-rule px-4 py-2 text-[11px] leading-snug text-ink-3 sm:px-5">
+          <p className="text-[13px] leading-snug text-fg-muted">
             Drag to reorder, or use the arrows — they work on touch, where dragging does not.
-            Deleting a category moves its entries to{' '}
-            <strong className="font-semibold text-ink-2">Uncategorized</strong>.
+            Deleting a category moves its transactions to{' '}
+            <strong className="font-bold text-fg">Uncategorized</strong>.
           </p>
 
-          <ul>
+          <ul className="flex flex-col">
             {categories.map((category, index) => (
               <CategoryCard
                 key={category.id}
@@ -159,7 +158,7 @@ export function CategoriesPage() {
               />
             ))}
           </ul>
-        </Sheet>
+        </Card>
       )}
 
       <CategoryForm open={formOpen} category={editing} onClose={() => setFormOpen(false)} />
@@ -171,13 +170,12 @@ export function CategoriesPage() {
           pendingDelete ? (
             (usage.get(pendingDelete.id)?.count ?? 0) > 0 ? (
               <>
-                {usage.get(pendingDelete.id)?.count}{' '}
-                {usage.get(pendingDelete.id)?.count === 1 ? 'entry' : 'entries'} will be moved to{' '}
-                <strong className="font-semibold text-ink">Uncategorized</strong>. This cannot be
-                undone.
+                {usage.get(pendingDelete.id)?.count} transaction
+                {usage.get(pendingDelete.id)?.count === 1 ? '' : 's'} will be moved to{' '}
+                <strong className="font-bold text-fg">Uncategorized</strong>. This cannot be undone.
               </>
             ) : (
-              'This category has no entries. It will be removed permanently.'
+              'This category has no transactions. It will be removed permanently.'
             )
           ) : null
         }

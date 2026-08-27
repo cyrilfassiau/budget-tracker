@@ -11,22 +11,22 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 
 export function Input({ className, leading, trailing, ...props }: InputProps) {
   if (!leading && !trailing) {
-    return <input className={cn(controlClasses, 'h-9', className)} {...props} />
+    return <input className={cn(controlClasses, 'h-12', className)} {...props} />
   }
 
   return (
     <div className="relative flex items-center">
       {leading ? (
-        <span className="pointer-events-none absolute left-2.5 flex items-center text-ink-3">
+        <span className="pointer-events-none absolute left-3.5 flex items-center text-fg-faint">
           {leading}
         </span>
       ) : null}
       <input
-        className={cn(controlClasses, 'h-9', leading && 'pl-7', trailing && 'pr-8', className)}
+        className={cn(controlClasses, 'h-12', leading && 'pl-10', trailing && 'pr-10', className)}
         {...props}
       />
       {trailing ? (
-        <span className="absolute right-2.5 flex items-center text-ink-3">{trailing}</span>
+        <span className="absolute right-3.5 flex items-center text-fg-faint">{trailing}</span>
       ) : null}
     </div>
   )

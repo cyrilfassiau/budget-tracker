@@ -88,21 +88,21 @@ export function BudgetForm({
     <Modal
       open={open}
       onClose={onClose}
-      title={isEditing ? 'Change limit' : 'Set a limit'}
+      title={isEditing ? 'Edit budget' : 'New budget'}
       description={`For ${formatMonthLabel(month)}`}
       size="sm"
       footer={
         <>
-          <Button variant="ghost" onClick={onClose} disabled={submitting}>
+          <Button variant="secondary" onClick={onClose} disabled={submitting}>
             Cancel
           </Button>
           <Button variant="primary" type="submit" form="budget-form" loading={submitting}>
-            {isEditing ? 'Save' : 'Set limit'}
+            {isEditing ? 'Save' : 'Set'}
           </Button>
         </>
       }
     >
-      <form id="budget-form" onSubmit={handleSubmit} className="flex flex-col gap-4" noValidate>
+      <form id="budget-form" onSubmit={handleSubmit} className="flex flex-col gap-4 pb-2" noValidate>
         <Field label="Category" required>
           {({ id }) => (
             <Select
@@ -122,10 +122,10 @@ export function BudgetForm({
         </Field>
 
         <Field
-          label="Limit for the period"
+          label="Monthly limit"
           error={error}
           required
-          hint="Progress is measured against how much of the period has passed."
+          hint="Progress is measured against how much of the month has passed."
         >
           {({ id, describedBy, invalid }) => (
             <Input
@@ -133,7 +133,7 @@ export function BudgetForm({
               inputMode="decimal"
               autoComplete="off"
               placeholder="0.00"
-              leading={<span className="text-[13px] font-medium">{symbol}</span>}
+              leading={<span className="text-[18px] font-extrabold">{symbol}</span>}
               value={limit}
               onChange={(event) => setLimitValue(event.target.value)}
               onBlur={() => setError(validateBudgetLimit(limit))}

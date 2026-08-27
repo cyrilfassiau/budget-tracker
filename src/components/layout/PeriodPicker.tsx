@@ -7,10 +7,8 @@ import { useUIStore } from '@/store/useUIStore'
 import { currentMonthKey, formatMonthLabel, shiftMonth } from '@/utils/dates'
 
 /**
- * The period under inspection, shared by every surface that reads one.
- *
- * Months that hold entries are marked, so choosing a period is reading rather
- * than guessing — an unmarked month is a month you already know is empty.
+ * The month under inspection, shared by every surface that reads one. Months
+ * holding entries are marked, so choosing one is reading rather than guessing.
  */
 export function PeriodPicker({ className, range = 24 }: { className?: string; range?: number }) {
   const month = useUIStore((state) => state.selectedMonth)
@@ -24,12 +22,12 @@ export function PeriodPicker({ className, range = 24 }: { className?: string; ra
   )
 
   return (
-    <div className={cn('flex items-stretch border border-rule bg-sheet', className)}>
+    <div className={cn('pill inline-flex items-center bg-surface-2 p-1', className)}>
       <button
         type="button"
         onClick={() => setMonth(shiftMonth(month, -1))}
-        aria-label="Previous period"
-        className="px-1.5 text-ink-3 transition-colors hover:bg-sheet-alt hover:text-ink"
+        aria-label="Previous month"
+        className="flex size-8 items-center justify-center rounded-full text-fg-muted transition-colors hover:bg-surface-3 hover:text-fg"
       >
         <ChevronLeft className="size-4" />
       </button>
@@ -37,8 +35,8 @@ export function PeriodPicker({ className, range = 24 }: { className?: string; ra
       <select
         value={month}
         onChange={(event) => setMonth(event.target.value)}
-        aria-label="Period"
-        className="h-8 min-w-[9.5rem] cursor-pointer appearance-none border-x border-rule bg-transparent px-2 text-center font-narrow text-[12px] font-semibold uppercase tracking-[0.07em] text-ink"
+        aria-label="Month"
+        className="h-8 min-w-[8.5rem] cursor-pointer appearance-none bg-transparent px-1 text-center text-[14px] font-bold text-fg"
       >
         {!options.includes(month) ? (
           <option value={month}>{formatMonthLabel(month)}</option>
@@ -46,7 +44,7 @@ export function PeriodPicker({ className, range = 24 }: { className?: string; ra
         {options.map((value) => (
           <option key={value} value={value}>
             {formatMonthLabel(value)}
-            {withEntries.has(value) ? ' ·' : ''}
+            {withEntries.has(value) ? ' •' : ''}
           </option>
         ))}
       </select>
@@ -55,8 +53,8 @@ export function PeriodPicker({ className, range = 24 }: { className?: string; ra
         type="button"
         onClick={() => setMonth(shiftMonth(month, 1))}
         disabled={month >= thisMonth}
-        aria-label="Next period"
-        className="px-1.5 text-ink-3 transition-colors hover:bg-sheet-alt hover:text-ink disabled:pointer-events-none disabled:opacity-30"
+        aria-label="Next month"
+        className="flex size-8 items-center justify-center rounded-full text-fg-muted transition-colors hover:bg-surface-3 hover:text-fg disabled:pointer-events-none disabled:opacity-30"
       >
         <ChevronRight className="size-4" />
       </button>

@@ -4,43 +4,39 @@ import { cn } from '@/lib/cn'
 
 import { NAV_ITEMS } from './navigation'
 
-/**
- * The bound left edge of the book, from `lg` up. Section numerals are the
- * book's own index, not decoration: they are how a passbook's tabs are cut.
- */
+/** Persistent rail from `lg` up. */
 export function Sidebar() {
   return (
-    <aside className="hidden w-52 shrink-0 border-r border-rule bg-sheet lg:flex lg:flex-col">
-      <div className="border-b border-rule px-5 py-4">
-        <p className="font-narrow text-[15px] font-bold uppercase tracking-[0.06em] text-ink">
-          Budget Tracker
-        </p>
-      </div>
+    <aside className="hidden w-60 shrink-0 flex-col px-3 py-5 lg:flex">
+      <p className="px-3 pb-5 text-[19px] font-extrabold tracking-[-0.03em] text-fg">
+        Budget Tracker
+      </p>
 
-      <nav aria-label="Sections" className="flex-1 py-1">
-        {NAV_ITEMS.map(({ to, label, index }) => (
+      <nav aria-label="Sections" className="flex flex-col gap-1">
+        {NAV_ITEMS.map(({ to, label, icon: Icon }) => (
           <NavLink
             key={to}
             to={to}
             end={to === '/'}
             className={({ isActive }) =>
               cn(
-                'flex items-baseline gap-3 border-l px-5 py-2',
-                'font-narrow text-[13px] font-semibold uppercase tracking-[0.07em]',
-                'transition-colors duration-100',
-                isActive
-                  ? 'border-carbon bg-carbon-tint text-ink'
-                  : 'border-transparent text-ink-3 hover:bg-sheet-alt hover:text-ink',
+                'flex items-center gap-3 rounded-[14px] px-3 py-2.5 text-[15px] font-bold',
+                'transition-colors duration-150',
+                isActive ? 'bg-surface-2 text-fg' : 'text-fg-muted hover:bg-surface hover:text-fg',
               )
             }
           >
-            <span className="stamp w-4 shrink-0 text-[10px] text-ink-3">{index}</span>
-            {label}
+            {({ isActive }) => (
+              <>
+                <Icon className="size-5 shrink-0" strokeWidth={isActive ? 2.4 : 2} />
+                {label}
+              </>
+            )}
           </NavLink>
         ))}
       </nav>
 
-      <p className="border-t border-rule px-5 py-3 text-[11px] leading-relaxed text-ink-3">
+      <p className="mt-auto px-3 pt-5 text-[12px] leading-relaxed text-fg-faint">
         Held in this browser only. No account, no server.
       </p>
     </aside>
@@ -48,34 +44,35 @@ export function Sidebar() {
 }
 
 /**
- * Below `lg` the same index runs along the foot of the page. One navigation at
- * every width — there is no band where the app has none, and none where it has
- * two.
+ * Below `lg` the same destinations sit under the thumb. One navigation at
+ * every width — no band where the app has none, none where it has two.
  */
 export function TabBar() {
   return (
     <nav
       aria-label="Sections"
-      className="sticky bottom-0 z-30 border-t border-rule bg-sheet lg:hidden"
+      className="sticky bottom-0 z-30 border-t border-surface-2 bg-bg/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md lg:hidden"
     >
       <ul className="flex items-stretch">
-        {NAV_ITEMS.map(({ to, label }) => (
+        {NAV_ITEMS.map(({ to, label, icon: Icon }) => (
           <li key={to} className="flex-1">
             <NavLink
               to={to}
               end={to === '/'}
               className={({ isActive }) =>
                 cn(
-                  'flex h-12 items-center justify-center border-t-2 px-1',
-                  'font-narrow text-[11px] font-semibold uppercase tracking-[0.05em]',
-                  'transition-colors duration-100',
-                  isActive
-                    ? 'border-carbon bg-carbon-tint text-ink'
-                    : 'border-transparent text-ink-3',
+                  'flex h-14 flex-col items-center justify-center gap-1 text-[11px] font-bold',
+                  'transition-colors duration-150',
+                  isActive ? 'text-accent' : 'text-fg-faint',
                 )
               }
             >
-              {label}
+              {({ isActive }) => (
+                <>
+                  <Icon className="size-[22px]" strokeWidth={isActive ? 2.5 : 2} />
+                  <span className="max-w-full truncate px-0.5">{label}</span>
+                </>
+              )}
             </NavLink>
           </li>
         ))}

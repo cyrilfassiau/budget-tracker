@@ -26,11 +26,11 @@ export function ImportExport({ rows, scopeLabel }: ImportExportProps) {
 
   const handleExport = () => {
     if (rows.length === 0) {
-      toast.info('Nothing to export', { description: 'No entries match the current view.' })
+      toast.info('Nothing to export', { description: 'Nothing matches the current view.' })
       return
     }
     downloadFile(`budget-tracker-${toDateKey(new Date())}.csv`, toCSV(rows, categories))
-    toast.success(`Exported ${rows.length} ${rows.length === 1 ? 'entry' : 'entries'}`, {
+    toast.success(`Exported ${rows.length} transaction${rows.length === 1 ? '' : 's'}`, {
       description: scopeLabel,
     })
   }
@@ -48,7 +48,7 @@ export function ImportExport({ rows, scopeLabel }: ImportExportProps) {
       }
 
       const created = await addMany(parsed)
-      toast.success(`Imported ${created.length} ${created.length === 1 ? 'entry' : 'entries'}`, {
+      toast.success(`Imported ${created.length} transaction${created.length === 1 ? '' : 's'}`, {
         description:
           errors.length > 0
             ? `${errors.length} ${errors.length === 1 ? 'row was' : 'rows were'} skipped: ${errors[0]}`
@@ -63,7 +63,7 @@ export function ImportExport({ rows, scopeLabel }: ImportExportProps) {
   }
 
   return (
-    <div className="flex items-center gap-1.5">
+    <div className="flex items-center gap-2">
       <input
         ref={inputRef}
         type="file"
@@ -80,7 +80,7 @@ export function ImportExport({ rows, scopeLabel }: ImportExportProps) {
       <Button
         variant="secondary"
         size="sm"
-        icon={<Upload className="size-3" />}
+        icon={<Upload className="size-4" />}
         loading={importing}
         onClick={() => inputRef.current?.click()}
       >
@@ -89,7 +89,7 @@ export function ImportExport({ rows, scopeLabel }: ImportExportProps) {
       <Button
         variant="secondary"
         size="sm"
-        icon={<Download className="size-3" />}
+        icon={<Download className="size-4" />}
         onClick={handleExport}
       >
         Export

@@ -3,217 +3,197 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* --------------------------------------------------------------------------
-   The Passbook.
+   A consumer banking app.
 
-   Two inks on cheque safety stock. Carbon-copy blue carries the interface;
-   ledger red is spent on one meaning only — money you do not have, or a
-   budget you have already passed. Income and expense are never separated by
-   colour, because the register separates them by column.
-
-   Dark mode is the carbon copy underneath the top sheet, not an inversion.
+   Flat surfaces only — no gradient anywhere, by explicit constraint. Depth
+   comes from surface tone and radius, never from a colour ramp. One vivid
+   accent carries every action; green means money arrived; red means trouble.
    -------------------------------------------------------------------------- */
 :root {
-  /* Stock */
-  --paper: #e9eee4;
-  --sheet: #fbfcf9;
-  --sheet-alt: #f3f6ef;
-  --rule: #c2ccbd;
-  --rule-strong: #9aa795;
-  --perforation: #d5ddcf;
+  --bg: #ffffff;
+  --surface: #f4f5f7;
+  --surface-2: #eaecf0;
+  --surface-3: #dfe2e8;
+  --raised: #ffffff;
 
-  /* Inks */
-  --ink: #12161c;
-  --ink-2: #4a5560;
-  --ink-3: #5f6a75;
-  --carbon: #2f3b8c;
-  --carbon-2: #4d59b0;
-  --carbon-tint: #dee2f4;
-  --red: #a8231c;
-  --red-tint: #f7e3e1;
+  --fg: #0b0c0f;
+  --fg-muted: #61646e;
+  --fg-faint: #8b8f9a;
 
-  --caret: #2f3b8c;
-  --selection: #cfd6f0;
-  --shadow-rgb: 30 40 28;
+  --accent: #1f5eff;
+  --accent-fg: #ffffff;
+  --accent-soft: #e6edff;
+
+  --positive: #07914a;
+  --positive-soft: #e2f5eb;
+  --negative: #d4342f;
+  --negative-soft: #fdeceb;
+  --caution: #a75c00;
+  --caution-soft: #fdf0dd;
+
+  --scrim: 11 12 15;
+  --ring: #1f5eff;
 }
 
 .dark {
-  --paper: #0f1116;
-  --sheet: #171a21;
-  --sheet-alt: #1d212a;
-  --rule: #2b313c;
-  --rule-strong: #414958;
-  --perforation: #232833;
+  --bg: #0b0c0f;
+  --surface: #16181d;
+  --surface-2: #202329;
+  --surface-3: #2b2f37;
+  --raised: #16181d;
 
-  --ink: #e6e9e2;
-  --ink-2: #a8b0ba;
-  --ink-3: #8f97a2;
-  --carbon: #9aa2f2;
-  --carbon-2: #b3b9f7;
-  --carbon-tint: #232741;
-  --red: #f08b82;
-  --red-tint: #331b1c;
+  --fg: #ffffff;
+  --fg-muted: #9ba0ac;
+  --fg-faint: #71767f;
 
-  --caret: #9aa2f2;
-  --selection: #2b3160;
-  --shadow-rgb: 0 0 0;
+  --accent: #5b8bff;
+  --accent-fg: #06070a;
+  --accent-soft: #1a2440;
+
+  --positive: #2fd07a;
+  --positive-soft: #10281d;
+  --negative: #ff6b66;
+  --negative-soft: #2d1615;
+  --caution: #f0a92e;
+  --caution-soft: #2c2011;
+
+  --scrim: 0 0 0;
+  --ring: #5b8bff;
 }
 
 @theme inline {
-  --color-paper: var(--paper);
-  --color-sheet: var(--sheet);
-  --color-sheet-alt: var(--sheet-alt);
-  --color-rule: var(--rule);
-  --color-rule-strong: var(--rule-strong);
-  --color-perforation: var(--perforation);
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-raised: var(--raised);
 
-  --color-ink: var(--ink);
-  --color-ink-2: var(--ink-2);
-  --color-ink-3: var(--ink-3);
-  --color-carbon: var(--carbon);
-  --color-carbon-2: var(--carbon-2);
-  --color-carbon-tint: var(--carbon-tint);
-  --color-red: var(--red);
-  --color-red-tint: var(--red-tint);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-faint: var(--fg-faint);
 
-  --font-sans: 'Archivo', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-narrow: 'Archivo Narrow', 'Archivo', ui-sans-serif, system-ui, sans-serif;
-  --font-stamp: 'Courier Prime', ui-monospace, 'Courier New', monospace;
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-soft: var(--accent-soft);
+
+  --color-positive: var(--positive);
+  --color-positive-soft: var(--positive-soft);
+  --color-negative: var(--negative);
+  --color-negative-soft: var(--negative-soft);
+  --color-caution: var(--caution);
+  --color-caution-soft: var(--caution-soft);
+
+  --font-sans: 'Manrope', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --radius-card: 20px;
+  --radius-row: 16px;
+  --radius-control: 14px;
 }
 
 @layer base {
-  * {
-    border-color: var(--rule);
-  }
-
   html {
     -webkit-text-size-adjust: 100%;
-    /* The browser's own surfaces belong to the design too. */
-    scrollbar-color: var(--rule-strong) transparent;
-    caret-color: var(--caret);
+    scrollbar-color: var(--surface-3) transparent;
+    caret-color: var(--accent);
   }
 
   body {
-    background-color: var(--paper);
-    color: var(--ink);
+    background-color: var(--bg);
+    color: var(--fg);
     font-family: var(--font-sans);
+    font-feature-settings: 'ss01';
     -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
   }
 
-  /* Every figure in this app is money in a column. None of them may shift. */
-  table,
+  /* Money never reflows as its digits change. */
   .figure {
     font-variant-numeric: tabular-nums lining-nums;
+    letter-spacing: -0.02em;
   }
 
   :focus-visible {
-    outline: 2px solid var(--carbon);
-    outline-offset: 1px;
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+    border-radius: 12px;
   }
 
   ::selection {
-    background-color: var(--selection);
-    color: var(--ink);
+    background-color: var(--accent);
+    color: var(--accent-fg);
   }
 
   ::-webkit-scrollbar {
-    width: 11px;
-    height: 11px;
+    width: 10px;
+    height: 10px;
   }
   ::-webkit-scrollbar-track {
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: var(--rule-strong);
-    border: 3px solid var(--paper);
+    background: var(--surface-3);
+    border: 3px solid var(--bg);
     border-radius: 99px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--ink-3);
+    background: var(--fg-faint);
   }
 
   a {
     text-underline-offset: 3px;
-    text-decoration-thickness: 1px;
   }
 
-  /* Native date pickers are ink-coloured rather than browser blue. */
-  ::-webkit-calendar-picker-indicator {
-    filter: var(--picker-filter, none);
-    cursor: pointer;
-    opacity: 0.55;
-  }
-  ::-webkit-calendar-picker-indicator:hover {
-    opacity: 1;
-  }
   .dark ::-webkit-calendar-picker-indicator {
-    filter: invert(1) opacity(0.7);
+    filter: invert(1) opacity(0.65);
   }
 }
 
 @layer components {
-  /* The printed column head: the one place small caps earn their keep. */
-  .col-head {
-    font-family: var(--font-narrow);
-    font-size: 10.5px;
-    font-weight: 600;
-    letter-spacing: 0.09em;
-    text-transform: uppercase;
-    color: var(--ink-3);
+  /* The app's one container. Flat fill, generous radius, no border. */
+  .card {
+    background-color: var(--raised);
+    border-radius: var(--radius-card);
   }
 
-  /* Machine-stamped reference layer — codes, stamps, perforation microtext. */
-  .stamp {
-    font-family: var(--font-stamp);
-    font-size: 11px;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
+  /* Light mode needs a hairline to separate white cards from a white page;
+     dark mode separates by fill alone and must not get one. */
+  :root:not(.dark) .card {
+    box-shadow: 0 0 0 1px rgb(11 12 15 / 0.06);
   }
 
-  /* Ledger convention: money you do not have is printed in red. */
-  .dr {
-    color: var(--red);
-  }
-
-  /* The bound edge of the book, printed once down the left of the sheet. */
-  .stub-edge {
-    background-image: repeating-linear-gradient(
-      to bottom,
-      var(--perforation) 0 4px,
-      transparent 4px 9px
-    );
+  .pill {
+    border-radius: 999px;
   }
 }
 
 @layer utilities {
   .animate-in {
-    animation: sheet-in 260ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation: rise 280ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
-  .animate-entry {
-    animation: entry-strike 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  /* The one authored moment: a new entry drops onto the stack and settles,
+     the way a pending transaction lands in a banking feed. */
+  .animate-drop {
+    animation: drop 460ms cubic-bezier(0.22, 1.2, 0.36, 1) both;
+  }
+
+  .animate-sheet {
+    animation: sheet-up 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
   .animate-fade-in {
-    animation: fade-in 160ms ease-out both;
+    animation: fade-in 180ms ease-out both;
   }
 
   .shimmer {
-    background: linear-gradient(
-      90deg,
-      var(--sheet-alt) 0%,
-      var(--paper) 45%,
-      var(--sheet-alt) 85%
-    );
-    background-size: 200% 100%;
-    animation: shimmer 1.5s ease-in-out infinite;
+    background: var(--surface-2);
+    animation: pulse 1.5s ease-in-out infinite;
   }
 }
 
-@keyframes sheet-in {
+@keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
@@ -221,20 +201,26 @@
   }
 }
 
-/* A new entry is struck onto the sheet: it arrives from the left, the way a
-   printer's carriage lays a line down, and settles. The one authored moment. */
-@keyframes entry-strike {
-  from {
+@keyframes drop {
+  0% {
     opacity: 0;
-    transform: translateX(-6px);
-    background-color: var(--carbon-tint);
+    transform: translateY(-14px) scale(0.98);
   }
-  60% {
+  70% {
+    opacity: 1;
+  }
+  100% {
     opacity: 1;
     transform: none;
   }
+}
+
+@keyframes sheet-up {
+  from {
+    transform: translateY(100%);
+  }
   to {
-    background-color: transparent;
+    transform: none;
   }
 }
 
@@ -247,12 +233,13 @@
   }
 }
 
-@keyframes shimmer {
-  from {
-    background-position: 200% 0;
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
   }
-  to {
-    background-position: -200% 0;
+  50% {
+    opacity: 0.55;
   }
 }
 

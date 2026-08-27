@@ -1,7 +1,7 @@
-import { ArrowDown, ArrowUp, Search, X } from 'lucide-react'
+import { ArrowDown, ArrowUp, Search, SlidersHorizontal, X } from 'lucide-react'
 import { useState } from 'react'
 
-import { Button, Field, Input, Select, TypePicker } from '@/components/ui'
+import { Button, Field, Input, SegmentedPill, Select } from '@/components/ui'
 import { cn } from '@/lib/cn'
 import { useCategoriesStore } from '@/store/useCategoriesStore'
 import { useUIStore } from '@/store/useUIStore'
@@ -14,11 +14,11 @@ const SORT_FIELDS: { field: SortField; label: string }[] = [
 ]
 
 /**
- * Search and scope stay visible; the rest folds away. The period scope lives
- * here rather than only on the statement, so arriving from "see all entries"
- * never silently widens the period the reader had in mind.
+ * Search and month scope stay out; the rest folds away. The scope control
+ * lives here as well as on the header, so arriving from "see all" never
+ * silently widens the month the reader had in mind.
  */
-export function RegisterControls() {
+export function TransactionFilters() {
   const filters = useUIStore((state) => state.filters)
   const setFilters = useUIStore((state) => state.setFilters)
   const resetFilters = useUIStore((state) => state.resetFilters)
@@ -32,57 +32,87 @@ export function RegisterControls() {
   const activeCount = countActiveFilters(filters)
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-3">
       <div className="flex flex-wrap items-center gap-2">
-        <div className="min-w-[12rem] flex-1">
-          <label htmlFor="register-search" className="sr-only">
-            Search particulars
+        <div className="min-w-[11rem] flex-1">
+          <label htmlFor="transaction-search" className="sr-only">
+            Search transactions
           </label>
           <Input
-            id="register-search"
+            id="transaction-search"
             type="search"
-            placeholder="Search particulars…"
+            placeholder="Search"
             value={filters.search}
             onChange={(event) => setFilters({ search: event.target.value })}
-            leading={<Search className="size-3.5" />}
+            leading={<Search className="size-4" />}
           />
         </div>
 
-        <TypePicker<'month' | 'all'>
-          label="Period scope"
-          value={scope}
-          onChange={setScope}
-          options={[
-            { value: 'month', label: 'This period' },
-            { value: 'all', label: 'All history' },
-          ]}
-          className="w-auto shrink-0"
-        />
-
         <Button
           variant={expanded ? 'primary' : 'secondary'}
+          icon={<SlidersHorizontal className="size-4" />}
           onClick={() => setExpanded((value) => !value)}
           aria-expanded={expanded}
-          aria-controls="register-filters"
+          aria-controls="transaction-filters"
         >
           Filters{activeCount > 0 ? ` (${activeCount})` : ''}
         </Button>
 
         {isFilterActive(filters) ? (
-          <Button variant="ghost" onClick={resetFilters} icon={<X className="size-3.5" />}>
+          <Button variant="ghost" icon={<X className="size-4" />} onClick={resetFilters}>
             Clear
           </Button>
         ) : null}
       </div>
 
+      <div className="flex flex-wrap items-center gap-2">
+        <SegmentedPill<'month' | 'all'>
+          label="Period scope"
+          value={scope}
+          onChange={setScope}
+          options={[
+            { value: 'month', label: 'This month' },
+            { value: 'all', label: 'All time' },
+          ]}
+        />
+
+        <div className="ml-auto flex items-center gap-1">
+          <span className="text-[13px] font-semibold text-fg-faint">Sort</span>
+          {SORT_FIELDS.map(({ field, label }) => {
+            const active = sort.field === field
+            return (
+              <button
+                key={field}
+                type="button"
+                onClick={() => toggleSort(field)}
+                aria-pressed={active}
+                className={cn(
+                  'pill inline-flex items-center gap-1 px-3 py-1.5 text-[13px] font-bold transition-colors',
+                  active ? 'bg-surface-2 text-fg' : 'text-fg-muted hover:bg-surface hover:text-fg',
+                )}
+              >
+                {label}
+                {active ? (
+                  sort.direction === 'asc' ? (
+                    <ArrowUp className="size-3" />
+                  ) : (
+                    <ArrowDown className="size-3" />
+                  )
+                ) : null}
+              </button>
+            )
+          })}
+        </div>
+      </div>
+
       <div
-        id="register-filters"
+        id="transaction-filters"
         hidden={!expanded}
-        className="grid animate-in gap-3 border border-rule bg-sheet p-3 sm:grid-cols-2 lg:grid-cols-4"
+        className="grid animate-in gap-4 rounded-[20px] bg-surface p-4 sm:grid-cols-2 lg:grid-cols-4"
       >
         <Field label="Type">
           {() => (
-            <TypePicker<TransactionType | 'all'>
+            <SegmentedPill<TransactionType | 'all'>
               label="Filter by type"
               value={filters.type}
               onChange={(type) => setFilters({ type })}
@@ -90,8 +120,9 @@ export function RegisterControls() {
                 { value: 'all', label: 'All' },
                 { value: 'expense', label: 'Out' },
                 { value: 'income', label: 'In' },
-                { value: 'transfer', label: 'Tfr' },
+                { value: 'transfer', label: 'Moved' },
               ]}
+              className="w-full"
             />
           )}
         </Field>
@@ -138,36 +169,6 @@ export function RegisterControls() {
             />
           )}
         </Field>
-      </div>
-
-      <div className="flex items-center gap-1">
-        <span className="col-head mr-1 text-ink-3">Order by</span>
-        {SORT_FIELDS.map(({ field, label }) => {
-          const active = sort.field === field
-          return (
-            <button
-              key={field}
-              type="button"
-              onClick={() => toggleSort(field)}
-              aria-pressed={active}
-              className={cn(
-                'inline-flex items-center gap-1 px-1.5 py-0.5',
-                'font-narrow text-[11px] font-semibold uppercase tracking-[0.06em]',
-                'transition-colors duration-100',
-                active ? 'bg-ink text-sheet' : 'text-ink-3 hover:bg-sheet-alt hover:text-ink',
-              )}
-            >
-              {label}
-              {active ? (
-                sort.direction === 'asc' ? (
-                  <ArrowUp className="size-2.5" />
-                ) : (
-                  <ArrowDown className="size-2.5" />
-                )
-              ) : null}
-            </button>
-          )
-        })}
       </div>
     </div>
   )

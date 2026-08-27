@@ -17,9 +17,10 @@ interface ModalProps {
 }
 
 /**
- * A slip laid over the book. Focus is trapped, Escape closes, the page behind
- * cannot scroll, and focus returns to the trigger. Ids are generated per
- * instance so two open dialogs never collide.
+ * A bottom sheet on a phone, a centred dialog from `sm` up.
+ *
+ * The grab handle is not decoration: it is the affordance that tells a
+ * thumb this panel came from the bottom edge and goes back there.
  */
 export function Modal({
   open,
@@ -44,7 +45,7 @@ export function Modal({
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
       <div
-        className="absolute inset-0 animate-fade-in bg-[rgb(12_16_14/0.5)]"
+        className="absolute inset-0 animate-fade-in bg-[rgb(var(--scrim)/0.55)]"
         onClick={closeOnBackdrop ? onClose : undefined}
         aria-hidden="true"
       />
@@ -56,21 +57,20 @@ export function Modal({
         aria-labelledby={titleId}
         aria-describedby={description ? descriptionId : undefined}
         className={cn(
-          'relative z-10 flex max-h-[92dvh] w-full animate-in flex-col',
-          'border border-ink bg-sheet',
+          'relative z-10 flex max-h-[92dvh] w-full flex-col bg-raised',
+          'animate-sheet rounded-t-[28px] sm:animate-in sm:rounded-[24px]',
           size === 'sm' ? 'sm:max-w-sm' : 'sm:max-w-md',
         )}
       >
-        <header className="flex items-start justify-between gap-4 border-b border-rule px-4 py-2.5">
+        <div aria-hidden="true" className="mx-auto mt-2.5 h-1 w-9 rounded-full bg-surface-3 sm:hidden" />
+
+        <header className="flex items-start justify-between gap-4 px-5 pb-3 pt-4">
           <div className="min-w-0">
-            <h2
-              id={titleId}
-              className="font-narrow text-[13px] font-semibold uppercase tracking-[0.08em] text-ink"
-            >
+            <h2 id={titleId} className="text-[19px] font-extrabold tracking-[-0.02em] text-fg">
               {title}
             </h2>
             {description ? (
-              <p id={descriptionId} className="mt-0.5 text-[12px] text-ink-3">
+              <p id={descriptionId} className="mt-0.5 text-[13px] text-fg-muted">
                 {description}
               </p>
             ) : null}
@@ -79,18 +79,16 @@ export function Modal({
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="-mr-1 -mt-0.5 p-1 text-ink-3 transition-colors hover:bg-sheet-alt hover:text-ink"
+            className="-mr-1 -mt-1 flex size-9 items-center justify-center rounded-full bg-surface-2 text-fg-muted transition-colors hover:bg-surface-3 hover:text-fg"
           >
             <X className="size-4" />
           </button>
         </header>
 
-        <div className="min-h-0 flex-1 overflow-y-auto px-4 py-3.5">{children}</div>
+        <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-2">{children}</div>
 
         {footer ? (
-          <footer className="flex items-center justify-end gap-2 border-t border-rule px-4 py-2.5">
-            {footer}
-          </footer>
+          <footer className="flex items-center gap-2 px-5 pb-5 pt-3 [&>*]:flex-1">{footer}</footer>
         ) : null}
       </div>
     </div>,

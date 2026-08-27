@@ -5,37 +5,30 @@ import { createPortal } from 'react-dom'
 import { cn } from '@/lib/cn'
 import { TOAST_DURATION, useToastStore, type Toast as ToastModel } from '@/store/useToastStore'
 
-/**
- * A receipt slip printed at the foot of the page. No icon set, no colour
- * coding beyond the ledger's one rule: trouble is red.
- */
 function Toast({ toast }: { toast: ToastModel }) {
   const dismiss = useToastStore((state) => state.dismiss)
 
   useEffect(() => {
     // An undo offer must outlast a glance at the screen.
-    const timer = setTimeout(() => dismiss(toast.id), toast.action ? TOAST_DURATION * 2 : TOAST_DURATION)
+    const timer = setTimeout(
+      () => dismiss(toast.id),
+      toast.action ? TOAST_DURATION * 2 : TOAST_DURATION,
+    )
     return () => clearTimeout(timer)
   }, [toast.id, toast.action, dismiss])
 
   return (
     <div
       className={cn(
-        'pointer-events-auto flex w-full items-start gap-3 animate-in border bg-sheet px-3 py-2.5',
-        toast.variant === 'error' ? 'border-red' : 'border-ink',
+        'pointer-events-auto flex w-full items-start gap-3 rounded-[18px] p-3.5 pr-2.5 animate-in',
+        'shadow-[0_8px_28px_-8px_rgb(var(--scrim)/0.35)]',
+        toast.variant === 'error' ? 'bg-negative text-white' : 'bg-fg text-bg',
       )}
     >
       <div className="min-w-0 flex-1">
-        <p
-          className={cn(
-            'font-narrow text-[12px] font-semibold uppercase tracking-[0.07em]',
-            toast.variant === 'error' ? 'text-red' : 'text-ink',
-          )}
-        >
-          {toast.message}
-        </p>
+        <p className="text-[14px] font-bold">{toast.message}</p>
         {toast.description ? (
-          <p className="mt-0.5 text-[12px] leading-snug text-ink-2">{toast.description}</p>
+          <p className="mt-0.5 text-[13px] leading-snug opacity-80">{toast.description}</p>
         ) : null}
         {toast.action ? (
           <button
@@ -44,7 +37,7 @@ function Toast({ toast }: { toast: ToastModel }) {
               toast.action?.onClick()
               dismiss(toast.id)
             }}
-            className="mt-1.5 font-narrow text-[12px] font-semibold uppercase tracking-[0.07em] text-carbon underline underline-offset-4 hover:text-ink"
+            className="pill mt-2 bg-white/20 px-3 py-1 text-[13px] font-bold transition-colors hover:bg-white/30"
           >
             {toast.action.label}
           </button>
@@ -55,7 +48,7 @@ function Toast({ toast }: { toast: ToastModel }) {
         type="button"
         onClick={() => dismiss(toast.id)}
         aria-label="Dismiss"
-        className="-mr-1 -mt-0.5 p-1 text-ink-3 transition-colors hover:bg-sheet-alt hover:text-ink"
+        className="rounded-full p-1.5 opacity-70 transition-opacity hover:opacity-100"
       >
         <X className="size-3.5" />
       </button>
@@ -71,7 +64,7 @@ export function Toaster() {
       role="status"
       aria-live="polite"
       aria-atomic="false"
-      className="pointer-events-none fixed bottom-3 left-3 z-[60] flex w-[calc(100%-1.5rem)] flex-col gap-2 sm:left-auto sm:right-3 sm:w-80"
+      className="pointer-events-none fixed bottom-20 left-4 z-[60] flex w-[calc(100%-2rem)] flex-col gap-2 sm:bottom-5 sm:left-auto sm:right-5 sm:w-80"
     >
       {toasts.map((toast) => (
         <Toast key={toast.id} toast={toast} />

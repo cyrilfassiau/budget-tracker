@@ -5,23 +5,19 @@ import { cn } from '@/lib/cn'
 import { Spinner } from './Spinner'
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger'
-export type ButtonSize = 'sm' | 'md' | 'icon'
+export type ButtonSize = 'sm' | 'md' | 'lg'
 
-/**
- * Stamped, not styled: square corners, one ink, no shadow. The primary is a
- * solid block of carbon; everything else is a ruled outline.
- */
 const VARIANTS: Record<ButtonVariant, string> = {
-  primary: 'bg-carbon text-sheet hover:bg-carbon-2',
-  secondary: 'border border-rule-strong bg-sheet text-ink hover:bg-sheet-alt hover:border-ink-3',
-  ghost: 'text-ink-2 hover:bg-sheet-alt hover:text-ink',
-  danger: 'border border-red bg-red-tint text-red hover:bg-red hover:text-sheet',
+  primary: 'bg-accent text-accent-fg hover:opacity-90 active:opacity-80',
+  secondary: 'bg-surface-2 text-fg hover:bg-surface-3',
+  ghost: 'text-fg-muted hover:bg-surface-2 hover:text-fg',
+  danger: 'bg-negative text-white hover:opacity-90 active:opacity-80',
 }
 
 const SIZES: Record<ButtonSize, string> = {
-  sm: 'h-7 px-2.5 text-[12px] gap-1.5',
-  md: 'h-9 px-3.5 text-[13px] gap-2',
-  icon: 'size-8',
+  sm: 'h-9 px-3.5 text-[14px] gap-1.5',
+  md: 'h-11 px-5 text-[15px] gap-2',
+  lg: 'h-13 px-6 text-[16px] gap-2',
 }
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -32,6 +28,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   fullWidth?: boolean
 }
 
+/** Pill-shaped, flat-filled, chunky enough for a thumb. */
 export function Button({
   variant = 'secondary',
   size = 'md',
@@ -50,9 +47,8 @@ export function Button({
       disabled={disabled || loading}
       aria-busy={loading || undefined}
       className={cn(
-        'inline-flex shrink-0 select-none items-center justify-center',
-        'font-narrow font-semibold uppercase tracking-[0.07em]',
-        'transition-colors duration-100',
+        'pill inline-flex shrink-0 select-none items-center justify-center font-bold',
+        'transition-[background-color,opacity,transform] duration-150 active:scale-[0.98]',
         'disabled:pointer-events-none disabled:opacity-40',
         VARIANTS[variant],
         SIZES[size],
@@ -61,8 +57,40 @@ export function Button({
       )}
       {...props}
     >
-      {loading ? <Spinner className="size-3.5" /> : icon}
+      {loading ? <Spinner className="size-4" /> : icon}
       {children}
+    </button>
+  )
+}
+
+interface QuickActionProps {
+  label: string
+  icon: ReactNode
+  onClick: () => void
+  variant?: 'accent' | 'neutral'
+}
+
+/**
+ * The circular action under the balance — icon in a filled disc with its label
+ * beneath, the way a banking app offers its two or three primary verbs.
+ */
+export function QuickAction({ label, icon, onClick, variant = 'neutral' }: QuickActionProps) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="group flex w-16 shrink-0 flex-col items-center gap-1.5 outline-offset-4"
+    >
+      <span
+        className={cn(
+          'flex size-14 items-center justify-center rounded-full transition-transform',
+          'group-hover:scale-105 group-active:scale-95',
+          variant === 'accent' ? 'bg-accent text-accent-fg' : 'bg-surface-2 text-fg',
+        )}
+      >
+        {icon}
+      </span>
+      <span className="text-[12px] font-semibold leading-tight text-fg-muted">{label}</span>
     </button>
   )
 }

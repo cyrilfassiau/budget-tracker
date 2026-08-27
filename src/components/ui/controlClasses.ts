@@ -1,13 +1,11 @@
 import { cn } from '@/lib/cn'
 
-/**
- * Fields are ruled boxes on the sheet, not rounded inputs: square corners, a
- * hairline that darkens on hover, and the carbon ink on focus.
- */
+/** Filled, rounded, borderless until focus — a tappable field, not a box. */
 export const controlClasses = cn(
-  'w-full border border-rule bg-sheet px-2.5 py-1.5 text-[13px] text-ink',
-  'placeholder:text-ink-3 transition-colors duration-100',
-  'hover:border-rule-strong focus:border-carbon',
+  'w-full rounded-[14px] bg-surface-2 px-3.5 py-2.5 text-[15px] font-medium text-fg',
+  'placeholder:font-normal placeholder:text-fg-faint',
+  'transition-[box-shadow,background-color] duration-150',
+  'focus:bg-surface hover:bg-surface-3',
   'disabled:cursor-not-allowed disabled:opacity-50',
-  'aria-[invalid=true]:border-red aria-[invalid=true]:bg-red-tint',
+  'aria-[invalid=true]:bg-negative-soft',
 )

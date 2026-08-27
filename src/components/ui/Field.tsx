@@ -17,10 +17,6 @@ interface FieldProps {
   }) => ReactNode
 }
 
-/**
- * Column head above a ruled field. `required` reaches the control itself, so
- * assistive tech learns it before a failed submit rather than after one.
- */
 export function Field({
   label,
   htmlFor,
@@ -38,13 +34,12 @@ export function Field({
     [error ? errorId : null, hint ? hintId : null].filter(Boolean).join(' ') || undefined
 
   return (
-    <div className={cn('flex flex-col gap-1', className)}>
-      <label htmlFor={id} className="col-head text-ink-2">
+    <div className={cn('flex flex-col gap-1.5', className)}>
+      <label htmlFor={id} className="text-[13px] font-bold text-fg-muted">
         {label}
-        {/* The control carries `required`, so this marker is for sighted
-            readers only — in the accessible name it just muddies the label. */}
+        {/* The control carries `required`; this marker is for sighted readers. */}
         {required ? (
-          <span aria-hidden="true" className="ml-1 text-ink-3">
+          <span aria-hidden="true" className="ml-1 font-medium text-fg-faint">
             required
           </span>
         ) : null}
@@ -53,13 +48,13 @@ export function Field({
       {children({ id, describedBy, invalid: Boolean(error), required })}
 
       {hint && !error ? (
-        <p id={hintId} className="text-[11px] leading-snug text-ink-3">
+        <p id={hintId} className="text-[12px] leading-snug text-fg-faint">
           {hint}
         </p>
       ) : null}
 
       {error ? (
-        <p id={errorId} role="alert" className="text-[11px] font-semibold leading-snug text-red">
+        <p id={errorId} role="alert" className="text-[12px] font-semibold leading-snug text-negative">
           {error}
         </p>
       ) : null}

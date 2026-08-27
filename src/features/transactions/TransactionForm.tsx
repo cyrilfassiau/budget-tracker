@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 
-import { Button, Field, Input, Modal, Select, Textarea, TypePicker } from '@/components/ui'
+import { Button, Field, Input, Modal, SegmentedPill, Select, Textarea } from '@/components/ui'
 import { CURRENCIES } from '@/lib/constants'
 import { useCategoriesStore } from '@/store/useCategoriesStore'
 import { useSettingsStore } from '@/store/useSettingsStore'
@@ -44,11 +44,11 @@ function emptyValues(month: string, overrides: Partial<TransactionFormValues> = 
 }
 
 const TYPE_OPTIONS = [
-  { value: 'expense' as const, label: 'Paid out', hint: 'Money leaving your accounts' },
-  { value: 'income' as const, label: 'Paid in', hint: 'Money arriving' },
+  { value: 'expense' as const, label: 'Spent', hint: 'Money leaving your accounts' },
+  { value: 'income' as const, label: 'Received', hint: 'Money arriving' },
   {
     value: 'transfer' as const,
-    label: 'Transfer',
+    label: 'Moved',
     hint: 'Between your own accounts — counts as neither',
   },
 ]
@@ -137,14 +137,14 @@ export function TransactionForm() {
       const payload = toTransactionPayload(values)
       if (editing) {
         await edit(editing.id, payload)
-        toast.success('Entry updated')
+        toast.success('Transaction updated')
       } else {
         await add(payload)
-        toast.success('Entry recorded')
+        toast.success('Transaction added')
       }
       close()
     } catch (error) {
-      toast.error(toMessage(error, 'Could not record the entry.'))
+      toast.error(toMessage(error, 'Could not save the transaction.'))
     } finally {
       setSubmitting(false)
     }
@@ -154,31 +154,32 @@ export function TransactionForm() {
     <Modal
       open={open}
       onClose={close}
-      title={editing ? 'Amend entry' : 'New entry'}
-      description={editing ? undefined : 'Record money in, out, or moved.'}
+      title={editing ? 'Edit transaction' : 'New transaction'}
+      description={editing ? undefined : 'Money in, out, or moved between your accounts.'}
       footer={
         <>
-          <Button variant="ghost" onClick={close} disabled={submitting}>
+          <Button variant="secondary" onClick={close} disabled={submitting}>
             Cancel
           </Button>
           <Button variant="primary" type="submit" form="entry-form" loading={submitting}>
-            {editing ? 'Save' : 'Record'}
+            {editing ? 'Save' : 'Add'}
           </Button>
         </>
       }
     >
-      <form id="entry-form" onSubmit={handleSubmit} className="flex flex-col gap-3.5" noValidate>
-        <TypePicker<TransactionType>
-          label="Entry type"
+      <form id="entry-form" onSubmit={handleSubmit} className="flex flex-col gap-4 pb-2" noValidate>
+        <SegmentedPill<TransactionType>
+          label="Transaction type"
           value={values.type}
           onChange={setType}
           options={TYPE_OPTIONS}
+          className="w-full"
         />
 
         {values.type === 'transfer' ? (
-          <p className="border border-rule bg-sheet-alt px-2.5 py-1.5 text-[11px] leading-snug text-ink-2">
-            A transfer moves money between your own accounts. It is left out of paid in, paid out,
-            budgets and the savings rate.
+          <p className="rounded-[14px] bg-surface-2 px-3.5 py-2.5 text-[13px] leading-snug text-fg-muted">
+            Moving money between your own accounts. It is left out of income, spending, budgets and
+            your savings rate.
           </p>
         ) : null}
 
@@ -191,13 +192,13 @@ export function TransactionForm() {
               autoComplete="off"
               placeholder="0.00"
               required={required}
-              leading={<span className="text-[12px] font-semibold">{symbol}</span>}
+              leading={<span className="text-[18px] font-extrabold">{symbol}</span>}
               value={values.amount}
               onChange={(event) => setField('amount', event.target.value)}
               onBlur={() => blur('amount')}
               aria-describedby={describedBy}
               aria-invalid={invalid}
-              className="text-[15px] font-semibold"
+              className="h-14 text-[22px] font-extrabold"
               data-autofocus
             />
           )}
@@ -250,7 +251,7 @@ export function TransactionForm() {
         </div>
 
         <Field
-          label="Particulars"
+          label="Note"
           error={errors.note}
           hint={
             values.note.length > MAX_NOTE_LENGTH - 30

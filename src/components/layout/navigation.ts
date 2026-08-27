@@ -1,18 +1,23 @@
+import {
+  ArrowLeftRight,
+  House,
+  PieChart,
+  Settings,
+  Tag,
+  type LucideIcon,
+} from 'lucide-react'
+
 export interface NavItem {
   to: string
-  /** One label, used by every navigation surface. */
+  /** One label per destination, used by every navigation surface. */
   label: string
-  index: string
+  icon: LucideIcon
 }
 
-/**
- * The book's index. Labels are identical in the sidebar and the tab bar —
- * two names for one destination is a bug, not a responsive adaptation.
- */
 export const NAV_ITEMS: NavItem[] = [
-  { to: '/', label: 'Statement', index: 'I' },
-  { to: '/transactions', label: 'Register', index: 'II' },
-  { to: '/budgets', label: 'Budgets', index: 'III' },
-  { to: '/categories', label: 'Categories', index: 'IV' },
-  { to: '/settings', label: 'Account', index: 'V' },
+  { to: '/', label: 'Home', icon: House },
+  { to: '/transactions', label: 'Transactions', icon: ArrowLeftRight },
+  { to: '/budgets', label: 'Budgets', icon: PieChart },
+  { to: '/categories', label: 'Categories', icon: Tag },
+  { to: '/settings', label: 'Settings', icon: Settings },
 ]
