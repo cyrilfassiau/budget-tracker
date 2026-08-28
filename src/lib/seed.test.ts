@@ -14,7 +14,6 @@ describe('seeded demo data', () => {
   })
 
   it('varies spending enough for the trend chart to mean something', () => {
-    // The complete months only — the current one is partial by construction.
     const series = monthlySeries(transactions, currentMonthKey(today), 6, today)
       .filter((point) => !point.partial)
       .map((point) => point.expenses)

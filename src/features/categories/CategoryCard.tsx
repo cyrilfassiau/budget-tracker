@@ -42,11 +42,6 @@ const KIND_LABEL: Record<CategoryKind, string> = {
   both: 'Any',
 }
 
-/**
- * Reordering works by drag on a pointer and by the arrows everywhere else. The
- * arrows are always rendered, never revealed on hover, because a touch device
- * has no hover to reveal them with.
- */
 function OverflowMenu({
   category,
   canMoveUp,
@@ -92,7 +87,6 @@ function OverflowMenu({
       >
         <MoreHorizontal className="size-4" />
       </button>
-
       {open ? (
         <div
           role="menu"
@@ -148,9 +142,7 @@ export function CategoryCard({
       <span aria-hidden="true" className="hidden cursor-grab text-fg-faint active:cursor-grabbing sm:block">
         <GripVertical className="size-4" />
       </span>
-
       <CategoryAvatar color={category.color} icon={category.icon} />
-
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-1.5">
           <p className="truncate text-[15px] font-bold text-fg">{category.name}</p>
@@ -165,7 +157,6 @@ export function CategoryCard({
             : ' · unused'}
         </p>
       </div>
-
       {usage.total > 0 ? (
         <span className="shrink-0 text-[15px] font-bold text-fg">
           <Amount value={usage.total} plain whole />
@@ -180,7 +171,6 @@ export function CategoryCard({
         onDelete={onDelete}
         onMove={onMove}
       />
-
       <div className="hidden shrink-0 items-center gap-0.5 sm:flex">
         <div className="flex flex-col">
           <button
@@ -202,7 +192,6 @@ export function CategoryCard({
             <ChevronDown className="size-3.5" />
           </button>
         </div>
-
         <button
           type="button"
           onClick={() => onEdit(category)}

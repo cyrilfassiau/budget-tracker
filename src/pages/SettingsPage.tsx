@@ -106,7 +106,6 @@ export function SettingsPage() {
             <ThemeToggle />
           </div>
         </Card>
-
         <Card className="flex flex-col gap-4">
           <CardHead title="Money" meta="How amounts are shown" />
           <div className="grid gap-4 sm:grid-cols-2">
@@ -125,7 +124,6 @@ export function SettingsPage() {
                 </Select>
               )}
             </Field>
-
             <Field label="Language">
               {({ id }) => (
                 <Select
@@ -146,7 +144,6 @@ export function SettingsPage() {
             Display only. Amounts are never converted between currencies.
           </p>
         </Card>
-
         <Card className="flex flex-col gap-3">
           <CardHead title="Adding transactions" />
           <ToggleRow
@@ -156,18 +153,15 @@ export function SettingsPage() {
             onChange={(allowFutureDates) => update({ allowFutureDates })}
           />
         </Card>
-
         <Card className="flex flex-col gap-4">
           <CardHead
             title="Your data"
             meta={`${transactions.length} transactions · ${categories.length} categories · ${budgets.length} budgets`}
           />
-
           <p className="text-[14px] leading-relaxed text-fg-muted">
             Everything lives in this browser alone. There is no account and no server, so clearing
             your browsing data erases it and nobody can restore it for you.
           </p>
-
           <div className="flex flex-wrap gap-2">
             <Button variant="secondary" onClick={exportBackup}>
               Export a backup
@@ -176,8 +170,6 @@ export function SettingsPage() {
               Restore sample data
             </Button>
           </div>
-
-          {/* Kept apart from everything reversible, and styled as what it is. */}
           <div className="rounded-[16px] bg-negative-soft p-4">
             <p className="text-[14px] font-bold text-negative">Delete everything</p>
             <p className="mt-1 text-[13px] leading-relaxed text-fg-muted">
@@ -190,7 +182,6 @@ export function SettingsPage() {
           </div>
         </Card>
       </div>
-
       <ConfirmDialog
         open={pendingAction !== null}
         title={pendingAction === 'reset' ? 'Restore sample data?' : 'Delete everything?'}

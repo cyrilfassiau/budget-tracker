@@ -12,14 +12,9 @@ export interface TransactionFormValues {
 }
 
 export type FieldErrors<T> = Partial<Record<keyof T, string>>
-
 export const MAX_AMOUNT = 1_000_000_000
 export const MAX_NOTE_LENGTH = 140
 
-/**
- * Validation lives outside the component so the same rules can be unit-tested
- * and reused by CSV import.
- */
 export function validateTransaction(
   values: TransactionFormValues,
   options: { allowFutureDates: boolean },
@@ -60,7 +55,6 @@ export function hasErrors<T>(errors: FieldErrors<T>): boolean {
   return Object.values(errors).some(Boolean)
 }
 
-/** Turns validated form values into the payload the service expects. */
 export function toTransactionPayload(values: TransactionFormValues): NewTransaction {
   return {
     amount: parseAmount(values.amount) ?? 0,

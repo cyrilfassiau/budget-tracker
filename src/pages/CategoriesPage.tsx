@@ -25,7 +25,6 @@ export function CategoriesPage() {
   const [draggingId, setDraggingId] = useState<string | null>(null)
   const [overId, setOverId] = useState<string | null>(null)
 
-  /** Transaction count and total per category, for the card subtitle. */
   const usage = useMemo(() => {
     const map = new Map<string, CategoryUsage>()
     for (const transaction of transactions) {
@@ -136,7 +135,6 @@ export function CategoriesPage() {
             Deleting a category moves its transactions to{' '}
             <strong className="font-bold text-fg">Uncategorized</strong>.
           </p>
-
           <ul className="flex flex-col">
             {categories.map((category, index) => (
               <CategoryCard
@@ -162,7 +160,6 @@ export function CategoriesPage() {
       )}
 
       <CategoryForm open={formOpen} category={editing} onClose={() => setFormOpen(false)} />
-
       <ConfirmDialog
         open={pendingDelete !== null}
         title={`Delete ${pendingDelete?.name ?? ''}?`}

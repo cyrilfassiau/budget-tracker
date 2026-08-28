@@ -35,7 +35,6 @@ export const DEFAULT_CATEGORIES: Category[] = [
   },
 ]
 
-/** Deterministic PRNG so the demo dataset looks the same on every fresh load. */
 function makeRandom(seed: number) {
   let state = seed
   return () => {
@@ -48,7 +47,7 @@ interface SeedRecipe {
   categoryId: string
   type: TransactionType
   notes: string[]
-  /** Number of transactions to create per month. */
+
   perMonth: number
   min: number
   max: number
@@ -67,23 +66,10 @@ const RECIPES: SeedRecipe[] = [
   { categoryId: 'cat-savings', type: 'transfer', notes: ['Transfer to savings'], perMonth: 1, min: 200, max: 400 },
 ]
 
-/**
- * Month-to-month variation, oldest to newest.
- *
- * Without this every month came out within a few percent of the last, so the
- * six-month chart — whose entire job is to show variation — showed a flat row
- * of identical bars. Fixed charges (rent, salary) ignore it; discretionary
- * spending does not, which is how a real year actually behaves.
- */
 const MONTH_VARIATION = [0.78, 1.24, 0.9, 1.38, 0.84, 1.05]
 
-/** Categories whose amount is a fixed commitment, not discretionary spend. */
 const FIXED_CATEGORIES = new Set(['cat-rent', 'cat-salary'])
 
-/**
- * Six months of plausible history — a portfolio demo with empty charts sells
- * nothing, and this also exercises the month picker on first load.
- */
 export function buildSeedTransactions(today = new Date()): Transaction[] {
   const random = makeRandom(20240517)
   const transactions: Transaction[] = []

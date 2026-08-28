@@ -15,8 +15,6 @@ const payload = {
 }
 
 beforeEach(() => {
-  // Latency off keeps the service tests fast; the delay itself is not the
-  // behaviour under test.
   localStorage.setItem(STORAGE_KEYS.settings, JSON.stringify({ latencyMs: 0 }))
   db.transactions.write([])
 })

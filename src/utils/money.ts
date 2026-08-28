@@ -1,4 +1,3 @@
-/** Rounds to cents — guards against float drift when summing many rows. */
 export function roundMoney(value: number): number {
   return Math.round((value + Number.EPSILON) * 100) / 100
 }
@@ -17,7 +16,6 @@ export function formatMoney(
   }).format(roundMoney(value))
 }
 
-/** Compact form for chart axes: €1.2k rather than €1,240.00. */
 export function formatMoneyCompact(value: number, currency = 'EUR', locale = 'en-GB'): string {
   return new Intl.NumberFormat(locale, {
     style: 'currency',
@@ -44,10 +42,6 @@ export function formatPercent(value: number, locale = 'en-GB'): string {
   }).format(value)
 }
 
-/**
- * Parses user input tolerantly: "1 234,56", "€1,234.56" and "1234.56" all
- * become 1234.56. Returns `null` when nothing numeric can be read.
- */
 export function parseAmount(input: string): number | null {
   const cleaned = input.replace(/[^\d.,-]/g, '').trim()
   if (!cleaned) return null
@@ -57,7 +51,6 @@ export function parseAmount(input: string): number | null {
   let normalised = cleaned
 
   if (lastComma > -1 && lastDot > -1) {
-    // Whichever separator comes last is the decimal separator.
     normalised =
       lastComma > lastDot
         ? cleaned.replace(/\./g, '').replace(',', '.')

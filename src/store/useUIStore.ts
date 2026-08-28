@@ -7,12 +7,11 @@ import { currentMonthKey } from '@/utils/dates'
 import { DEFAULT_SORT, EMPTY_FILTERS } from '@/utils/filters'
 
 interface UIState {
-  /** `yyyy-MM` currently being inspected, shared by dashboard and budgets. */
   selectedMonth: string
   filters: TransactionFilters
   sort: TransactionSort
   page: number
-  /** The register reads the selected period by default, or all history. */
+
   registerScope: 'month' | 'all'
   theme: ThemePreference
 
@@ -34,12 +33,10 @@ export const useUIStore = create<UIState>((set) => ({
   registerScope: 'month',
   theme: readJSON<ThemePreference>(STORAGE_KEYS.theme, 'system'),
 
-  // Changing the period resets pagination: page 4 of a different month is a bug.
   setMonth: (selectedMonth) => set({ selectedMonth, page: 1 }),
 
   setScope: (registerScope) => set({ registerScope, page: 1 }),
 
-  // Any filter change resets pagination — page 4 of a new result set is a bug.
   setFilters: (patch) =>
     set((state) => ({ filters: { ...state.filters, ...patch }, page: 1 })),
 
@@ -62,5 +59,4 @@ export const useUIStore = create<UIState>((set) => ({
     writeJSON(STORAGE_KEYS.theme, theme)
     set({ theme })
   },
-
 }))

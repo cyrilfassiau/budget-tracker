@@ -2,13 +2,6 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* --------------------------------------------------------------------------
-   A consumer banking app.
-
-   Flat surfaces only — no gradient anywhere, by explicit constraint. Depth
-   comes from surface tone and radius, never from a colour ramp. One vivid
-   accent carries every action; green means money arrived; red means trouble.
-   -------------------------------------------------------------------------- */
 :root {
   --bg: #ffffff;
   --surface: #f4f5f7;
@@ -32,8 +25,6 @@
   --caution: #a75c00;
   --caution-soft: #fdf0dd;
 
-  /* Category identity for rows with no category, and the collapsed
-     "Other" slice. A role, not a one-off grey. */
   --category-none: #6e727d;
 
   --scrim: 11 12 15;
@@ -115,7 +106,6 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Money never reflows as its digits change. */
   .figure {
     font-variant-numeric: tabular-nums lining-nums;
     letter-spacing: -0.02em;
@@ -158,14 +148,11 @@
 }
 
 @layer components {
-  /* The app's one container. Flat fill, generous radius, no border. */
   .card {
     background-color: var(--raised);
     border-radius: var(--radius-card);
   }
 
-  /* Light mode needs a hairline to separate white cards from a white page;
-     dark mode separates by fill alone and must not get one. */
   :root:not(.dark) .card {
     box-shadow: 0 0 0 1px rgb(11 12 15 / 0.06);
   }
@@ -174,9 +161,6 @@
     border-radius: 999px;
   }
 
-  /* A real 44px target on touch, shrinking only where a pointer aims. An
-     invisible oversized overlay was worse: adjacent ones overlapped, so a tap
-     near an edge fired the neighbour — a wrong action, not a missed one. */
   .tap {
     width: 44px;
     height: 44px;
@@ -194,8 +178,6 @@
     animation: rise 280ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
-  /* The one authored moment: a new entry drops onto the stack and settles,
-     the way a pending transaction lands in a banking feed. */
   .animate-drop {
     animation: drop 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }

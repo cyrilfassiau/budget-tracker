@@ -3,14 +3,9 @@ import type { HTMLAttributes, ReactNode } from 'react'
 import { cn } from '@/lib/cn'
 
 interface CardProps extends HTMLAttributes<HTMLElement> {
-  /** Removes inner padding for cards that host a full-bleed list. */
   flush?: boolean
 }
 
-/**
- * The app's one container: a flat rounded surface. Depth comes from the fill
- * and the radius, never from a gradient — which the brief rules out outright.
- */
 export function Card({ className, flush, children, ...props }: CardProps) {
   return (
     <section className={cn('card', !flush && 'p-4 sm:p-5', className)} {...props}>

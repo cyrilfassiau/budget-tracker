@@ -36,7 +36,6 @@ export function Pagination({ page, totalPages, total, pageSize, onChange }: Pagi
             ? `${total} transaction${total === 1 ? '' : 's'}`
             : `${first}–${last} of ${total}`}
       </p>
-
       {totalPages > 1 ? (
         <div className="flex items-center gap-1">
           <button
@@ -48,7 +47,6 @@ export function Pagination({ page, totalPages, total, pageSize, onChange }: Pagi
           >
             <ChevronLeft className="size-4" />
           </button>
-
           {pageWindow(page, totalPages).map((entry, index) =>
             entry === 'gap' ? (
               <span key={`gap-${index}`} className="px-0.5 text-fg-faint" aria-hidden="true">

@@ -9,13 +9,13 @@ import { formatDateLabel } from '@/utils/dates'
 interface TransactionRowProps {
   transaction: Transaction
   category?: Category
-  /** Balance after this entry, across all history. */
+
   balance?: number
   showBalance?: boolean
   onEdit?: (transaction: Transaction) => void
   onDelete?: (transaction: Transaction) => void
   pending?: boolean
-  /** A just-added row drops onto the stack. */
+
   fresh?: boolean
 }
 
@@ -63,7 +63,6 @@ function RowMenu({
       >
         <MoreHorizontal className="size-4" />
       </button>
-
       {open ? (
         <div
           role="menu"
@@ -99,12 +98,6 @@ function RowMenu({
   )
 }
 
-/**
- * One line of the feed: circular category avatar, what it was, and the amount.
- *
- * Money arriving is the only thing that turns green; a transfer is labelled
- * because it changes no balance and would otherwise read as a payment.
- */
 export function TransactionRow({
   transaction,
   category,
@@ -128,24 +121,18 @@ export function TransactionRow({
       )}
     >
       <CategoryAvatar color={category?.color ?? 'var(--category-none)'} icon={category?.icon} />
-
       <div className="min-w-0 flex-1">
         <p className="truncate text-[15px] font-bold text-fg">{label}</p>
-        {/* "Transfer" rides the meta line rather than a pill beside the title:
-            as a pill it took 64px and left the label a 45px slot. */}
         <p className="mt-0.5 truncate text-[13px] text-fg-muted">
           {isTransfer ? 'Transfer · ' : ''}
           {category?.name ?? 'Uncategorized'} · {formatDateLabel(transaction.date, 'd MMM')}
         </p>
       </div>
-
       <div className="shrink-0 text-right">
         <p className="text-[15px] font-extrabold text-fg">
           {isTransfer ? (
             <Amount value={transaction.amount} plain className="text-fg-muted" />
           ) : (
-            // Signed for both directions: the sign carries the direction, so
-            // red stays free to mean trouble rather than "this was spending".
             <Amount value={isIncome ? transaction.amount : -transaction.amount} signed />
           )}
         </p>
@@ -155,7 +142,6 @@ export function TransactionRow({
           </p>
         ) : null}
       </div>
-
       {onEdit && onDelete ? (
         <RowMenu
           label={label}

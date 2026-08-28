@@ -1,6 +1,5 @@
 import { cn } from '@/lib/cn'
 
-/** Filled, rounded, borderless until focus — a tappable field, not a box. */
 export const controlClasses = cn(
   'w-full rounded-[14px] bg-surface-2 px-3.5 py-2.5 text-[15px] font-medium text-fg',
   'placeholder:font-normal placeholder:text-fg-faint',

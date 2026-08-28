@@ -6,10 +6,6 @@ import { useMonthsWithEntries } from '@/hooks/useAppData'
 import { useUIStore } from '@/store/useUIStore'
 import { currentMonthKey, formatMonthLabel, shiftMonth } from '@/utils/dates'
 
-/**
- * The month under inspection, shared by every surface that reads one. Months
- * holding entries are marked, so choosing one is reading rather than guessing.
- */
 export function PeriodPicker({ className, range = 24 }: { className?: string; range?: number }) {
   const month = useUIStore((state) => state.selectedMonth)
   const setMonth = useUIStore((state) => state.setMonth)
@@ -31,7 +27,6 @@ export function PeriodPicker({ className, range = 24 }: { className?: string; ra
       >
         <ChevronLeft className="size-4" />
       </button>
-
       <select
         value={month}
         onChange={(event) => setMonth(event.target.value)}
@@ -48,7 +43,6 @@ export function PeriodPicker({ className, range = 24 }: { className?: string; ra
           </option>
         ))}
       </select>
-
       <button
         type="button"
         onClick={() => setMonth(shiftMonth(month, 1))}

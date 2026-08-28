@@ -11,15 +11,13 @@ interface ConfirmDialogProps {
   confirmLabel?: string
   cancelLabel?: string
   tone?: 'danger' | 'primary'
-  /** Gate for a loss that cannot be undone. */
+
   typeToConfirm?: string
   secondaryAction?: { label: string; onClick: () => void }
   onConfirm: () => void | Promise<void>
   onCancel: () => void
 }
 
-/** Cancel holds focus. A dialog that opens on the destructive button turns a
- *  stray Enter into data loss. */
 export function ConfirmDialog({
   open,
   title,
@@ -76,7 +74,6 @@ export function ConfirmDialog({
       }
     >
       <div className="text-[15px] leading-relaxed text-fg-muted">{message}</div>
-
       {secondaryAction ? (
         <Button variant="ghost" className="mt-3" fullWidth onClick={secondaryAction.onClick}>
           {secondaryAction.label}

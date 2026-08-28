@@ -13,12 +13,6 @@ interface BudgetRowProps {
   compact?: boolean
 }
 
-/**
- * Spend against limit, judged against how much of the month has gone.
- *
- * The verdict is written in words rather than left to be inferred from a bar,
- * and an unpaid fixed charge late in the month is never called comfortable.
- */
 function verdict(budget: BudgetProgress, currency: string, locale: string): string {
   if (budget.limit === 0) return 'No limit set'
   if (budget.status === 'over') {
@@ -47,7 +41,6 @@ export function BudgetRow({ budget, onEdit, onDelete, compact = false }: BudgetR
     <li className={cn('group flex flex-col gap-2.5', compact ? 'py-2.5' : 'py-3')}>
       <div className="flex items-center gap-3">
         <CategoryAvatar color={budget.color} icon={budget.icon} size={compact ? 'sm' : 'md'} />
-
         <div className="min-w-0 flex-1">
           <p className="truncate text-[15px] font-bold text-fg">{budget.name}</p>
           <p
@@ -59,7 +52,6 @@ export function BudgetRow({ budget, onEdit, onDelete, compact = false }: BudgetR
             {verdict(budget, currency, locale)}
           </p>
         </div>
-
         <div className="shrink-0 text-right">
           <p className="text-[15px] font-extrabold text-fg">
             <Amount value={budget.spent} plain whole />
@@ -68,7 +60,6 @@ export function BudgetRow({ budget, onEdit, onDelete, compact = false }: BudgetR
             of <Amount value={budget.limit} plain whole />
           </p>
         </div>
-
         {!compact && onEdit && onDelete ? (
           <div className="flex shrink-0 items-center gap-1">
             <button
@@ -90,7 +81,6 @@ export function BudgetRow({ budget, onEdit, onDelete, compact = false }: BudgetR
           </div>
         ) : null}
       </div>
-
       <PaceBar
         value={budget.ratio}
         pace={budget.pace}

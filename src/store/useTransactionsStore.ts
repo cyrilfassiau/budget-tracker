@@ -9,14 +9,13 @@ interface TransactionsState {
   items: Transaction[]
   status: RequestStatus
   error: string | null
-  /** Ids with an in-flight mutation, so rows can show their own pending state. */
+
   pendingIds: string[]
   fetchAll: () => Promise<void>
   add: (input: NewTransaction) => Promise<Transaction>
   addMany: (inputs: NewTransaction[]) => Promise<Transaction[]>
   edit: (id: string, patch: Partial<NewTransaction>) => Promise<Transaction>
   remove: (id: string) => Promise<void>
-  /** Re-reads from the service after an out-of-band change (import, reset). */
   invalidate: () => Promise<void>
 }
 
@@ -63,7 +62,7 @@ export const useTransactionsStore = create<TransactionsState>((set, get) => ({
 
   remove: async (id) => {
     const snapshot = get().items
-    // Optimistic: the row disappears immediately and is restored on failure.
+
     set((state) => ({ items: state.items.filter((item) => item.id !== id) }))
     try {
       await transactionsService.remove(id)

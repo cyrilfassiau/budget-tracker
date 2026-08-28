@@ -48,7 +48,6 @@ describe('migrate: stale category kinds', () => {
   })
 
   it('retypes a built-in category that has become a transfer category', () => {
-    // A book written before transfers existed: Savings stored as an expense.
     db.categories.write(
       DEFAULT_CATEGORIES.map((category) =>
         category.id === 'cat-savings' ? { ...category, kind: 'expense' as const } : category,

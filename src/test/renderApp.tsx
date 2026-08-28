@@ -20,11 +20,6 @@ interface SeedOptions {
   budgets?: Budget[]
 }
 
-/**
- * Puts the app back to a known state: empty stores, seeded categories, no
- * artificial latency. Zustand stores are module singletons, so without this
- * one test's data leaks into the next.
- */
 export function resetApp({ transactions = [], budgets = [] }: SeedOptions = {}) {
   localStorage.clear()
   localStorage.setItem(STORAGE_KEYS.settings, JSON.stringify({ latencyMs: 0 }))

@@ -4,10 +4,6 @@ import { useUIStore } from '@/store/useUIStore'
 
 const DARK_QUERY = '(prefers-color-scheme: dark)'
 
-/**
- * Reflects the theme preference onto `<html class="dark">`.
- * `system` keeps following the OS while it is selected.
- */
 export function useTheme(): void {
   const theme = useUIStore((state) => state.theme)
 

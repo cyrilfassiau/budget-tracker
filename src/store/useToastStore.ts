@@ -9,7 +9,7 @@ export interface Toast {
   message: string
   description?: string
   variant: ToastVariant
-  /** Optional single action, e.g. "Undo" after a delete. */
+
   action?: { label: string; onClick: () => void }
 }
 
@@ -34,10 +34,6 @@ export const useToastStore = create<ToastState>((set) => ({
   clear: () => set({ toasts: [] }),
 }))
 
-/**
- * Imperative facade so event handlers can fire a toast without a hook.
- * `useToastStore.getState()` is the escape hatch Zustand gives us for this.
- */
 export const toast = {
   success: (message: string, options?: Partial<Omit<Toast, 'id' | 'message' | 'variant'>>) =>
     useToastStore.getState().push({ ...options, message, variant: 'success' }),
@@ -47,7 +43,6 @@ export const toast = {
     useToastStore.getState().push({ ...options, message, variant: 'info' }),
 }
 
-/** Normalises anything thrown by a service into a displayable string. */
 export function toMessage(error: unknown, fallback = 'Something went wrong.'): string {
   if (error instanceof Error && error.message) return error.message
   if (typeof error === 'string' && error) return error

@@ -10,10 +10,6 @@ import { downloadFile, fromCSV, toCSV } from '@/utils/csv'
 import { toDateKey } from '@/utils/dates'
 
 interface ImportExportProps {
-  /**
-   * The rows currently on screen. Export writes exactly these — an export
-   * button that quietly ignores the filters above it is a lie.
-   */
   rows: Transaction[]
   scopeLabel: string
 }
@@ -94,9 +90,6 @@ export function ImportExport({ rows, scopeLabel }: ImportExportProps) {
           if (file) void handleImport(file)
         }}
       />
-
-      {/* One control on a phone, two buttons once there is room. Import and
-          export are rare next to Add, and should not cost the feed a row. */}
       <Button
         variant="secondary"
         size="sm"
@@ -109,7 +102,6 @@ export function ImportExport({ rows, scopeLabel }: ImportExportProps) {
       >
         {importing ? null : <MoreHorizontal className="size-4" />}
       </Button>
-
       <Button
         variant="secondary"
         size="sm"
@@ -129,7 +121,6 @@ export function ImportExport({ rows, scopeLabel }: ImportExportProps) {
       >
         Export
       </Button>
-
       {open ? (
         <div
           role="menu"

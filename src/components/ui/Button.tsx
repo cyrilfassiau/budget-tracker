@@ -27,7 +27,6 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   fullWidth?: boolean
 }
 
-/** Pill-shaped, flat-filled, chunky enough for a thumb. */
 export function Button({
   variant = 'secondary',
   size = 'md',
@@ -69,10 +68,6 @@ interface QuickActionProps {
   variant?: 'accent' | 'neutral'
 }
 
-/**
- * The circular action under the balance — icon in a filled disc with its label
- * beneath, the way a banking app offers its two or three primary verbs.
- */
 export function QuickAction({ label, icon, onClick, variant = 'neutral' }: QuickActionProps) {
   return (
     <button

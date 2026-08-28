@@ -9,7 +9,6 @@ function Toast({ toast }: { toast: ToastModel }) {
   const dismiss = useToastStore((state) => state.dismiss)
 
   useEffect(() => {
-    // An undo offer must outlast a glance at the screen.
     const timer = setTimeout(
       () => dismiss(toast.id),
       toast.action ? TOAST_DURATION * 2 : TOAST_DURATION,
@@ -43,7 +42,6 @@ function Toast({ toast }: { toast: ToastModel }) {
           </button>
         ) : null}
       </div>
-
       <button
         type="button"
         onClick={() => dismiss(toast.id)}

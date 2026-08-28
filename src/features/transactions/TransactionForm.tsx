@@ -19,12 +19,6 @@ import {
   type TransactionFormValues,
 } from '@/utils/validation'
 
-/**
- * A new entry lands in the period the user is looking at.
- *
- * Defaulting to today looks harmless until someone opens an empty March, is
- * told to add an entry, does exactly that, and watches March stay empty.
- */
 function defaultDateFor(month: string): string {
   const today = new Date()
   if (month === currentMonthKey(today)) return toDateKey(today)
@@ -53,10 +47,6 @@ const TYPE_OPTIONS = [
   },
 ]
 
-/**
- * The entry slip. Validation runs on submit, then live per field once that
- * field has been touched, so no error appears while typing a first character.
- */
 export function TransactionForm() {
   const { open, editing, defaults, close } = useTransactionModal()
   const month = useUIStore((state) => state.selectedMonth)
@@ -81,8 +71,6 @@ export function TransactionForm() {
     [categories, values.type],
   )
 
-  // Re-seed when the slip opens on a different subject. Adjusting state during
-  // render is cheaper than an effect and the stale values never reach the DOM.
   const instance = open ? (editing?.id ?? `new:${month}`) : 'closed'
   const [renderedInstance, setRenderedInstance] = useState(instance)
 
@@ -112,7 +100,6 @@ export function TransactionForm() {
     if (touched[key]) setErrors(validateTransaction(next, { allowFutureDates }))
   }
 
-  /** Switching type can strand a category that no longer applies to it. */
   const setType = (type: TransactionType) => {
     const stillValid = categories.some(
       (entry) => entry.id === values.categoryId && (entry.kind === type || entry.kind === 'both'),
@@ -175,7 +162,6 @@ export function TransactionForm() {
           options={TYPE_OPTIONS}
           className="w-full"
         />
-
         {values.type === 'transfer' ? (
           <p className="rounded-[14px] bg-surface-2 px-3.5 py-2.5 text-[13px] leading-snug text-fg-muted">
             Moving money between your own accounts. It is left out of income, spending, budgets and
@@ -203,7 +189,6 @@ export function TransactionForm() {
             />
           )}
         </Field>
-
         <div className="grid gap-3.5 sm:grid-cols-2">
           <Field label="Category" error={errors.categoryId} required>
             {({ id, describedBy, invalid, required }) => (
@@ -226,7 +211,6 @@ export function TransactionForm() {
               </Select>
             )}
           </Field>
-
           <Field
             label="Date"
             error={errors.date}
@@ -249,7 +233,6 @@ export function TransactionForm() {
             )}
           </Field>
         </div>
-
         <Field
           label="Note"
           error={errors.note}

@@ -17,7 +17,6 @@
     />
     <title>Budget Tracker</title>
     <script>
-      // Applied before first paint so the sheet never flashes the wrong side.
       try {
         var stored = localStorage.getItem('budget-tracker:theme');
         var theme = stored ? JSON.parse(stored) : null;
@@ -30,25 +29,7 @@
     </script>
   </head>
   <body>
-    <!--
-      THESIS: A consumer banking app, not a document. The balance leads at
-      display scale, money is a stack of tappable rows with circular category
-      avatars, and every surface is a flat rounded card. Refuses the ruled
-      editorial ledger it replaces: no hairline structure, no column tables, no
-      uppercase micro-labels, no monospace, no square corners.
-      OWN-WORLD: Near-black or pure-white ground with raised flat cards at 20px
-      radius, one vivid blue accent, green reserved for money in and red for
-      trouble. Manrope at 800 for figures, tight tracking. Circular avatars in
-      flat category colour. Pill controls. Absolutely no gradients.
-      STORY: The visitor sees what they have, how far through the month they
-      are, and adds an entry from a bottom sheet in two taps.
-      FIRST VIEWPORT: Balance in display type over the period and its pacing,
-      then a row of circular quick actions, then the spending ring and the
-      latest entries as avatar rows. Primary action is the centre quick action.
-      FORM: Brief-pinned world (Revolut, played straight, no gradients); the
-      roll is not consulted because a pinned decision beats it.
-      FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance.
-    -->
+    
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

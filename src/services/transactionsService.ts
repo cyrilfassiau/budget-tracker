@@ -4,15 +4,6 @@ import type { NewTransaction, Transaction } from '@/types'
 import { db } from './db'
 import { ServiceError, clone, delay } from './http'
 
-/**
- * CRUD for transactions.
- *
- * Every function is `async` even though the storage read/write underneath is
- * synchronous: the call sites (stores, components) are already written against
- * a promise-based API, so pointing these at `fetch` later changes this file
- * only.
- */
-
 function sortByDateDesc(rows: Transaction[]): Transaction[] {
   return [...rows].sort((a, b) =>
     a.date === b.date ? b.createdAt.localeCompare(a.createdAt) : b.date.localeCompare(a.date),
@@ -73,7 +64,6 @@ export async function remove(id: string): Promise<void> {
   db.transactions.write(next)
 }
 
-/** Used by CSV import and recurring-transaction materialisation. */
 export async function createMany(inputs: NewTransaction[]): Promise<Transaction[]> {
   await delay()
   const now = new Date().toISOString()
@@ -87,7 +77,6 @@ export async function createMany(inputs: NewTransaction[]): Promise<Transaction[
   return clone(created)
 }
 
-/** Moves every transaction of one category onto another (category deletion). */
 export async function reassignCategory(
   fromCategoryId: string,
   toCategoryId: string,

@@ -47,7 +47,6 @@ export function EmptyState({
           <p className="mt-1 text-[14px] leading-relaxed text-fg-muted">{description}</p>
         ) : null}
       </div>
-
       {action ? <div className="mt-1.5 flex flex-wrap justify-center gap-2">{action}</div> : null}
     </div>
   )

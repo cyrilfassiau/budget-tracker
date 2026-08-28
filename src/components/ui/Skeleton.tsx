@@ -4,7 +4,6 @@ export function Skeleton({ className }: { className?: string }) {
   return <div aria-hidden="true" className={cn('shimmer rounded-xl', className)} />
 }
 
-/** Avatar rows waiting for their figures — the shape the list will take. */
 export function SkeletonRows({ rows = 6, className }: { rows?: number; className?: string }) {
   return (
     <div className={cn('flex flex-col gap-1', className)}>

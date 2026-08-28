@@ -38,7 +38,7 @@ export interface StatementData {
   progress: number
 
   summary: PeriodSummary
-  /** The previous period truncated to the same day, so the comparison is fair. */
+
   previousSummary: PeriodSummary
   incomeChange: number | null
   expenseChange: number | null
@@ -58,13 +58,6 @@ export interface StatementData {
   monthTransactions: Transaction[]
 }
 
-/**
- * Every figure on the statement, in one memoised place.
- *
- * The rule this hook exists to enforce: nothing here may present a period
- * still in progress as if it were finished. Comparisons are truncated to the
- * same day of the previous month, and the daily rate divides by days elapsed.
- */
 export function useStatement(today = new Date()): StatementData {
   const transactions = useTransactionsStore((state) => state.items)
   const categories = useCategoriesStore((state) => state.items)
@@ -79,7 +72,6 @@ export function useStatement(today = new Date()): StatementData {
     const totalDays = daysInMonth(month)
     const complete = isMonthComplete(month, today)
 
-    // Like-for-like: a 26-day month is never measured against a full one.
     const previousMonth = shiftMonth(month, -1)
     const throughDay = complete ? daysInMonth(previousMonth) : Math.max(1, elapsed)
     const previousSummary = summarise(comparableSlice(transactions, previousMonth, throughDay))

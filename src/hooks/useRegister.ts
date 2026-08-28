@@ -12,9 +12,9 @@ import { useDebouncedValue } from './useDebouncedValue'
 
 export interface RegisterRow {
   transaction: Transaction
-  /** Balance after this entry, computed across all history, not just this page. */
+
   balance: number
-  /** First row of its day — the register rules a line between days. */
+
   startsDay: boolean
 }
 
@@ -28,17 +28,10 @@ export interface RegisterResult {
   pageSize: number
   isEmpty: boolean
   isFilteredEmpty: boolean
-  /** Balance after the most recent entry in scope — the passbook's headline. */
+
   closingBalance: number
 }
 
-/**
- * Scope → filter → sort → paginate, then attach the running balance.
- *
- * The balance is computed over the entire dataset before any filtering, so the
- * figure in the column is the real balance after that entry rather than a
- * subtotal of whatever happens to be on screen.
- */
 export function useRegister(): RegisterResult {
   const transactions = useTransactionsStore((state) => state.items)
   const filters = useUIStore((state) => state.filters)
@@ -73,7 +66,6 @@ export function useRegister(): RegisterResult {
 
   const totalPages = pageCount(matched.length, PAGE_SIZE)
 
-  // Deleting the last row of the last page would otherwise strand the user.
   useEffect(() => {
     if (page > totalPages) setPage(totalPages)
   }, [page, totalPages, setPage])

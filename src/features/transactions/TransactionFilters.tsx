@@ -13,11 +13,6 @@ const SORT_FIELDS: { field: SortField; label: string }[] = [
   { field: 'amount', label: 'Amount' },
 ]
 
-/**
- * Search and month scope stay out; the rest folds away. The scope control
- * lives here as well as on the header, so arriving from "see all" never
- * silently widens the month the reader had in mind.
- */
 export function TransactionFilters() {
   const filters = useUIStore((state) => state.filters)
   const setFilters = useUIStore((state) => state.setFilters)
@@ -47,7 +42,6 @@ export function TransactionFilters() {
             leading={<Search className="size-4" />}
           />
         </div>
-
         <Button
           variant={expanded ? 'primary' : 'secondary'}
           icon={<SlidersHorizontal className="size-4" />}
@@ -57,14 +51,12 @@ export function TransactionFilters() {
         >
           Filters{activeCount > 0 ? ` (${activeCount})` : ''}
         </Button>
-
         {isFilterActive(filters) ? (
           <Button variant="ghost" icon={<X className="size-4" />} onClick={resetFilters}>
             Clear
           </Button>
         ) : null}
       </div>
-
       <SegmentedPill<'month' | 'all'>
         label="Period scope"
         value={scope}
@@ -75,7 +67,6 @@ export function TransactionFilters() {
         ]}
         className="self-start"
       />
-
       <div
         id="transaction-filters"
         hidden={!expanded}
@@ -97,7 +88,6 @@ export function TransactionFilters() {
             />
           )}
         </Field>
-
         <Field label="Category">
           {({ id }) => (
             <Select
@@ -116,7 +106,6 @@ export function TransactionFilters() {
             </Select>
           )}
         </Field>
-
         <Field label="From">
           {({ id }) => (
             <Input
@@ -128,7 +117,6 @@ export function TransactionFilters() {
             />
           )}
         </Field>
-
         <Field label="To">
           {({ id }) => (
             <Input
@@ -140,7 +128,6 @@ export function TransactionFilters() {
             />
           )}
         </Field>
-
         <Field label="Sort by" className="sm:col-span-2 lg:col-span-4">
           {() => (
             <div className="flex items-center gap-1.5">

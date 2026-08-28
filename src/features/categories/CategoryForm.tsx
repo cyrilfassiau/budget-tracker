@@ -1,5 +1,5 @@
 import { Check } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { createElement, useMemo, useState } from 'react'
 
 import { Button, Field, Input, Modal, SegmentedPill } from '@/components/ui'
 import { CATEGORY_COLORS } from '@/lib/constants'
@@ -17,7 +17,7 @@ import {
 
 interface CategoryFormProps {
   open: boolean
-  /** `null` opens the dialog in create mode. */
+
   category: Category | null
   onClose: () => void
 }
@@ -46,8 +46,6 @@ export function CategoryForm({ open, category, onClose }: CategoryFormProps) {
     [categories, category],
   )
 
-  // Seed the fields when the dialog opens on a different category, adjusting
-  // state during render rather than in an effect.
   const instance = open ? (category?.id ?? 'new') : 'closed'
   const [renderedInstance, setRenderedInstance] = useState(instance)
 
@@ -84,8 +82,6 @@ export function CategoryForm({ open, category, onClose }: CategoryFormProps) {
     }
   }
 
-  const PreviewIcon = getCategoryIcon(values.icon)
-
   return (
     <Modal
       open={open}
@@ -110,10 +106,11 @@ export function CategoryForm({ open, category, onClose }: CategoryFormProps) {
             className="flex size-12 shrink-0 items-center justify-center rounded-full text-white transition-colors"
             style={{ backgroundColor: values.color }}
           >
-            {/* oxlint-disable-next-line react/static-components */}
-            <PreviewIcon className="size-5" strokeWidth={2.25} />
+            {createElement(getCategoryIcon(values.icon), {
+              className: 'size-5',
+              strokeWidth: 2.25,
+            })}
           </span>
-
           <Field label="Name" error={errors.name} required className="flex-1">
             {({ id, describedBy, invalid }) => (
               <Input
@@ -129,7 +126,6 @@ export function CategoryForm({ open, category, onClose }: CategoryFormProps) {
             )}
           </Field>
         </div>
-
         <Field label="Used for">
           {() => (
             <SegmentedPill<CategoryKind>
@@ -146,7 +142,6 @@ export function CategoryForm({ open, category, onClose }: CategoryFormProps) {
             />
           )}
         </Field>
-
         <fieldset>
           <legend className="mb-2 text-[13px] font-bold text-fg-muted">Colour</legend>
           <div role="radiogroup" aria-label="Category colour" className="flex flex-wrap gap-2">
@@ -177,7 +172,6 @@ export function CategoryForm({ open, category, onClose }: CategoryFormProps) {
             </p>
           ) : null}
         </fieldset>
-
         <fieldset>
           <legend className="mb-2 text-[13px] font-bold text-fg-muted">Icon</legend>
           <div
@@ -186,7 +180,6 @@ export function CategoryForm({ open, category, onClose }: CategoryFormProps) {
             className="grid max-h-40 grid-cols-7 gap-1.5 overflow-y-auto rounded-[16px] bg-surface p-2"
           >
             {ICON_KEYS.map((key) => {
-              const Icon = getCategoryIcon(key)
               const selected = values.icon === key
               return (
                 <button
@@ -201,8 +194,7 @@ export function CategoryForm({ open, category, onClose }: CategoryFormProps) {
                     selected ? 'bg-fg text-bg' : 'text-fg-muted hover:bg-surface-2 hover:text-fg',
                   )}
                 >
-                  {/* oxlint-disable-next-line react/static-components */}
-                  <Icon className="size-[18px]" />
+                  {createElement(getCategoryIcon(key), { className: 'size-[18px]' })}
                 </button>
               )
             })}

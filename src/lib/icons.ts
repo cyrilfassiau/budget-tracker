@@ -26,10 +26,6 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 
-/**
- * Registry of icons a category may use. Categories store the *key*, never the
- * component, so they stay serialisable.
- */
 export const CATEGORY_ICONS: Record<string, LucideIcon> = {
   utensils: Utensils,
   cart: ShoppingCart,

@@ -67,7 +67,7 @@ export function BudgetsPage() {
     const previous = shiftMonth(month, -1)
     try {
       const count = await copyMonth(previous, month)
-      // A no-op is not a success: say plainly that nothing was there to copy.
+
       if (count === 0) {
         toast.info('Nothing to copy', {
           description: `${formatMonthLabel(previous)} has no budgets set.`,
@@ -134,14 +134,11 @@ export function BudgetsPage() {
               }
 
             />
-
             {rows.length > 0 ? (
               <div className="pt-1">
                 <div>
                   <div className="flex flex-wrap items-baseline justify-between gap-x-4">
                     <p className="text-[13px] font-semibold text-fg-muted">Spent this month</p>
-                    {/* On the same baseline as the label it belongs to, rather
-                        than floating in a column of its own. */}
                     <button
                       type="button"
                       onClick={handleCopy}
@@ -215,7 +212,6 @@ export function BudgetsPage() {
               </ul>
             )}
           </Card>
-
           {unbudgeted.length > 0 ? (
             <Card>
               <CardHead title="No budget set" meta="Categories without a limit this month" />
@@ -253,7 +249,6 @@ export function BudgetsPage() {
         currentLimit={editing && editing.limit > 0 ? editing.limit : null}
         onClose={() => setFormOpen(false)}
       />
-
       <ConfirmDialog
         open={pendingDelete !== null}
         title={`Remove the budget for ${pendingDelete?.name ?? ''}?`}

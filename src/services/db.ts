@@ -8,11 +8,6 @@ import {
 import { readJSON, writeJSON } from '@/lib/storage'
 import type { Budget, Category, Settings, Transaction } from '@/types'
 
-/**
- * Thin table abstraction over the storage layer. Services talk to `table(...)`
- * rather than to localStorage keys directly, which keeps the swap to a real
- * API mechanical.
- */
 function table<T>(key: string, fallback: T[]) {
   return {
     read: () => readJSON<T[]>(key, fallback),
@@ -33,11 +28,6 @@ export const db = {
   },
 }
 
-/**
- * Populates a demo dataset the first time the app runs so the dashboard has
- * something to show. Runs exactly once — a user who deletes everything keeps
- * an empty app.
- */
 export const SCHEMA_VERSION = 2
 
 export function ensureSeeded(): void {
@@ -54,21 +44,9 @@ export function ensureSeeded(): void {
   writeJSON(STORAGE_KEYS.schema, SCHEMA_VERSION)
 }
 
-/**
- * Brings an existing book up to date with the current model.
- *
- * Transfers were introduced after the first release, so a book written before
- * it holds "Savings" entries typed as expenses. Re-seeding would fix the demo
- * and destroy anyone's real data, so instead each entry whose category is now
- * a transfer category is retyped in place. Runs at most once per book.
- */
 export function migrate(): void {
   if (readJSON<number>(STORAGE_KEYS.schema, 0) >= SCHEMA_VERSION) return
 
-  // The stored categories were written by the old seed, so their `kind` is
-  // stale too. Reconcile only the narrow case this migration is for — a
-  // built-in category that has become a transfer category — so a kind the
-  // user chose themselves is never overwritten.
   const storedCategories = db.categories.read()
   const defaultKinds = new Map(DEFAULT_CATEGORIES.map((entry) => [entry.id, entry.kind]))
 
@@ -100,13 +78,11 @@ export function migrate(): void {
   writeJSON(STORAGE_KEYS.schema, SCHEMA_VERSION)
 }
 
-/** Wipes every table and re-seeds — wired to "Restore the sample book". */
 export function resetToSeed(): void {
   writeJSON(STORAGE_KEYS.seeded, false)
   ensureSeeded()
 }
 
-/** Clears every table without re-seeding. */
 export function clearAll(): void {
   db.categories.write(DEFAULT_CATEGORIES)
   db.transactions.write([])

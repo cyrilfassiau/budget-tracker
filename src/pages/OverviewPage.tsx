@@ -37,7 +37,6 @@ export function OverviewPage() {
       ) : (
         <div className="flex animate-in flex-col gap-4">
           <BalanceCard data={data} />
-
           {!hasEntries ? (
             <Card>
               <EmptyState
@@ -46,7 +45,6 @@ export function OverviewPage() {
                 description="Add a transaction to this month, or jump to a month that already has some."
                 action={
                   <>
-                    {/* Opens dated inside the month on screen, not today. */}
                     <Button variant="primary" onClick={() => openNew()}>
                       Add a transaction
                     </Button>
@@ -66,7 +64,6 @@ export function OverviewPage() {
                   <CardHead title="Spending" meta={formatMonthLabel(data.month)} />
                   <SpendingRing data={data.spendingByCategory} total={data.summary.expenses} />
                 </Card>
-
                 <Card className="flex flex-col gap-3">
                   <CardHead
                     title="Budgets"
@@ -85,7 +82,6 @@ export function OverviewPage() {
                       </Link>
                     }
                   />
-
                   {data.budgets.length === 0 ? (
                     <EmptyState
                       size="sm"
@@ -109,13 +105,11 @@ export function OverviewPage() {
                   )}
                 </Card>
               </div>
-
               <div className="grid gap-4 lg:grid-cols-2">
                 <Card className="flex flex-col gap-4">
                   <CardHead title="Last 6 months" meta="Spending" />
                   <TrendBars data={data.series} activeMonth={data.month} />
                 </Card>
-
                 <Card className="flex flex-col gap-2">
                   <CardHead
                     title="Recent"

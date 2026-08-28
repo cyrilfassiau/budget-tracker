@@ -1,4 +1,3 @@
-/** Category every transaction falls back to when its category is deleted. */
 export const UNCATEGORIZED_ID = 'cat-uncategorized'
 
 export const STORAGE_KEYS = {
@@ -24,7 +23,6 @@ export const CURRENCIES = [
   { code: 'JPY', symbol: '¥', label: 'Japanese Yen' },
 ] as const
 
-/** Palette offered in the category colour picker. */
 export const CATEGORY_COLORS = [
   '#e11d48',
   '#f97316',

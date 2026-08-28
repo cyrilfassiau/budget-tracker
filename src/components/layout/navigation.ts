@@ -9,7 +9,7 @@ import {
 
 export interface NavItem {
   to: string
-  /** One label per destination, used by every navigation surface. */
+
   label: string
   icon: LucideIcon
 }

@@ -99,7 +99,6 @@ export function TransactionsPage() {
     >
       <div className="flex flex-col gap-4">
         <TransactionFilters />
-
         <Card className="flex flex-col gap-2">
           {!loading && !isEmpty && !isFilteredEmpty ? (
             <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-2 pb-1">
@@ -160,7 +159,6 @@ export function TransactionsPage() {
                   />
                 ))}
               </ul>
-
               <Pagination
                 page={page}
                 totalPages={totalPages}
@@ -172,7 +170,6 @@ export function TransactionsPage() {
           )}
         </Card>
       </div>
-
       <ConfirmDialog
         open={pendingDelete !== null}
         title="Delete this transaction?"

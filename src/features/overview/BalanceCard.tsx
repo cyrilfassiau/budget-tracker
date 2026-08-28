@@ -6,12 +6,6 @@ import { useCurrencyFormat } from '@/store/useSettingsStore'
 import { useTransactionModal } from '@/store/useTransactionModal'
 import { formatMoney, formatPercent } from '@/utils/money'
 
-/**
- * What you have, how the month is going, and the two taps that matter.
- *
- * The pacing line under the balance is the app's one honest guard: it stops a
- * month that is 84% gone from reading like a finished one.
- */
 export function BalanceCard({ data }: { data: StatementData }) {
   const { currency, locale } = useCurrencyFormat()
   const openNew = useTransactionModal((state) => state.openNew)
@@ -24,7 +18,6 @@ export function BalanceCard({ data }: { data: StatementData }) {
         <p className="figure mt-1 text-[40px] font-extrabold leading-none tracking-[-0.035em] text-fg sm:text-[52px]">
           <Amount value={data.carriedForward} plain />
         </p>
-
         <div className="mt-2.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[14px]">
           <span className="font-bold text-positive">
             <Amount value={summary.income} plain /> in
@@ -43,7 +36,6 @@ export function BalanceCard({ data }: { data: StatementData }) {
           ) : null}
         </div>
       </div>
-
       <div className="flex gap-2 overflow-x-auto pb-1 lg:justify-end lg:overflow-visible lg:pb-0">
         <QuickAction
           label="Add"
@@ -62,7 +54,6 @@ export function BalanceCard({ data }: { data: StatementData }) {
           onClick={() => openNew({ type: 'transfer' })}
         />
       </div>
-
       <div className="lg:col-span-2">
         <div className="flex items-baseline justify-between gap-3 text-[13px]">
           <span className="font-semibold text-fg-muted">

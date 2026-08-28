@@ -7,11 +7,6 @@ import { renderWithRouter, resetApp } from '@/test/renderApp'
 import { makeTransaction } from '@/test/factories'
 import { useTransactionsStore } from '@/store/useTransactionsStore'
 
-/**
- * Integration coverage for the flow a user actually performs: open the dialog,
- * fill the form, submit, and see the transaction in the list. It exercises the
- * form, validation, the store and the service together.
- */
 describe('recording an entry', () => {
   beforeEach(() => {
     resetApp()
@@ -36,11 +31,8 @@ describe('recording an entry', () => {
 
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
 
-    // Assert the columns, not just the figure: an expense belongs in "paid
-    // out", and the balance column must carry what it left behind.
     const row = (await screen.findByText('Market run')).closest('li')!
-    // The amount and the balance it left behind are both on the row; for a
-    // first entry they are the same figure, so assert on the count.
+
     expect(within(row).getAllByText(/32\.90/)).toHaveLength(2)
     expect(row).toHaveTextContent('Groceries')
     expect(screen.getByText(/transaction added/i)).toBeInTheDocument()

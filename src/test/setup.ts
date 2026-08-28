@@ -3,7 +3,6 @@ import '@testing-library/jest-dom/vitest'
 import { cleanup } from '@testing-library/react'
 import { afterEach, beforeEach, vi } from 'vitest'
 
-// jsdom does not implement matchMedia, which the theme hook subscribes to.
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
   value: (query: string) => ({
@@ -18,7 +17,6 @@ Object.defineProperty(window, 'matchMedia', {
   }),
 })
 
-// Recharts measures its container; jsdom always reports 0 without this.
 Object.defineProperty(HTMLElement.prototype, 'clientWidth', {
   configurable: true,
   value: 800,

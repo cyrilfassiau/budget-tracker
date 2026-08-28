@@ -13,7 +13,7 @@ import { validateBudgetLimit } from '@/utils/validation'
 interface BudgetFormProps {
   open: boolean
   month: string
-  /** Pre-selected category; locked when editing an existing limit. */
+
   categoryId: string | null
   currentLimit: number | null
   onClose: () => void
@@ -48,7 +48,6 @@ export function BudgetForm({
       (category.id === categoryId || !budgetedIds.has(category.id)),
   )
 
-  // Seed the fields when the dialog opens on a different category.
   const instance = open ? (categoryId ?? 'new') : 'closed'
   const [renderedInstance, setRenderedInstance] = useState(instance)
 
@@ -120,7 +119,6 @@ export function BudgetForm({
             </Select>
           )}
         </Field>
-
         <Field
           label="Monthly limit"
           error={error}

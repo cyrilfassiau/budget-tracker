@@ -1,13 +1,5 @@
-/**
- * The only module in the app that touches `localStorage`.
- *
- * Everything above it (services → stores → components) goes through the async
- * service API, so replacing this file with `fetch` calls is a contained change.
- */
-
 const memoryFallback = new Map<string, string>()
 
-/** Safari private mode and SSR both make `localStorage` unavailable. */
 function getBackingStore(): Pick<Storage, 'getItem' | 'setItem' | 'removeItem'> {
   try {
     const probe = '__budget_tracker_probe__'
@@ -38,8 +30,6 @@ export function writeJSON<T>(key: string, value: T): void {
   try {
     getBackingStore().setItem(key, JSON.stringify(value))
   } catch (error) {
-    // Quota exceeded is the realistic failure here; surface it to the caller
-    // so the service can turn it into a user-visible error.
     console.error(`[storage] could not write "${key}"`, error)
     throw new Error('Storage is full — could not save your changes.')
   }

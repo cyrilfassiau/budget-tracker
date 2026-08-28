@@ -62,7 +62,7 @@ export function sortTransactions(
       return delta === 0 ? a.date.localeCompare(b.date) * direction : delta * direction
     }
     const delta = a.date.localeCompare(b.date)
-    // Same-day rows fall back to insertion order so the list never jitters.
+
     return delta === 0 ? a.createdAt.localeCompare(b.createdAt) * direction : delta * direction
   })
 }

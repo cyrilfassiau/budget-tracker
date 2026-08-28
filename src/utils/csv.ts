@@ -26,7 +26,6 @@ export function toCSV(transactions: Transaction[], categories: Category[]): stri
   return [HEADERS.join(','), ...rows].join('\n')
 }
 
-/** Minimal RFC-4180 reader — enough for files this app writes or a spreadsheet exports. */
 export function parseCSV(text: string): string[][] {
   const rows: string[][] = []
   let row: string[] = []
@@ -77,10 +76,6 @@ export interface ImportResult {
   errors: string[]
 }
 
-/**
- * Maps CSV rows onto transactions, resolving category *names* to ids and
- * collecting per-row problems instead of failing the whole file.
- */
 export function fromCSV(text: string, categories: Category[]): ImportResult {
   const rows = parseCSV(text)
   const errors: string[] = []
@@ -102,7 +97,6 @@ export function fromCSV(text: string, categories: Category[]): ImportResult {
   const index = Object.fromEntries(
     HEADERS.map((name) => [name, header.indexOf(name)]),
   ) as Record<(typeof HEADERS)[number], number>
-
   const categoryByName = new Map(
     categories.map((category) => [category.name.trim().toLowerCase(), category.id]),
   )

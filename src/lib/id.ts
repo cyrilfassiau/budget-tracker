@@ -1,4 +1,3 @@
-/** Collision-resistant enough for a single-browser dataset. */
 export function createId(prefix = 'id'): string {
   const cryptoRef = globalThis.crypto
   if (cryptoRef && 'randomUUID' in cryptoRef) {

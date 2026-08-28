@@ -30,11 +30,6 @@ function collapse(data: CategoryTotal[], maxSlices: number): CategoryTotal[] {
   ]
 }
 
-/**
- * The spending ring: a thick donut with the month's total in the middle and a
- * tappable legend beside it. Category colour is the encoding here — it is the
- * only link between a slice and its name.
- */
 export function SpendingRing({ data, total, maxSlices = 7 }: SpendingRingProps) {
   const { currency, locale } = useCurrencyFormat()
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
@@ -59,8 +54,7 @@ export function SpendingRing({ data, total, maxSlices = 7 }: SpendingRingProps) 
               endAngle={-270}
               onMouseEnter={(_, index) => setActiveIndex(index)}
               onMouseLeave={() => setActiveIndex(null)}
-              // Recharts does not settle its sweep under React 19 StrictMode
-              // and leaves slivers on screen.
+
               isAnimationActive={false}
             >
               {slices.map((entry, index) => (
@@ -74,7 +68,6 @@ export function SpendingRing({ data, total, maxSlices = 7 }: SpendingRingProps) 
             </Pie>
           </PieChart>
         </ResponsiveContainer>
-
         <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
           <span className="max-w-[75%] truncate text-[12px] font-semibold text-fg-muted">
             {active ? active.name : 'Spent'}
@@ -86,7 +79,6 @@ export function SpendingRing({ data, total, maxSlices = 7 }: SpendingRingProps) 
           </span>
         </div>
       </div>
-
       <ul className="flex w-full min-w-0 flex-col gap-0.5">
         {slices.map((entry, index) => (
           <li key={entry.categoryId}>

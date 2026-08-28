@@ -257,7 +257,6 @@ describe('month pacing', () => {
   })
 
   it('divides the daily rate by days elapsed, not days in the month', () => {
-    // 800 spent by the 13th is ~61.54/day, not 800/31 = 25.81.
     expect(averageDailySpend(march, '2026-03', midMarch)).toBeCloseTo(800 / 13, 2)
   })
 
@@ -282,7 +281,6 @@ describe('budget pacing', () => {
   })
 
   it('flags spending that has outrun the month', () => {
-    // 200 of 400 spent, but only 13/31 of the month gone.
     const [row] = budgetProgress(budgets, march, categories, '2026-03', { today: midMarch })
     expect(row?.aheadOfSchedule).toBe(true)
     expect(row?.paceDelta).toBeCloseTo(200 - 400 * (13 / 31), 2)

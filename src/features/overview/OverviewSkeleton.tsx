@@ -17,7 +17,6 @@ export function OverviewSkeleton() {
           </div>
           <Skeleton className="h-2 w-full rounded-full" />
         </Card>
-
         <div className="grid gap-4 lg:grid-cols-2">
           <Card className="flex flex-col gap-4">
             <Skeleton className="h-4 w-32" />

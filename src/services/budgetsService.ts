@@ -14,10 +14,6 @@ export async function getByMonth(month: string): Promise<Budget[]> {
   return clone(db.budgets.read().filter((row) => row.month === month))
 }
 
-/**
- * Budgets are unique per (category, month), so create and update collapse into
- * a single upsert — the UI only ever sets "the limit for this category".
- */
 export async function upsert(input: NewBudget): Promise<Budget> {
   await delay()
   const rows = db.budgets.read()
@@ -47,7 +43,6 @@ export async function remove(id: string): Promise<void> {
   db.budgets.write(next)
 }
 
-/** Copies every limit from one month to another (used by "Copy last month"). */
 export async function copyMonth(fromMonth: string, toMonth: string): Promise<Budget[]> {
   await delay()
   const rows = db.budgets.read()

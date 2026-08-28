@@ -25,7 +25,6 @@ export const useSettingsStore = create<SettingsState>((set) => ({
   },
 }))
 
-/** Formatting options bundled for `formatMoney` call sites. */
 export function useCurrencyFormat() {
   const currency = useSettingsStore((state) => state.currency)
   const locale = useSettingsStore((state) => state.locale)

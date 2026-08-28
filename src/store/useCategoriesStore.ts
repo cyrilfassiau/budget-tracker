@@ -14,7 +14,6 @@ interface CategoriesState {
   fetchAll: () => Promise<void>
   add: (input: NewCategory) => Promise<Category>
   edit: (id: string, patch: Partial<NewCategory>) => Promise<Category>
-  /** Deletes a category, moving its transactions to Uncategorized. */
   remove: (id: string) => Promise<number>
   reorder: (orderedIds: string[]) => Promise<void>
   invalidate: () => Promise<void>
@@ -56,7 +55,7 @@ export const useCategoriesStore = create<CategoriesState>((set, get) => ({
 
   reorder: async (orderedIds) => {
     const snapshot = get().items
-    // Optimistic so dragging feels instant; rolled back if persistence fails.
+
     const byId = new Map(snapshot.map((item) => [item.id, item]))
     set({
       items: orderedIds

@@ -37,14 +37,13 @@ export function Field({
     <div className={cn('flex flex-col gap-1.5', className)}>
       <label htmlFor={id} className="text-[13px] font-bold text-fg-muted">
         {label}
-        {/* The control carries `required`; this marker is for sighted readers. */}
+
         {required ? (
           <span aria-hidden="true" className="ml-1 font-medium text-fg-faint">
             required
           </span>
         ) : null}
       </label>
-
       {children({ id, describedBy, invalid: Boolean(error), required })}
 
       {hint && !error ? (

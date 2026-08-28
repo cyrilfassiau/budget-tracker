@@ -3,7 +3,6 @@ import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-d
 
 import { RouteFallback } from '@/components/layout/RouteFallback'
 
-/** Routes are code-split so the first load does not pay for Recharts. */
 const OverviewPage = lazy(() =>
   import('@/pages/OverviewPage').then((module) => ({ default: module.OverviewPage })),
 )
@@ -29,7 +28,6 @@ export function App() {
       >
         Skip to content
       </a>
-
       <Suspense fallback={<RouteFallback />}>
         <Routes>
           <Route path="/" element={<OverviewPage />} />

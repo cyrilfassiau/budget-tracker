@@ -4,14 +4,12 @@ import { cn } from '@/lib/cn'
 
 import { NAV_ITEMS } from './navigation'
 
-/** Persistent rail from `lg` up. */
 export function Sidebar() {
   return (
     <aside className="hidden w-60 shrink-0 flex-col px-3 py-5 lg:flex">
       <p className="px-3 pb-5 text-[19px] font-extrabold tracking-[-0.03em] text-fg">
         Budget Tracker
       </p>
-
       <nav aria-label="Sections" className="flex flex-col gap-1">
         {NAV_ITEMS.map(({ to, label, icon: Icon }) => (
           <NavLink
@@ -35,7 +33,6 @@ export function Sidebar() {
           </NavLink>
         ))}
       </nav>
-
       <p className="mt-auto px-3 pt-5 text-[12px] leading-relaxed text-fg-faint">
         Held in this browser only. No account, no server.
       </p>
@@ -43,10 +40,6 @@ export function Sidebar() {
   )
 }
 
-/**
- * Below `lg` the same destinations sit under the thumb. One navigation at
- * every width — no band where the app has none, none where it has two.
- */
 export function TabBar() {
   return (
     <nav

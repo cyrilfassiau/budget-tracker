@@ -14,7 +14,6 @@ interface SegmentedPillProps<T extends string> {
   className?: string
 }
 
-/** A track of pills; the chosen one fills. Radio semantics for arrow keys. */
 export function SegmentedPill<T extends string>({
   value,
   onChange,

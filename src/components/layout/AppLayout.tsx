@@ -20,11 +20,8 @@ export function AppLayout({ title, actions, children }: AppLayoutProps) {
   return (
     <div className="flex min-h-dvh bg-bg">
       <Sidebar />
-
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="sticky top-0 z-30 bg-bg/90 backdrop-blur-md">
-          {/* One instance of `actions`, reordered by CSS. On a phone they take
-              their own row rather than squeezing the title to nothing. */}
           <div className="flex flex-wrap items-center gap-x-3 gap-y-2 px-4 py-3 sm:px-6">
             <h1 className="min-w-0 flex-1 truncate text-[24px] font-extrabold tracking-[-0.03em] text-fg">
               {title}
@@ -36,14 +33,11 @@ export function AppLayout({ title, actions, children }: AppLayoutProps) {
             ) : null}
           </div>
         </header>
-
         <main id="main-content" className="flex-1 px-4 pb-6 sm:px-6">
           <div className="mx-auto w-full max-w-3xl lg:max-w-5xl">{children}</div>
         </main>
-
         <TabBar />
       </div>
-
       <TransactionForm />
       <Toaster />
     </div>

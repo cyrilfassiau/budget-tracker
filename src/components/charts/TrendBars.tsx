@@ -5,11 +5,6 @@ import type { MonthlyPoint } from '@/utils/calculations'
 import { formatMonthLabel } from '@/utils/dates'
 import { formatMoney } from '@/utils/money'
 
-/**
- * Six months of spending. The month still running is drawn hollow rather than
- * solid — a partial bar sitting flush beside five complete ones is the most
- * misleading mark a budget app can print.
- */
 export function TrendBars({ data, activeMonth }: { data: MonthlyPoint[]; activeMonth?: string }) {
   const { currency, locale } = useCurrencyFormat()
 
@@ -25,7 +20,6 @@ export function TrendBars({ data, activeMonth }: { data: MonthlyPoint[]; activeM
             tickLine={false}
             dy={6}
           />
-
           <Tooltip
             cursor={{ fill: 'var(--surface-2)', radius: 12 }}
             content={({ active, payload }) => {
@@ -44,7 +38,6 @@ export function TrendBars({ data, activeMonth }: { data: MonthlyPoint[]; activeM
               )
             }}
           />
-
           <Bar dataKey="expenses" radius={[10, 10, 10, 10]} maxBarSize={30} isAnimationActive={false}>
             {data.map((point) => (
               <Cell

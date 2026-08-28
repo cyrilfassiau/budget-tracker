@@ -9,10 +9,6 @@ const FOCUSABLE = [
   '[tabindex]:not([tabindex="-1"])',
 ].join(',')
 
-/**
- * Keeps Tab focus inside `ref` while `active`, and restores focus to whatever
- * was focused before the dialog opened.
- */
 export function useFocusTrap(
   ref: RefObject<HTMLElement | null>,
   active: boolean,
@@ -33,9 +29,6 @@ export function useFocusTrap(
       target.focus({ preventScroll: true })
     }
 
-    // Focus synchronously: deferring to the next frame lets a user who types
-    // immediately have their first keystrokes land in the wrong field.
-    // `preventScroll` is what keeps the entry animation from jumping.
     focusFirst()
 
     const onKeyDown = (event: KeyboardEvent) => {
@@ -75,7 +68,6 @@ export function useFocusTrap(
   }, [ref, active, onEscape])
 }
 
-/** Prevents the page behind a dialog from scrolling. */
 export function useScrollLock(active: boolean): void {
   useEffect(() => {
     if (!active) return

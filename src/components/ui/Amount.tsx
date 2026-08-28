@@ -4,22 +4,15 @@ import { formatMoney } from '@/utils/money'
 
 interface AmountProps {
   value: number
-  /** Suppresses the sign and the positive/negative colouring. */
+
   plain?: boolean
   blankZero?: boolean
   whole?: boolean
-  /**
-   * Shows an explicit + or −. Money arriving turns green; money leaving stays
-   * in the default ink, because red is reserved for trouble.
-   */
+
   signed?: boolean
   className?: string
 }
 
-/**
- * Every figure goes through here, so tabular numerals, tight tracking and the
- * green-means-money-in rule are decided in one place.
- */
 export function Amount({ value, plain, blankZero, whole, signed, className }: AmountProps) {
   const { currency, locale } = useCurrencyFormat()
 

@@ -78,7 +78,6 @@ export async function remove(id: string): Promise<void> {
   db.categories.write(rows.filter((row) => row.id !== id))
 }
 
-/** Persists the order produced by drag-and-drop on the categories page. */
 export async function reorder(orderedIds: string[]): Promise<Category[]> {
   await delay(0)
   const rows = db.categories.read()
